@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Networking A to Z — The Complete Guide</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0a0e1a;--surface:#111827;--surface2:#1e293b;--surface3:#293548;
+    --accent:#3b82f6;--accent2:#8b5cf6;--accent3:#06b6d4;--accent4:#10b981;--accent5:#f59e0b;--accent6:#ef4444;--accent7:#ec4899;
+    --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+    --border:#334155;
+    --grad1:linear-gradient(135deg,#3b82f6,#8b5cf6);
+    --grad2:linear-gradient(135deg,#06b6d4,#10b981);
+    --grad3:linear-gradient(135deg,#f59e0b,#ef4444);
+  }
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+  
+  /* SCROLLBAR */
+  ::-webkit-scrollbar{width:8px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:4px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+  /* NAV */
+  .topnav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,14,26,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;height:60px;gap:1.5rem}
+  .topnav .logo{font-weight:800;font-size:1.1rem;background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap}
+  .nav-links{display:flex;gap:.25rem;overflow-x:auto;flex:1;scrollbar-width:none}
+  .nav-links::-webkit-scrollbar{display:none}
+  .nav-links a{color:var(--text2);text-decoration:none;font-size:.78rem;padding:.4rem .7rem;border-radius:6px;white-space:nowrap;transition:.2s}
+  .nav-links a:hover,.nav-links a.active{color:#fff;background:var(--surface2)}
+  .progress-bar{position:fixed;top:60px;left:0;height:3px;background:var(--grad1);z-index:101;transition:width .1s}
+
+  /* HERO */
+  .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(59,130,246,.12),transparent 70%);top:-100px;right:-100px;pointer-events:none}
+  .hero::after{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(139,92,246,.1),transparent 70%);bottom:-100px;left:-100px;pointer-events:none}
+  .hero h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:1rem}
+  .hero h1 .gr1{background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .hero h1 .gr2{background:var(--grad2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .hero p{font-size:1.15rem;color:var(--text2);max-width:650px;margin-bottom:2.5rem}
+  .hero-stats{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center}
+  .hero-stats .stat{text-align:center}
+  .hero-stats .stat .num{font-size:2.2rem;font-weight:800;background:var(--grad1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .hero-stats .stat .lbl{font-size:.8rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px}
+
+  /* SECTIONS */
+  .section{padding:5rem 2rem;max-width:1100px;margin:0 auto}
+  .section-header{text-align:center;margin-bottom:3.5rem}
+  .section-header .badge{display:inline-block;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;padding:.35rem 1rem;border-radius:20px;margin-bottom:1rem}
+  .section-header h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;margin-bottom:.75rem}
+  .section-header p{color:var(--text2);max-width:600px;margin:0 auto;font-size:1.05rem}
+
+  /* CARDS */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-bottom:1.5rem;transition:.3s}
+  .card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 30px rgba(59,130,246,.08)}
+
+  /* OSI LAYERS */
+  .osi-stack{display:flex;flex-direction:column;gap:0;max-width:900px;margin:0 auto 3rem}
+  .osi-layer{display:grid;grid-template-columns:60px 180px 1fr 180px;align-items:center;gap:1rem;padding:1.2rem 1.5rem;border:1px solid var(--border);cursor:pointer;transition:.3s;position:relative}
+  .osi-layer:first-child{border-radius:16px 16px 0 0}
+  .osi-layer:last-child{border-radius:0 0 16px 16px}
+  .osi-layer:hover{z-index:2;transform:scale(1.01);box-shadow:0 4px 20px rgba(0,0,0,.3)}
+  .osi-layer .num{font-size:1.8rem;font-weight:900;opacity:.7}
+  .osi-layer .name{font-weight:700;font-size:1.05rem}
+  .osi-layer .desc{color:var(--text2);font-size:.88rem}
+  .osi-layer .proto{font-size:.8rem;color:var(--text3);text-align:right}
+  .osi-layer .proto span{display:inline-block;background:rgba(255,255,255,.06);padding:.15rem .5rem;border-radius:4px;margin:.1rem}
+  .layer-detail{max-height:0;overflow:hidden;transition:max-height .4s ease;background:var(--surface);border-left:1px solid var(--border);border-right:1px solid var(--border)}
+  .layer-detail.open{max-height:600px}
+  .layer-detail-inner{padding:1.5rem 2rem 2rem}
+  .layer-detail-inner h4{margin-bottom:.5rem;color:var(--accent3)}
+  .layer-detail-inner p{color:var(--text2);font-size:.92rem;margin-bottom:.75rem}
+
+  /* DIAGRAM BOXES */
+  .diagram{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:2rem auto;max-width:900px;overflow-x:auto}
+  .diagram h3{text-align:center;margin-bottom:1.5rem;font-size:1.2rem}
+  .flow-row{display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap;margin:1rem 0}
+  .flow-box{padding:.7rem 1.2rem;border-radius:10px;font-size:.85rem;font-weight:600;text-align:center;min-width:100px;border:2px solid}
+  .flow-arrow{font-size:1.3rem;color:var(--text3)}
+
+  /* TCP TABLE */
+  .comparison-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;margin:2rem 0}
+  .comparison-table th{background:var(--surface2);padding:1rem;font-size:.85rem;text-transform:uppercase;letter-spacing:1px;color:var(--text2);text-align:left}
+  .comparison-table td{padding:.9rem 1rem;border-bottom:1px solid var(--border);font-size:.9rem;color:var(--text2)}
+  .comparison-table tr:last-child td{border-bottom:none}
+  .comparison-table tbody tr:hover{background:var(--surface2)}
+
+  /* TIMELINE */
+  .timeline{position:relative;max-width:800px;margin:2rem auto}
+  .timeline::before{content:'';position:absolute;left:30px;top:0;bottom:0;width:3px;background:var(--grad1);border-radius:3px}
+  .tl-item{display:flex;gap:1.5rem;margin-bottom:2rem;position:relative}
+  .tl-dot{width:20px;height:20px;border-radius:50%;flex-shrink:0;margin-top:.3rem;margin-left:21px;z-index:1;border:3px solid var(--bg)}
+  .tl-content{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.5rem;flex:1}
+  .tl-content h4{font-size:1rem;margin-bottom:.3rem}
+  .tl-content p{color:var(--text2);font-size:.88rem}
+
+  /* ENCAPSULATION */
+  .encap-visual{display:flex;flex-direction:column;align-items:center;gap:.5rem;margin:2rem 0}
+  .encap-row{display:flex;align-items:center;border-radius:10px;overflow:hidden;width:100%;max-width:800px}
+  .encap-row .hdr-block{padding:.6rem 1rem;font-size:.75rem;font-weight:700;color:#fff;white-space:nowrap;text-align:center}
+  .encap-row .data-block{flex:1;padding:.6rem 1rem;background:var(--surface2);font-size:.8rem;color:var(--text2);text-align:center}
+  .encap-label{font-size:.8rem;color:var(--text3);align-self:flex-start;margin-left:calc(50% - 400px);padding-left:.5rem}
+
+  /* KEY CONCEPTS GRID */
+  .concepts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.2rem;margin:2rem 0}
+  .concept-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;transition:.3s}
+  .concept-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .concept-card .icon{font-size:2rem;margin-bottom:.75rem}
+  .concept-card h4{font-size:1rem;margin-bottom:.4rem}
+  .concept-card p{color:var(--text2);font-size:.85rem}
+
+  /* SUBNET TABLE */
+  .subnet-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.85rem}
+  .subnet-table th{background:var(--surface2);padding:.7rem .8rem;text-align:left;color:var(--text2);font-weight:600}
+  .subnet-table td{padding:.6rem .8rem;border-bottom:1px solid var(--border);color:var(--text2)}
+  .subnet-table code{background:var(--surface2);padding:.15rem .4rem;border-radius:4px;font-size:.8rem;color:var(--accent3)}
+
+  /* QUIZ */
+  .quiz-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:1rem 0}
+  .quiz-box h4{margin-bottom:1rem}
+  .quiz-option{display:block;width:100%;text-align:left;background:var(--surface2);border:2px solid var(--border);border-radius:10px;padding:.8rem 1rem;margin:.4rem 0;color:var(--text);cursor:pointer;font-size:.9rem;transition:.2s}
+  .quiz-option:hover{border-color:var(--accent)}
+  .quiz-option.correct{border-color:var(--accent4);background:rgba(16,185,129,.1)}
+  .quiz-option.wrong{border-color:var(--accent6);background:rgba(239,68,68,.08)}
+  .quiz-feedback{margin-top:.75rem;padding:.75rem;border-radius:8px;font-size:.88rem;display:none}
+
+  /* FOOTER */
+  footer{text-align:center;padding:3rem 2rem;color:var(--text3);font-size:.85rem;border-top:1px solid var(--border)}
+
+  /* TABS */
+  .tabs{display:flex;gap:.3rem;margin-bottom:1.5rem;flex-wrap:wrap}
+  .tab-btn{padding:.5rem 1.2rem;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;font-size:.85rem;transition:.2s}
+  .tab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .tab-content{display:none}
+  .tab-content.active{display:block}
+
+  /* ANALOGY BOX */
+  .analogy{background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(139,92,246,.08));border:1px solid rgba(59,130,246,.2);border-radius:14px;padding:1.5rem;margin:1.5rem 0}
+  .analogy .tag{font-size:.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-weight:700;margin-bottom:.5rem}
+  .analogy p{color:var(--text2);font-size:.92rem}
+
+  /* CODE */
+  .code-block{background:#0d1117;border:1px solid var(--border);border-radius:10px;padding:1.2rem;font-family:'Fira Code','Cascadia Code',monospace;font-size:.82rem;color:#c9d1d9;overflow-x:auto;margin:1rem 0;line-height:1.8}
+  .code-block .comment{color:#8b949e}
+  .code-block .keyword{color:#ff7b72}
+  .code-block .string{color:#a5d6ff}
+  .code-block .func{color:#d2a8ff}
+
+  /* RESPONSIVE */
+  @media(max-width:768px){
+    .osi-layer{grid-template-columns:40px 1fr;gap:.4rem;padding:.9rem 1rem}
+    .osi-layer .desc,.osi-layer .proto{display:none}
+    .topnav{padding:0 1rem}
+    .section{padding:3rem 1rem}
+    .encap-row{flex-wrap:wrap}
+    .encap-label{margin-left:0}
+    .hero-stats{gap:1rem}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="logo">NET // GUIDE</div>
+  <div class="nav-links">
+    <a href="#home">Home</a>
+    <a href="#big-picture">Big Picture</a>
+    <a href="#osi">OSI Model</a>
+    <a href="#encapsulation">Encapsulation</a>
+    <a href="#physical">Physical</a>
+    <a href="#datalink">Data Link</a>
+    <a href="#network">Network</a>
+    <a href="#transport">Transport</a>
+    <a href="#upper">Upper Layers</a>
+    <a href="#dns">DNS</a>
+    <a href="#fulljourney">Full Journey</a>
+    <a href="#security">Security</a>
+    <a href="#quiz">Quiz</a>
+  </div>
+</nav>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <h1><span class="gr1">Networking</span><br><span class="gr2">A to Z</span></h1>
+  <p>A complete interactive guide to how computers communicate — from electrical signals on a wire to the web page on your screen. Bookmark this and come back anytime.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="num">7</div><div class="lbl">OSI Layers</div></div>
+    <div class="stat"><div class="num">50+</div><div class="lbl">Protocols</div></div>
+    <div class="stat"><div class="num">12</div><div class="lbl">Chapters</div></div>
+    <div class="stat"><div class="num">∞</div><div class="lbl">Packets/sec</div></div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CHAPTER 1: THE BIG PICTURE -->
+<!-- ============================================ -->
+<section class="section" id="big-picture">
+  <div class="section-header">
+    <div class="badge" style="background:rgba(59,130,246,.15);color:var(--accent)">Chapter 1</div>
+    <h2>The Big Picture</h2>
+    <p>Before diving into layers and protocols, let's understand what networking actually is and why it matters.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:1rem">What Is a Computer Network?</h3>
+    <p style="color:var(--text2)">A computer network is simply two or more devices connected together so they can share data. That's it. Whether it's two laptops connected by a cable, or billions of devices connected across the globe (the Internet) — the fundamental idea is the same: <strong>get data from point A to point B reliably.</strong></p>
+  </div>
+
+  <div class="analogy">
+    <div class="tag">📬 Real-World Analogy</div>
+    <p>Think of networking like the postal system. You write a letter (data), put it in an envelope (packet), write the address (IP), drop it in a mailbox (router), and the postal service figures out the best route to deliver it. The recipient opens the envelope and reads your letter. Networking works almost the same way — just billions of times faster.</p>
+  </div>
+
+  <div class="diagram">
+    <h3>Types of Networks by Scale</h3>
+    <div class="flow-row">
+      <div class="flow-box" style="border-color:var(--accent);background:rgba(59,130,246,.1)">
+        <div style="font-size:1.5rem">🏠</div>
+        <div>PAN</div>
+        <div style="font-size:.7rem;color:var(--text3);font-weight:400">Personal Area<br>~10 meters<br>Bluetooth, USB</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--accent2);background:rgba(139,92,246,.1)">
+        <div style="font-size:1.5rem">🏢</div>
+        <div>LAN</div>
+        <div style="font-size:.7rem;color:var(--text3);font-weight:400">Local Area<br>~1 km<br>Ethernet, WiFi</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--accent3);background:rgba(6,182,212,.1)">
+        <div style="font-size:1.5rem">🏙️</div>
+        <div>MAN</div>
+        <div style="font-size:.7rem;color:var(--text3);font-weight:400">Metropolitan<br>~100 km<br>Fiber, WiMAX</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--accent4);background:rgba(16,185,129,.1)">
+        <div style="font-size:1.5rem">🌍</div>
+        <div>WAN</div>
+        <div style="font-size:.7rem;color:var(--text3);font-weight:400">Wide Area<br>Global<br>The Internet</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:1rem">Why Do We Need Models?</h3>
+    <p style="color:var(--text2)">Networking is incredibly complex. To manage this complexity, engineers break the communication process into <strong>layers</strong>. Each layer handles one specific job and talks only to the layers directly above and below it. This is called the <strong>layered architecture</strong>, and it's the foundation of the OSI and TCP/IP models.</p>
+    <p style="color:var(--text2);margin-top:.75rem">Benefits: Each layer can be developed independently. You can swap WiFi for Ethernet without changing your web browser. A new app can run on the same network infrastructure. This separation of concerns is what makes the Internet so flexible and powerful.</p>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CHAPTER 2: THE OSI MODEL -->
+<!-- ============================================ -->
+<section class="section" id="osi">
+  <div class="section-header">
+    <div class="badge" style="background:rgba(139,92,246,.15);color:var(--accent2)">Chapter 2</div>
+    <h2>The OSI Model — 7 Layers</h2>
+    <p>The Open Systems Interconnection model is the universal framework for understanding network communication. Click each layer to learn more.</p>
+  </div>
+
+  <div class="analogy">
+    <div class="tag">🏗️ Think of it like building a house</div>
+    <p>Layer 1 is the foundation (physical cables). Layer 2 is the framing (local addressing). Layer 3 is the plumbing/electrical (routing). Layer 4 is the doors/hallways (reliable delivery). Layers 5–7 are the furniture, paint, and decor (the stuff you actually interact with). Each layer depends on the ones below it.</p>
+  </div>
+
+  <div class="osi-stack">
+    <!-- Layer 7 -->
+    <div class="osi-layer" style="background:linear-gradient(90deg,rgba(239,68,68,.12),transparent)" onclick="toggleLayer('l7')">
+      <div class="num" style="color:var(--accent6)">7</div>
+      <div class="name">Application</div>
+      <div class="desc">What the user interacts with — web browsers, email clients, file transfer</div>
+      <div class="proto"><span>HTTP</span><span>FTP</span><span>SMTP</span><span>DNS</span></div>
+    </div>
+    <div class="layer-detail" id="l7">
+      <div class="layer-detail-inner">
+        <h4>Layer 7 — Application Layer</h4>
+        <p>This is the only layer that directly interacts with the user. It provides network services to applications. When you type a URL in your browser, the browser uses HTTP (Application Layer protocol) to request that web page.</p>
+        <p><strong>Key Protocols:</strong> HTTP/HTTPS (web), SMTP/IMAP/POP3 (email), FTP/SFTP (file transfer), DNS (domain name resolution), SSH (secure remote access), SNMP (network management).</p>
+        <p><strong>Data Unit:</strong> Data / Message</p>
+      </div>
+    </div>
+
+    <!-- Layer 6 -->
+    <div class="osi-layer" style="background:linear-gradient(90deg,rgba(245,158,11,.12),transparent)" onclick="toggleLayer('l6')">
+      <div class="num" style="color:var(--accent5)">6</div>
+      <div class="name">Presentation</div>
+      <div class="desc">Translates, encrypts, and compresses data between formats</div>
+      <div class="proto"><span>SSL/TLS</span><span>JPEG</span><span>ASCII</span><span>MPEG</span></div>
+    </div>
+    <div class="layer-detail" id="l6">
+      <div class="layer-detail-inner">
+        <h4>Layer 6 — Presentation Layer</h4>
+        <p>The translator of the network. It ensures that data sent by one system can be understood by another. It handles three main functions: <strong>Translation</strong> (converting character encoding like ASCII to EBCDIC), <strong>Encryption/Decryption</strong> (SSL/TLS encryption happens here), and <strong>Compression</strong> (reducing data size for faster transmission).</p>
+        <p><strong>Real example:</strong> When you visit an HTTPS site, TLS encryption (Presentation Layer) scrambles your data so no one in between can read it.</p>
+        <p><strong>Data Unit:</strong> Data</p>
+      </div>
+    </div>
+
+    <!-- Layer 5 -->
+    <div class="osi-layer" style="background:linear-gradient(90deg,rgba(236,72,153,.12),transparent)" onclick="toggleLayer('l5')">
+      <div class="num" style="color:var(--accent7)">5</div>
+      <div class="name">Session</div>
+      <div class="desc">Opens, manages, and closes communication sessions</div>
+      <div class="proto"><span>NetBIOS</span><span>RPC</span><span>PPTP</span></div>
+    </div>
+    <div class="layer-detail" id="l5">
+      <div class="layer-detail-inner">
+        <h4>Layer 5 — Session Layer</h4>
+        <p>The session layer is the "conversation manager." It establishes, maintains, and terminates sessions between two devices. Think of it like a phone call: someone dials (opens session), you talk (maintain session), and someone hangs up (closes session).</p>
+        <p>It also handles <strong>checkpointing</strong>: if you're transferring a 500 MB file and the connection drops at 400 MB, the session layer can resume from 400 MB instead of starting over.</p>
+        <p><strong>Modes:</strong> Simplex (one-way), Half-duplex (take turns), Full-duplex (both ways simultaneously)</p>
+        <p><strong>Data Unit:</strong> Data</p>
+      </div>
+    </div>
+
+    <!-- Layer 4 -->
+    <div class="osi-layer" style="background:linear-gradient(90deg,rgba(16,185,129,.12),transparent)" onclick="toggleLayer('l4')">
+      <div class="num" style="color:var(--accent4)">4</div>
+      <div class="name">Transport</div>
+      <div class="desc">End-to-end delivery, reliability, flow control, error recovery</div>
+      <div class="proto"><span>TCP</span><span>UDP</span><span>QUIC</span></div>
+    </div>
+    <div class="layer-detail" id="l4">
+      <div class="layer-detail-inner">
+        <h4>Layer 4 — Transport Layer</h4>
+        <p>This is the "reliability manager." It takes data from the upper layers, breaks it into <strong>segments</strong>, and ensures they arrive correctly and in order at the destination. The two stars of this layer are TCP and UDP.</p>
+        <p><strong>TCP (Transmission Control Protocol):</strong> Reliable, ordered, error-checked. Uses a 3-way handshake (SYN → SYN-ACK → ACK) to establish connection. Used for web, email, file transfer.</p>
+        <p><strong>UDP (User Datagram Protocol):</strong> Fast, no handshake, no guarantee. Used for video streaming, gaming, DNS lookups, VoIP.</p>
+        <p><strong>Port Numbers:</strong> This layer uses port numbers (0–65535) to direct data to the right application. HTTP = 80, HTTPS = 443, SSH = 22, DNS = 53.</p>
+        <p><strong>Data Unit:</strong> Segment (TCP) / Datagram (UDP)</p>
+      </div>
+    </div>
+
+    <!-- Layer 3 -->
+    <div class="osi-layer" style="background:linear-gradient(90deg,rgba(6,182,212,.12),transparent)" onclick="toggleLayer('l3')">
+      <div class="num" style="color:var(--accent3)">3</div>
+      <div class="name">Network</div>
+      <div class="desc">Logical addressing (IP) and routing between different networks</div>
+      <div class="proto"><span>IP</span><span>ICMP</span><span>ARP</span><span>OSPF</span><span>BGP</span></div>
+    </div>
+    <div class="layer-detail" id="l3">
+      <div class="layer-detail-inner">
+        <h4>Layer 3 — Network Layer</h4>
+        <p>The "GPS navigator" of networking. This layer handles <strong>logical addressing</strong> (IP addresses) and <strong>routing</strong> — figuring out the best path for data to travel from source to destination across multiple networks.</p>
+        <p><strong>IP Addressing:</strong> Every device on the Internet has an IP address. IPv4 (e.g., 192.168.1.1) uses 32 bits, giving ~4.3 billion addresses. IPv6 (e.g., 2001:db8::1) uses 128 bits for an astronomical number of addresses.</p>
+        <p><strong>Routing Protocols:</strong> OSPF and RIP (within an organization), BGP (between organizations / ISPs — this is what literally holds the Internet together).</p>
+        <p><strong>Key Devices:</strong> Routers operate at this layer.</p>
+        <p><strong>Data Unit:</strong> Packet</p>
+      </div>
+    </div>
+
+    <!-- Layer 2 -->
+    <div class="osi-layer" style="background:linear-gradient(90deg,rgba(139,92,246,.12),transparent)" onclick="toggleLayer('l2')">
+      <div class="num" style="color:var(--accent2)">2</div>
+      <div class="name">Data Link</div>
+      <div class="desc">Physical addressing (MAC), framing, error detection on local link</div>
+      <div class="proto"><span>Ethernet</span><span>WiFi</span><span>PPP</span><span>ARP</span></div>
+    </div>
+    <div class="layer-detail" id="l2">
+      <div class="layer-detail-inner">
+        <h4>Layer 2 — Data Link Layer</h4>
+        <p>This layer handles communication between devices on the <strong>same local network</strong>. It uses <strong>MAC addresses</strong> (Media Access Control) — a unique 48-bit hardware address burned into every network interface card (e.g., AA:BB:CC:DD:EE:FF).</p>
+        <p><strong>Two Sub-layers:</strong></p>
+        <p>• <strong>LLC (Logical Link Control):</strong> Identifies which Network layer protocol (IPv4, IPv6, etc.) the frame carries.</p>
+        <p>• <strong>MAC (Media Access Control):</strong> Controls how devices gain access to the medium and transmit data.</p>
+        <p><strong>Error Detection:</strong> Uses CRC (Cyclic Redundancy Check) in the frame trailer to detect corrupted data.</p>
+        <p><strong>Key Devices:</strong> Switches, Bridges operate at this layer.</p>
+        <p><strong>Data Unit:</strong> Frame</p>
+      </div>
+    </div>
+
+    <!-- Layer 1 -->
+    <div class="osi-layer" style="background:linear-gradient(90deg,rgba(59,130,246,.12),transparent)" onclick="toggleLayer('l1')">
+      <div class="num" style="color:var(--accent)">1</div>
+      <div class="name">Physical</div>
+      <div class="desc">Raw bit transmission — cables, signals, voltages, radio waves</div>
+      <div class="proto"><span>Ethernet</span><span>USB</span><span>Fiber</span><span>WiFi Radio</span></div>
+    </div>
+    <div class="layer-detail" id="l1">
+      <div class="layer-detail-inner">
+        <h4>Layer 1 — Physical Layer</h4>
+        <p>The absolute bottom layer. It deals with the <strong>raw transmission of bits</strong> (1s and 0s) over a physical medium. It doesn't know or care what the bits mean — it just moves them.</p>
+        <p><strong>Transmission Media:</strong></p>
+        <p>• <strong>Copper cables (Ethernet):</strong> Use electrical voltage changes. Cat5e, Cat6, Cat6a cables.</p>
+        <p>• <strong>Fiber optic:</strong> Use light pulses. Much faster, longer range, immune to electromagnetic interference.</p>
+        <p>• <strong>Wireless (WiFi):</strong> Use radio frequency waves. Standards: 802.11a/b/g/n/ac/ax (WiFi 6).</p>
+        <p><strong>Concepts:</strong> Bit rate, bandwidth, latency, signal encoding, modulation.</p>
+        <p><strong>Key Devices:</strong> Hubs, Repeaters, Cables, Antennas.</p>
+        <p><strong>Data Unit:</strong> Bit</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- OSI vs TCP/IP -->
+  <div class="card">
+    <h3 style="margin-bottom:1rem">OSI Model vs TCP/IP Model</h3>
+    <p style="color:var(--text2);margin-bottom:1rem">The OSI model is a <strong>theoretical framework</strong> (7 layers). The TCP/IP model is what the Internet <strong>actually uses</strong> (4 layers). Here's how they map:</p>
+    <table class="comparison-table">
+      <thead>
+        <tr><th>OSI Layers</th><th>TCP/IP Layer</th><th>Protocols</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>7. Application<br>6. Presentation<br>5. Session</td><td style="color:var(--accent6);font-weight:600">Application</td><td>HTTP, FTP, SMTP, DNS, SSH, TLS</td></tr>
+        <tr><td>4. Transport</td><td style="color:var(--accent4);font-weight:600">Transport</td><td>TCP, UDP, QUIC</td></tr>
+        <tr><td>3. Network</td><td style="color:var(--accent3);font-weight:600">Internet</td><td>IP, ICMP, ARP, OSPF, BGP</td></tr>
+        <tr><td>2. Data Link<br>1. Physical</td><td style="color:var(--accent);font-weight:600">Network Access</td><td>Ethernet, WiFi, Fiber, PPP</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="analogy">
+    <div class="tag">💡 Mnemonic to remember OSI (bottom to top)</div>
+    <p><strong>P</strong>lease <strong>D</strong>o <strong>N</strong>ot <strong>T</strong>hrow <strong>S</strong>ausage <strong>P</strong>izza <strong>A</strong>way — Physical, Data Link, Network, Transport, Session, Presentation, Application.</p>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CHAPTER 3: ENCAPSULATION -->
+<!-- ============================================ -->
+<section class="section" id="encapsulation">
+  <div class="section-header">
+    <div class="badge" style="background:rgba(6,182,212,.15);color:var(--accent3)">Chapter 3</div>
+    <h2>Data Encapsulation</h2>
+    <p>As data moves down the OSI layers, each layer wraps it with its own header (and sometimes trailer). This process is called encapsulation. It reverses (de-encapsulation) at the receiving end.</p>
+  </div>
+
+  <div class="diagram">
+    <h3>How Data Gets Wrapped Layer by Layer</h3>
+    
+    <p style="text-align:center;color:var(--text3);font-size:.8rem;margin-bottom:1.5rem">Each layer adds its own header as data travels DOWN the stack →</p>
+
+    <div class="encap-visual">
+      <div style="font-size:.8rem;color:var(--accent6);font-weight:600;margin-bottom:.2rem">Layer 7/6/5 — Application Data</div>
+      <div class="encap-row" style="max-width:400px">
+        <div class="data-block" style="background:rgba(239,68,68,.15);color:var(--accent6);font-weight:600">DATA</div>
+      </div>
+
+      <div style="color:var(--text3)">↓ Transport layer adds source/destination ports</div>
+
+      <div style="font-size:.8rem;color:var(--accent4);font-weight:600;margin-bottom:.2rem">Layer 4 — Segment</div>
+      <div class="encap-row" style="max-width:520px">
+        <div class="hdr-block" style="background:var(--accent4)">TCP/UDP Header</div>
+        <div class="data-block" style="background:rgba(239,68,68,.15);color:var(--accent6)">DATA</div>
+      </div>
+
+      <div style="color:var(--text3)">↓ Network layer adds source/destination IP</div>
+
+      <div style="font-size:.8rem;color:var(--accent3);font-weight:600;margin-bottom:.2rem">Layer 3 — Packet</div>
+      <div class="encap-row" style="max-width:640px">
+        <div class="hdr-block" style="background:var(--accent3)">IP Header</div>
+        <div class="hdr-block" style="background:var(--accent4)">TCP Hdr</div>
+        <div class="data-block" style="background:rgba(239,68,68,.15);color:var(--accent6)">DATA</div>
+      </div>
+
+      <div style="color:var(--text3)">↓ Data Link layer adds MAC addresses + error check</div>
+
+      <div style="font-size:.8rem;color:var(--accent2);font-weight:600;margin-bottom:.2rem">Layer 2 — Frame</div>
+      <div class="encap-row" style="max-width:780px">
+        <div class="hdr-block" style="background:var(--accent2)">Frame Header</div>
+        <div class="hdr-block" style="background:var(--accent3)">IP Hdr</div>
+        <div class="hdr-block" style="background:var(--accent4)">TCP</div>
+        <div class="data-block" style="background:rgba(239,68,68,.15);color:var(--accent6)">DATA</div>
+        <div class="hdr-block" style="background:var(--accent2)">FCS ✓</div>
+      </div>
+
+      <div style="color:var(--text3)">↓ Physical layer converts everything to bits (1s and 0s)</div>
+
+      <div style="font-size:.8rem;color:var(--accent);font-weight:600;margin-bottom:.2rem">Layer 1 — Bits</div>
+      <div class="encap-row" style="max-width:800px">
+        <div class="data-block" style="background:rgba(59,130,246,.15);color:var(--accent);font-family:monospace;letter-spacing:2px">01001000 01100101 01101100 01101100 01101111 ...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <div class="tag">📦 Real-World Analogy</div>
+    <p>Imagine you write a letter (Application Data). You put it in an envelope and write "Attention: Accounting Dept" (Transport — port). You put that envelope in a bigger envelope with the street address (Network — IP). You put that in a package labeled with the mailroom barcode (Data Link — MAC). Finally, the courier physically carries it (Physical — bits). At the destination, each layer is "unwrapped" in reverse order.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:1rem">Data Unit Names at Each Layer</h3>
+    <table class="comparison-table">
+      <thead><tr><th>Layer</th><th>Data Unit</th><th>What's Added</th></tr></thead>
+      <tbody>
+        <tr><td>Application (7,6,5)</td><td style="font-weight:600">Data / Message</td><td>Application-specific formatting</td></tr>
+        <tr><td>Transport (4)</td><td style="font-weight:600">Segment / Datagram</td><td>Source & destination port numbers, sequence numbers</td></tr>
+        <tr><td>Network (3)</td><td style="font-weight:600">Packet</td><td>Source & destination IP addresses, TTL</td></tr>
+        <tr><td>Data Link (2)</td><td style="font-weight:600">Frame</td><td>Source & destination MAC, CRC error check</td></tr>
+        <tr><td>Physical (1)</td><td style="font-weight:600">Bits</td><td>Electrical/light/radio signals</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CHAPTER 4: PHYSICAL LAYER DEEP DIVE -->
+<!-- ============================================ -->
+<section class="section" id="physical">
+  <div class="section-header">
+    <div class="badge" style="background:rgba(59,130,246,.15);color:var(--accent)">Chapter 4</div>
+    <h2>Physical Layer — The Wires</h2>
+    <p>Everything in networking ultimately comes down to moving bits through a physical medium.</p>
+  </div>
+
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <div class="icon">🔌</div>
+      <h4>Copper (Ethernet)</h4>
+      <p>Uses electrical signals over twisted-pair cables. Cat5e supports 1 Gbps, Cat6a supports 10 Gbps. Max distance ~100m. Susceptible to electromagnetic interference (EMI).</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon">💡</div>
+      <h4>Fiber Optic</h4>
+      <p>Uses pulses of light through glass/plastic fibers. Single-mode fiber can span 100+ km. Multi-mode is shorter range but cheaper. Immune to EMI. Backbone of the Internet.</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon">📡</div>
+      <h4>Wireless (Radio)</h4>
+      <p>WiFi uses 2.4 GHz and 5 GHz frequencies. WiFi 6 (802.11ax) supports up to 9.6 Gbps theoretical. Signal degrades with distance, walls, and interference.</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon">🛰️</div>
+      <h4>Satellite</h4>
+      <p>Communication via satellites in orbit. GEO satellites have ~600ms latency. LEO constellations (like Starlink) reduce latency to ~20-40ms. Used in remote areas.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:1rem">Key Physical Layer Concepts</h3>
+    <p style="color:var(--text2)"><strong>Bandwidth:</strong> The maximum rate of data transfer — measured in bits per second (bps). Your "100 Mbps" Internet connection means 100 million bits per second maximum throughput.</p>
+    <p style="color:var(--text2);margin-top:.75rem"><strong>Latency:</strong> The time it takes for a bit to travel from source to destination. Measured in milliseconds (ms). Light in fiber travels at ~200,000 km/s (about 2/3 the speed of light in vacuum).</p>
+    <p style="color:var(--text2);margin-top:.75rem"><strong>Throughput:</strong> The actual data rate achieved in practice — always less than bandwidth due to overhead, congestion, and errors.</p>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CHAPTER 5: DATA LINK LAYER -->
+<!-- ============================================ -->
+<section class="section" id="datalink">
+  <div class="section-header">
+    <div class="badge" style="background:rgba(139,92,246,.15);color:var(--accent2)">Chapter 5</div>
+    <h2>Data Link Layer — Local Delivery</h2>
+    <p>How data gets from one device to another on the same local network.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:1rem">MAC Addresses</h3>
+    <p style="color:var(--text2)">Every network interface has a unique <strong>MAC address</strong> — a 48-bit address written as six pairs of hex digits: <code style="background:var(--surface2);padding:.15rem .4rem;border-radius:4px;color:var(--accent3)">AA:BB:CC:DD:EE:FF</code></p>
+    <p style="color:var(--text2);margin-top:.75rem">The first 3 bytes identify the manufacturer (OUI), and the last 3 bytes are unique to the device. MAC addresses work only on the <strong>local network</strong> — they don't survive past a router.</p>
+  </div>
+
+  <div class="diagram">
+    <h3>Ethernet Frame Structure</h3>
+    <div class="encap-row" style="max-width:100%;margin:1.5rem 0">
+      <div class="hdr-block" style="background:#4a5568;font-size:.7rem;min-width:60px">Preamble<br>8 bytes</div>
+      <div class="hdr-block" style="background:var(--accent2);font-size:.7rem;min-width:80px">Dest MAC<br>6 bytes</div>
+      <div class="hdr-block" style="background:var(--accent);font-size:.7rem;min-width:80px">Src MAC<br>6 bytes</div>
+      <div class="hdr-block" style="background:var(--accent5);font-size:.7rem;min-width:60px">Type<br>2 bytes</div>
+      <div class="data-block" style="flex:2;font-size:.7rem">Payload (46–1500 bytes)</div>
+      <div class="hdr-block" style="background:var(--accent4);font-size:.7rem;min-width:50px">FCS<br>4 bytes</div>
+    </div>
+    <p style="color:var(--text2);font-size:.85rem;margin-top:.5rem"><strong>FCS (Frame Check Sequence):</strong> A CRC checksum to detect errors. If the checksum doesn't match, the frame is discarded.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:1rem">Switches — The Traffic Directors of LANs</h3>
+    <p style="color:var(--text2)">A <strong>switch</strong> is the key device at Layer 2. It maintains a <strong>MAC address table</strong> that maps each MAC address to a physical port. When a frame arrives, the switch looks up the destination MAC and forwards the frame only to the correct port — instead of flooding it everywhere (like a hub would).</p>
+    <p style="color:var(--text2);margin-top:.75rem"><strong>How the table is built:</strong> When a device sends a frame, the switch records the source MAC address and the port it arrived on. Over time, it learns where every device is.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:1rem">ARP — Bridging Layer 2 and Layer 3</h3>
+    <p style="color:var(--text2)"><strong>ARP (Address Resolution Protocol)</strong> is the glue between IP addresses and MAC addresses. When your computer knows the IP of a device on the same network but not its MAC address, it broadcasts an ARP request: "Who has 192.168.1.5? Tell me your MAC!" The device with that IP replies with its MAC address. Your computer caches this mapping in its ARP table.</p>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CHAPTER 6: NETWORK LAYER -->
+<!-- ============================================ -->
+<section class="section" id="network">
+  <div class="section-header">
+    <div class="badge" style="background:rgba(6,182,212,.15);color:var(--accent3)">Chapter 6</div>
+    <h2>Network Layer — IP & Routing</h2>
+    <p>The layer responsible for getting data across different networks — from your home to a server on the other side of the world.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:1rem">IP Addresses Explained</h3>
+    <p style="color:var(--text2)">An IP address is a <strong>logical address</strong> assigned to a device. Unlike MAC addresses (burned into hardware), IP addresses can change and are assigned by network configuration (DHCP or manually).</p>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+      <div style="background:var(--surface2);padding:1rem;border-radius:10px">
+        <h4 style="color:var(--accent3);margin-bottom:.5rem">IPv4</h4>
+        <p style="color:var(--text2);font-size:.85rem">32-bit address. Written as 4 octets: <code style="color:var(--accent3)">192.168.1.100</code></p>
+        <p style="color:var(--text2);font-size:.85rem;margin-top:.3rem">~4.3 billion addresses total. We ran out! That's why NAT and IPv6 exist.</p>
+      </div>
+      <div style="background:var(--surface2);padding:1rem;border-radius:10px">
+        <h4 style="color:var(--accent2);margin-bottom:.5rem">IPv6</h4>
+        <p style="color:var(--text2);font-size:.85rem">128-bit address: <code style="color:var(--accent2)">2001:0db8::8a2e:0370:7334</code></p>
+        <p style="color:var(--text2);font-size:.85rem;margin-top:.3rem">340 undecillion addresses. Enough to give every atom on Earth an IP address (not really, but close).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:1rem">Subnetting — Dividing Networks</h3>
+    <p style="color:var(--text2);margin-bottom:1rem">Subnetting divides a large network into smaller, more manageable pieces. A <strong>subnet mask</strong> tells the device which part of the IP is the network portion and which is the host portion.</p>
+    <table class="subnet-table">
+      <thead><tr><th>CIDR</th><th>Subnet Mask</th><th>Usable Hosts</th><th>Common Use</th></tr></thead>
+      <tbody>
+        <tr><td><code>/8</code></td><td><code>255.0.0.0</code></td><td>16,777,214</td><td>Class A — huge organizations</td></tr>
+        <tr><td><code>/16</code></td><td><code>255.255.0.0</code></td><td>65,534</td><td>Class B — medium organizations</td></tr>
+        <tr><td><code>/24</code></td><td><code>255.255.255.0</code></td><td>254</td><td>Class C — most common LAN</td></tr>
+        <tr><td><code>/30</code></td><td><code>255.255.255.252</code></td><td>2</td><td>Point-to-point links</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:1rem">Private vs Public IP Addresses</h3>
+    <p style="color:var(--text2)">Certain IP ranges are reserved for <strong>private use</strong> (not routable on the Internet). Your home devices use private IPs, and your router uses <strong>NAT (Network Address Translation)</strong> to share one public IP with all of them.</p>
+    <table class="subnet-table">
+      <thead><tr><th>Range</th><th>Class</th><th>CIDR</th></tr></thead>
+      <tbody>
+        <tr><td><code>10.0.0.0 – 10.255.255.255</code></td><td>A</td><td><code>/8</code></td></tr>
+        <tr><td><code>172.16.0.0 – 172.31.255.255</code></td><td>B</td><td><code>/12</code></td></tr>
+        <tr><td><code>192.168.0.0 – 192.168.255.255</code></td><td>C</td><td><code>/16</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="diagram">
+    <h3>How Routing Works</h3>
+    <div class="flow-row">
+      <div class="flow-box" style="border-color:var(--accent);background:rgba(59,130,246,.1)">🖥️ Your PC<br><span style="font-size:.7rem;color:var(--text3)">192.168.1.10</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--accent5);background:rgba(245,158,11,.1)">🔀 Router 1<br><span style="font-size:.7rem;color:var(--text3)">Default Gateway</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--accent2);background:rgba(139,92,246,.1)">🔀 ISP Router<br><span style="font-size:.7rem;color:var(--text3)">Uses BGP</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--accent3);background:rgba(6,182,212,.1)">🌐 Internet<br><span style="font-size:.7rem;color:var(--text3)">Multiple hops</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--accent4);background:rgba(16,185,129,.1)">🖥️ Server<br><span style="font-size:.7rem;color:var(--text3)">93.184.216.34</span></div>
+    </div>
+    <p style="color:var(--text2);font-size:.85rem;text-align:center;margin-top:1rem">Each router examines the destination IP, consults its <strong>routing table</strong>, and forwards the packet to the next hop. This continues until the packet reaches its destination.</p>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CHAPTER 7: TRANSPORT LAYER -->
+<!-- ============================================ -->
+<section class="section" id="transport">
+  <div class="section-header">
+    <div class="badge" style="background:rgba(16,185,129,.15);color:var(--accent4)">Chapter 7</div>
+    <h2>Transport Layer — TCP vs UDP</h2>
+    <p>The layer that ensures data gets to the right application and (optionally) does so reliably.</p>
+  </div>
+
+  <div class="diagram">
+    <h3>TCP Three-Way Handshake</h3>
+    <p style="color:var(--text2);font-size:.88rem;text-align:center;margin-bottom:1.5rem">Before any data flows over TCP, the two devices must establish a connection:</p>
+    <div style="display:flex;justify-content:space-between;max-width:600px;margin:0 auto;position:relative">
+      <div style="text-align:center;width:100px">
+        <div style="font-size:2rem">🖥️</div>
+        <div style="font-weight:700;font-size:.9rem">Client</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:1.2rem;padding:0 1rem">
+        <div style="text-align:center;background:rgba(59,130,246,.1);padding:.5rem;border-radius:8px;border:1px solid rgba(59,130,246,.3)">
+          <div style="font-size:.8rem;color:var(--accent)">① SYN →</div>
+          <div style="font-size:.7rem;color:var(--text3)">"Hey, I want to connect" (seq=100)</div>
+        </div>
+        <div style="text-align:center;background:rgba(16,185,129,.1);padding:.5rem;border-radius:8px;border:1px solid rgba(16,185,129,.3)">
+          <div style="font-size:.8rem;color:var(--accent4)">← ② SYN-ACK</div>
+          <div style="font-size:.7rem;color:var(--text3)">"Sure! Here's my seq too" (seq=200, ack=101)</div>
+        </div>
+        <div style="text-align:center;background:rgba(139,92,246,.1);padding:.5rem;border-radius:8px;border:1px solid rgba(139,92,246,.3)">
+          <div style="font-size:.8rem;color:var(--accent2)">③ ACK →</div>
+          <div style="font-size:.7rem;color:var(--text3)">"Great, we're connected!" (ack=201)</div>
+        </div>
+      </div>
+      <div style="text-align:center;width:100px">
+        <div style="font-size:2rem">🖥️</div>
+        <div style="font-weight:700;font-size:.9rem">Server</div>
+      </div>
+    </div>
+    <p style="color:var(--text2);font-size:.85rem;text-align:center;margin-top:1.5rem">After this handshake, data can flow in both directions. Connection teardown uses a 4-step process (FIN → ACK → FIN → ACK).</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:1rem">TCP vs UDP — Head to Head</h3>
+    <table class="comparison-table">
+      <thead><tr><th>Feature</th><th style="color:var(--accent)">TCP</th><th style="color:var(--accent5)">UDP</th></tr></thead>
+      <tbody>
+        <tr><td>Connection</td><td>Connection-oriented (handshake)</td><td>Connectionless (fire and forget)</td></tr>
+        <tr><td>Reliability</td><td>Guaranteed delivery, retransmission</td><td>No guarantee, no retransmission</td></tr>
+        <tr><td>Ordering</td><td>Data arrives in order</td><td>No ordering guarantee</td></tr>
+        <tr><td>Speed</td><td>Slower (overhead)</td><td>Faster (minimal overhead)</td></tr>
+        <tr><td>Flow Control</td><td>Yes (sliding window)</td><td>No</td></tr>
+        <tr><td>Header Size</td><td>20–60 bytes</td><td>8 bytes</td></tr>
+        <tr><td>Use Cases</td><td>Web, email, file transfer, SSH</td><td>Streaming, gaming, DNS, VoIP</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="analogy">
+    <div class="tag">📞 vs 📢 Analogy</div>
+    <p><strong>TCP is like a phone call:</strong> You dial, wait for the other person to pick up, talk back and forth, confirm you understood each other, and hang up properly. <strong>UDP is like shouting into a megaphone:</strong> You blast your message out. Maybe they hear it, maybe they don't. But it's fast!</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:1rem">Port Numbers — Finding the Right App</h3>
+    <p style="color:var(--text2);margin-bottom:1rem">A single computer can run many network applications simultaneously. Port numbers (0–65535) identify which application should receive incoming data.</p>
+    <table class="subnet-table">
+      <thead><tr><th>Port</th><th>Protocol</th><th>Service</th></tr></thead>
+      <tbody>
+        <tr><td><code>20, 21</code></td><td>TCP</td><td>FTP (data & control)</td></tr>
+        <tr><td><code>22</code></td><td>TCP</td><td>SSH (secure shell)</td></tr>
+        <tr><td><code>25</code></td><td>TCP</td><td>SMTP (send email)</td></tr>
+        <tr><td><code>53</code></td><td>TCP/UDP</td><td>DNS (name resolution)</td></tr>
+        <tr><td><code>80</code></td><td>TCP</td><td>HTTP (web)</td></tr>
+        <tr><td><code>443</code></td><td>TCP</td><td>HTTPS (secure web)</td></tr>
+        <tr><td><code>3389</code></td><td>TCP</td><td>RDP (remote desktop)</td></tr>
+      </tbody>
+    </table>
+    <p style="color:var(--text3);font-size:.82rem;margin-top:.75rem">Ports 0–1023 are "well-known" (reserved for standard services). Ports 1024–49151 are "registered." Ports 49152–65535 are "dynamic/ephemeral" (used temporarily by client applications).</p>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CHAPTER 8: UPPER LAYERS -->
+<!-- ============================================ -->
+<section class="section" id="upper">
+  <div class="section-header">
+    <div class="badge" style="background:rgba(236,72,153,.15);color:var(--accent7)">Chapter 8</div>
+    <h2>Upper Layers — Where Users Live</h2>
+    <p>Session, Presentation, and Application layers — where data becomes useful.</p>
+  </div>
+
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <div class="icon">🌐</div>
+      <h4>HTTP / HTTPS</h4>
+      <p>The foundation of the web. HTTP sends requests (GET, POST, PUT, DELETE) and receives responses. HTTPS adds TLS encryption. Uses port 80 (HTTP) and 443 (HTTPS).</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon">📧</div>
+      <h4>SMTP / IMAP / POP3</h4>
+      <p>Email protocols. SMTP sends mail (port 25/587). IMAP (port 143/993) syncs mail across devices. POP3 (port 110/995) downloads and typically deletes from server.</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon">📁</div>
+      <h4>FTP / SFTP</h4>
+      <p>File Transfer Protocol transfers files between systems. FTP is unencrypted (ports 20-21). SFTP runs over SSH (port 22) for secure transfers.</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon">🔑</div>
+      <h4>SSH</h4>
+      <p>Secure Shell provides encrypted remote access to servers. Replaced insecure Telnet. Uses port 22. Supports key-based authentication for passwordless login.</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon">🔒</div>
+      <h4>TLS / SSL</h4>
+      <p>Transport Layer Security encrypts data in transit. Powers HTTPS. Uses certificates, key exchange (Diffie-Hellman), and symmetric encryption (AES). SSL is the deprecated predecessor.</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon">🔄</div>
+      <h4>DHCP</h4>
+      <p>Dynamic Host Configuration Protocol auto-assigns IP addresses. Your router's DHCP server gives each device an IP, subnet mask, gateway, and DNS server when they join the network.</p>
+    </div>
+  </div>
+
+  <div class="diagram">
+    <h3>How HTTP Request/Response Works</h3>
+    <div style="display:flex;justify-content:space-between;max-width:700px;margin:0 auto">
+      <div style="text-align:center;width:120px">
+        <div style="font-size:2.5rem">🖥️</div>
+        <div style="font-weight:700">Browser</div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:1rem;padding:0 1rem">
+        <div style="background:rgba(59,130,246,.1);padding:.6rem;border-radius:8px;border:1px solid rgba(59,130,246,.2)">
+          <div style="font-size:.75rem;color:var(--accent);font-weight:600">→ HTTP Request</div>
+          <div class="code-block" style="margin:.5rem 0 0;padding:.5rem;font-size:.72rem">
+            <span class="keyword">GET</span> /index.html <span class="string">HTTP/1.1</span><br>
+            <span class="comment">Host: www.example.com</span><br>
+            <span class="comment">User-Agent: Chrome/120</span><br>
+            <span class="comment">Accept: text/html</span>
+          </div>
+        </div>
+        <div style="background:rgba(16,185,129,.1);padding:.6rem;border-radius:8px;border:1px solid rgba(16,185,129,.2)">
+          <div style="font-size:.75rem;color:var(--accent4);font-weight:600">← HTTP Response</div>
+          <div class="code-block" style="margin:.5rem 0 0;padding:.5rem;font-size:.72rem">
+            <span class="string">HTTP/1.1</span> <span class="keyword">200 OK</span><br>
+            <span class="comment">Content-Type: text/html</span><br>
+            <span class="comment">Content-Length: 1256</span><br><br>
+            <span class="func">&lt;html&gt;</span>...<span class="func">&lt;/html&gt;</span>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;width:120px">
+        <div style="font-size:2.5rem">🗄️</div>
+        <div style="font-weight:700">Server</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CHAPTER 9: DNS -->
+<!-- ============================================ -->
+<section class="section" id="dns">
+  <div class="section-header">
+    <div class="badge" style="background:rgba(245,158,11,.15);color:var(--accent5)">Chapter 9</div>
+    <h2>DNS — The Internet's Phonebook</h2>
+    <p>How "google.com" becomes "142.250.185.78"</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:1rem">Why DNS Exists</h3>
+    <p style="color:var(--text2)">Humans remember names. Computers use numbers. DNS (Domain Name System) translates human-friendly domain names into IP addresses that computers can route to. Without DNS, you'd have to memorize IP addresses for every website.</p>
+  </div>
+
+  <div class="diagram">
+    <h3>DNS Resolution — Step by Step</h3>
+    <div class="timeline" style="margin:2rem 0">
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--accent)"></div>
+        <div class="tl-content">
+          <h4>① Browser Cache Check</h4>
+          <p>Your browser first checks its own cache. "Have I looked up google.com recently?" If yes, use the cached IP. If no, move on.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--accent2)"></div>
+        <div class="tl-content">
+          <h4>② OS Cache / hosts file</h4>
+          <p>The operating system checks its DNS cache and the local hosts file (/etc/hosts on Linux/Mac, C:\Windows\System32\drivers\etc\hosts on Windows).</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--accent3)"></div>
+        <div class="tl-content">
+          <h4>③ Recursive Resolver (ISP / 8.8.8.8)</h4>
+          <p>The query goes to a recursive DNS resolver (usually your ISP's, or public ones like Google's 8.8.8.8 or Cloudflare's 1.1.1.1). This resolver does the heavy lifting.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--accent5)"></div>
+        <div class="tl-content">
+          <h4>④ Root Name Server</h4>
+          <p>The resolver asks a root server: "Where do I find .com domains?" The root server responds with the address of the .com TLD server. There are 13 root server clusters worldwide.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--accent7)"></div>
+        <div class="tl-content">
+          <h4>⑤ TLD Name Server (.com)</h4>
+          <p>The resolver asks the .com TLD server: "Where's google.com?" The TLD server responds with the address of Google's authoritative name server.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--accent4)"></div>
+        <div class="tl-content">
+          <h4>⑥ Authoritative Name Server</h4>
+          <p>The resolver asks Google's name server: "What's the IP for google.com?" Answer: "142.250.185.78". The resolver caches this answer and returns it to your browser.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--accent6)"></div>
+        <div class="tl-content">
+          <h4>⑦ Connection Established!</h4>
+          <p>Your browser now has the IP address and can establish a TCP connection to the server. All of this happens in milliseconds.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom:1rem">DNS Record Types</h3>
+    <table class="subnet-table">
+      <thead><tr><th>Type</th><th>Purpose</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><code>A</code></td><td>Maps domain to IPv4 address</td><td>google.com → 142.250.185.78</td></tr>
+        <tr><td><code>AAAA</code></td><td>Maps domain to IPv6 address</td><td>google.com → 2607:f8b0:4004::64</td></tr>
+        <tr><td><code>CNAME</code></td><td>Alias for another domain</td><td>www.example.com → example.com</td></tr>
+        <tr><td><code>MX</code></td><td>Mail server for domain</td><td>gmail.com → alt1.gmail-smtp-in.l.google.com</td></tr>
+        <tr><td><code>NS</code></td><td>Authoritative name server</td><td>google.com → ns1.google.com</td></tr>
+        <tr><td><code>TXT</code></td><td>Text info (SPF, DKIM, verification)</td><td>Various verification strings</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CHAPTER 10: THE FULL JOURNEY -->
+<!-- ============================================ -->
+<section class="section" id="fulljourney">
+  <div class="section-header">
+    <div class="badge" style="background:rgba(16,185,129,.15);color:var(--accent4)">Chapter 10</div>
+    <h2>The Full Journey — Visiting a Website</h2>
+    <p>Let's trace every single step that happens when you type "https://www.example.com" and press Enter.</p>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--accent)"></div>
+      <div class="tl-content">
+        <h4>Step 1: URL Parsing</h4>
+        <p>Browser parses the URL: protocol (https), domain (www.example.com), path (/). It determines it needs to make an HTTPS request.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--accent2)"></div>
+      <div class="tl-content">
+        <h4>Step 2: DNS Resolution</h4>
+        <p>Browser resolves "www.example.com" to an IP address (e.g., 93.184.216.34) through the DNS hierarchy we covered above.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--accent3)"></div>
+      <div class="tl-content">
+        <h4>Step 3: TCP Handshake</h4>
+        <p>Browser initiates a TCP 3-way handshake with the server at 93.184.216.34 on port 443 (HTTPS). SYN → SYN-ACK → ACK. Connection established.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--accent5)"></div>
+      <div class="tl-content">
+        <h4>Step 4: TLS Handshake</h4>
+        <p>Since it's HTTPS, a TLS handshake occurs: Client Hello → Server Hello + Certificate → Key Exchange → Finished. Both sides now share a symmetric encryption key.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--accent7)"></div>
+      <div class="tl-content">
+        <h4>Step 5: HTTP Request</h4>
+        <p>Browser sends an encrypted HTTP GET request for "/". This data is encrypted (TLS), put in a TCP segment with port numbers, wrapped in an IP packet, framed with MAC addresses, and sent as bits on the wire.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--accent6)"></div>
+      <div class="tl-content">
+        <h4>Step 6: Routing Across the Internet</h4>
+        <p>The packet travels from your router → ISP → multiple backbone routers (each one looking at the destination IP and making forwarding decisions) → the server's network. It might cross oceans through undersea fiber cables!</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--accent4)"></div>
+      <div class="tl-content">
+        <h4>Step 7: Server Processes Request</h4>
+        <p>The server receives the packet, de-encapsulates through all layers, decrypts the TLS, reads the HTTP request, finds the requested resource, and prepares a response.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--accent)"></div>
+      <div class="tl-content">
+        <h4>Step 8: Response Travels Back</h4>
+        <p>The server sends back an HTTP 200 OK response with the HTML content, following the same encapsulation process in reverse. The response is broken into multiple TCP segments if it's large.</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--accent2)"></div>
+      <div class="tl-content">
+        <h4>Step 9: Browser Renders the Page</h4>
+        <p>Browser receives the HTML, parses it, discovers it needs CSS, JavaScript, images — and makes additional HTTP requests for each. The DOM is built, styles are applied, JavaScript executes, and you see the page!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="analogy">
+    <div class="tag">⏱️ Speed Context</div>
+    <p>All of these steps — DNS lookup, TCP handshake, TLS handshake, HTTP request/response, and rendering — typically happen in <strong>under 1 second</strong>. A DNS lookup takes ~20-120ms. A TCP handshake takes one round-trip (~10-100ms depending on distance). The TLS handshake adds another 1-2 round-trips. The rest depends on server speed and page complexity.</p>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CHAPTER 11: NETWORK SECURITY -->
+<!-- ============================================ -->
+<section class="section" id="security">
+  <div class="section-header">
+    <div class="badge" style="background:rgba(239,68,68,.15);color:var(--accent6)">Chapter 11</div>
+    <h2>Network Security Essentials</h2>
+    <p>Understanding threats and how networks are protected.</p>
+  </div>
+
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <div class="icon">🔥</div>
+      <h4>Firewalls</h4>
+      <p>Filter traffic based on rules (IP, port, protocol). Stateful firewalls track connection states. Next-gen firewalls (NGFW) inspect application-layer content.</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon">🔒</div>
+      <h4>VPN</h4>
+      <p>Virtual Private Network creates an encrypted tunnel over the public Internet. Protocols: IPsec, OpenVPN, WireGuard. Used for remote access and privacy.</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon">🛡️</div>
+      <h4>IDS / IPS</h4>
+      <p>Intrusion Detection/Prevention Systems monitor network traffic for suspicious patterns. IDS alerts; IPS actively blocks threats.</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon">🔐</div>
+      <h4>TLS/SSL Encryption</h4>
+      <p>Encrypts data in transit using asymmetric (key exchange) and symmetric (data encryption) cryptography. Certificates verify server identity.</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon">🎭</div>
+      <h4>Common Attacks</h4>
+      <p>DDoS (overwhelming with traffic), Man-in-the-Middle (intercepting communications), DNS Spoofing (redirecting to malicious sites), ARP Poisoning (local network attacks).</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon">📋</div>
+      <h4>Best Practices</h4>
+      <p>Use HTTPS everywhere. Keep firmware updated. Segment networks. Use strong authentication. Monitor logs. Principle of least privilege.</p>
+    </div>
+  </div>
+
+  <div class="diagram">
+    <h3>Network Security Architecture</h3>
+    <div class="flow-row">
+      <div class="flow-box" style="border-color:var(--accent6);background:rgba(239,68,68,.1)">🌐 Internet<br><span style="font-size:.7rem;color:var(--text3)">Untrusted</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--accent5);background:rgba(245,158,11,.1)">🔥 Firewall<br><span style="font-size:.7rem;color:var(--text3)">Filter traffic</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--accent7);background:rgba(236,72,153,.1)">📋 DMZ<br><span style="font-size:.7rem;color:var(--text3)">Public servers</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--accent5);background:rgba(245,158,11,.1)">🔥 Firewall<br><span style="font-size:.7rem;color:var(--text3)">Inner filter</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box" style="border-color:var(--accent4);background:rgba(16,185,129,.1)">🏢 Internal LAN<br><span style="font-size:.7rem;color:var(--text3)">Trusted zone</span></div>
+    </div>
+    <p style="text-align:center;color:var(--text2);font-size:.85rem;margin-top:1rem">The DMZ (Demilitarized Zone) hosts public-facing servers (web, email) between two firewalls, protecting the internal network even if a DMZ server is compromised.</p>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- CHAPTER 12: QUIZ -->
+<!-- ============================================ -->
+<section class="section" id="quiz">
+  <div class="section-header">
+    <div class="badge" style="background:rgba(139,92,246,.15);color:var(--accent2)">Chapter 12</div>
+    <h2>Test Your Knowledge</h2>
+    <p>Let's see how much you've absorbed! Click an answer to check.</p>
+  </div>
+
+  <div class="quiz-box" id="q1">
+    <h4>1. Which OSI layer is responsible for routing packets between different networks?</h4>
+    <button class="quiz-option" onclick="checkQuiz('q1',this,false)">Transport (Layer 4)</button>
+    <button class="quiz-option" onclick="checkQuiz('q1',this,true)">Network (Layer 3)</button>
+    <button class="quiz-option" onclick="checkQuiz('q1',this,false)">Data Link (Layer 2)</button>
+    <button class="quiz-option" onclick="checkQuiz('q1',this,false)">Session (Layer 5)</button>
+    <div class="quiz-feedback" id="q1-fb"></div>
+  </div>
+
+  <div class="quiz-box" id="q2">
+    <h4>2. What does ARP do?</h4>
+    <button class="quiz-option" onclick="checkQuiz('q2',this,false)">Encrypts data for secure transmission</button>
+    <button class="quiz-option" onclick="checkQuiz('q2',this,false)">Assigns IP addresses to devices</button>
+    <button class="quiz-option" onclick="checkQuiz('q2',this,true)">Maps IP addresses to MAC addresses</button>
+    <button class="quiz-option" onclick="checkQuiz('q2',this,false)">Routes packets across the Internet</button>
+    <div class="quiz-feedback" id="q2-fb"></div>
+  </div>
+
+  <div class="quiz-box" id="q3">
+    <h4>3. Which protocol would you use for a live video call where speed matters more than perfect reliability?</h4>
+    <button class="quiz-option" onclick="checkQuiz('q3',this,false)">TCP</button>
+    <button class="quiz-option" onclick="checkQuiz('q3',this,true)">UDP</button>
+    <button class="quiz-option" onclick="checkQuiz('q3',this,false)">FTP</button>
+    <button class="quiz-option" onclick="checkQuiz('q3',this,false)">SMTP</button>
+    <div class="quiz-feedback" id="q3-fb"></div>
+  </div>
+
+  <div class="quiz-box" id="q4">
+    <h4>4. What is the correct order of TCP's three-way handshake?</h4>
+    <button class="quiz-option" onclick="checkQuiz('q4',this,false)">ACK → SYN → SYN-ACK</button>
+    <button class="quiz-option" onclick="checkQuiz('q4',this,false)">SYN → ACK → SYN-ACK</button>
+    <button class="quiz-option" onclick="checkQuiz('q4',this,true)">SYN → SYN-ACK → ACK</button>
+    <button class="quiz-option" onclick="checkQuiz('q4',this,false)">SYN-ACK → SYN → ACK</button>
+    <div class="quiz-feedback" id="q4-fb"></div>
+  </div>
+
+  <div class="quiz-box" id="q5">
+    <h4>5. Which DNS record type maps a domain name to an IPv4 address?</h4>
+    <button class="quiz-option" onclick="checkQuiz('q5',this,false)">MX</button>
+    <button class="quiz-option" onclick="checkQuiz('q5',this,false)">CNAME</button>
+    <button class="quiz-option" onclick="checkQuiz('q5',this,true)">A</button>
+    <button class="quiz-option" onclick="checkQuiz('q5',this,false)">AAAA</button>
+    <div class="quiz-feedback" id="q5-fb"></div>
+  </div>
+
+  <div class="quiz-box" id="q6">
+    <h4>6. What is the data unit called at the Data Link layer?</h4>
+    <button class="quiz-option" onclick="checkQuiz('q6',this,false)">Packet</button>
+    <button class="quiz-option" onclick="checkQuiz('q6',this,false)">Segment</button>
+    <button class="quiz-option" onclick="checkQuiz('q6',this,true)">Frame</button>
+    <button class="quiz-option" onclick="checkQuiz('q6',this,false)">Bit</button>
+    <div class="quiz-feedback" id="q6-fb"></div>
+  </div>
+
+  <div class="quiz-box" id="q7">
+    <h4>7. Which port is used by HTTPS?</h4>
+    <button class="quiz-option" onclick="checkQuiz('q7',this,false)">80</button>
+    <button class="quiz-option" onclick="checkQuiz('q7',this,true)">443</button>
+    <button class="quiz-option" onclick="checkQuiz('q7',this,false)">22</button>
+    <button class="quiz-option" onclick="checkQuiz('q7',this,false)">53</button>
+    <div class="quiz-feedback" id="q7-fb"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p style="font-size:1.1rem;margin-bottom:.5rem">🎓 You've reached the end!</p>
+  <p>Bookmark this page and revisit anytime. Networking is a journey — each time you revisit, you'll understand more deeply.</p>
+  <p style="margin-top:1rem;color:var(--text3)">Built with care • Networking A to Z Guide</p>
+</footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;
+  document.getElementById('progressBar').style.width=pct+'%';
+});
+
+// Nav active state
+const sections=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-200)cur=s.id});
+  navLinks.forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+cur)});
+});
+
+// OSI layer toggle
+function toggleLayer(id){
+  const el=document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+// Quiz
+const explanations={
+  q1:'Layer 3 (Network) handles logical addressing (IP) and routing between different networks. Routers operate here.',
+  q2:'ARP (Address Resolution Protocol) resolves IP addresses to MAC addresses on the local network. It bridges Layer 3 and Layer 2.',
+  q3:'UDP is connectionless and fast — perfect for real-time applications like video calls where a dropped frame is better than a delayed one.',
+  q4:'The TCP three-way handshake is: SYN (client initiates) → SYN-ACK (server acknowledges and initiates) → ACK (client confirms). Connection established!',
+  q5:'The A record maps a domain to an IPv4 address. AAAA is for IPv6, CNAME is an alias, and MX is for mail servers.',
+  q6:'At Layer 2 (Data Link), data is packaged into Frames that include MAC addresses and an error-checking trailer (FCS).',
+  q7:'HTTPS uses port 443. HTTP uses 80, SSH uses 22, and DNS uses 53.'
+};
+
+function checkQuiz(qid,btn,correct){
+  const box=document.getElementById(qid);
+  if(box.dataset.answered)return;
+  box.dataset.answered='true';
+  const fb=document.getElementById(qid+'-fb');
+  if(correct){
+    btn.classList.add('correct');
+    fb.style.background='rgba(16,185,129,.1)';
+    fb.style.color='var(--accent4)';
+    fb.innerHTML='✅ Correct! '+explanations[qid];
+  } else {
+    btn.classList.add('wrong');
+    box.querySelectorAll('.quiz-option').forEach(o=>{
+      if(!o.classList.contains('wrong')){
+        // find correct
+        const idx=[...box.querySelectorAll('.quiz-option')].indexOf(o);
+        // We'll just highlight correct by checking all
+      }
+    });
+    fb.style.background='rgba(239,68,68,.08)';
+    fb.style.color='var(--accent6)';
+    fb.innerHTML='❌ Not quite. '+explanations[qid];
+  }
+  fb.style.display='block';
+}
+
+// Smooth scroll for nav
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t)t.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+</script>
+</body>
+</html>

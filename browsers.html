@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Browsers Work: A to Z — Complete Deep Dive</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232736;
+    --border: #2e3347;
+    --text: #e2e4ed;
+    --text-dim: #8b8fa7;
+    --accent: #6c8cff;
+    --accent2: #a78bfa;
+    --accent3: #34d399;
+    --accent4: #f59e0b;
+    --accent5: #f87171;
+    --accent6: #38bdf8;
+    --gradient1: linear-gradient(135deg, #6c8cff, #a78bfa);
+    --gradient2: linear-gradient(135deg, #34d399, #38bdf8);
+    --gradient3: linear-gradient(135deg, #f59e0b, #f87171);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    overflow-x: hidden;
+  }
+  .hero {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    left: -20%;
+    width: 140%;
+    height: 140%;
+    background: radial-gradient(ellipse at 30% 50%, rgba(108,140,255,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, rgba(167,139,250,0.1) 0%, transparent 60%);
+    z-index: 0;
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 800;
+    background: var(--gradient1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1rem;
+  }
+  .hero p {
+    font-size: 1.2rem;
+    color: var(--text-dim);
+    max-width: 600px;
+    position: relative;
+    z-index: 1;
+  }
+  nav.toc {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15,17,23,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1rem;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  nav.toc a {
+    display: inline-block;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.4rem 0.9rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+    margin-right: 0.25rem;
+  }
+  nav.toc a:hover, nav.toc a.active {
+    color: #fff;
+    background: var(--surface2);
+  }
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+  section {
+    padding: 4rem 0 2rem;
+  }
+  h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  h2 .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem;
+    color: var(--accent6);
+  }
+  h4 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 1.5rem 0 0.75rem;
+    color: var(--accent2);
+  }
+  p, li { color: var(--text); margin-bottom: 0.75rem; }
+  ul, ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+  li { margin-bottom: 0.4rem; }
+
+  .diagram {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+  }
+  .diagram svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+
+  .callout {
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    border-left: 4px solid;
+  }
+  .callout.info { background: rgba(108,140,255,0.08); border-color: var(--accent); }
+  .callout.tip { background: rgba(52,211,153,0.08); border-color: var(--accent3); }
+  .callout.warn { background: rgba(245,158,11,0.08); border-color: var(--accent4); }
+  .callout.danger { background: rgba(248,113,113,0.08); border-color: var(--accent5); }
+  .callout strong { display: block; margin-bottom: 0.3rem; }
+
+  .flow-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: center;
+    margin: 1.5rem 0;
+  }
+  .flow-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.75rem 1.2rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    min-width: 100px;
+  }
+  .flow-arrow { color: var(--accent); font-size: 1.3rem; font-weight: 700; }
+
+  code {
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    background: var(--surface2);
+    padding: 0.15rem 0.45rem;
+    border-radius: 5px;
+    font-size: 0.88em;
+    color: var(--accent3);
+  }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    color: var(--text);
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+  }
+  .card h4 { margin-top: 0; }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.9rem;
+  }
+  .comparison-table th, .comparison-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .comparison-table th {
+    background: var(--surface2);
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .comparison-table tr:hover td { background: rgba(108,140,255,0.04); }
+
+  .tag {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-right: 0.3rem;
+  }
+  .tag.blue { background: rgba(108,140,255,0.15); color: var(--accent); }
+  .tag.green { background: rgba(52,211,153,0.15); color: var(--accent3); }
+  .tag.orange { background: rgba(245,158,11,0.15); color: var(--accent4); }
+  .tag.red { background: rgba(248,113,113,0.15); color: var(--accent5); }
+  .tag.purple { background: rgba(167,139,250,0.15); color: var(--accent2); }
+
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+    margin: 1.5rem 0;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2rem;
+    top: 0.5rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: var(--bg);
+  }
+  .timeline-item h4 { margin-top: 0; }
+
+  footer {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+
+  @media (max-width: 640px) {
+    .hero { min-height: 40vh; padding: 2rem 1rem; }
+    h2 { font-size: 1.5rem; }
+    .flow-row { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>How Browsers Work</h1>
+  <p>A complete A-to-Z deep dive into what happens from the moment you press Enter to the pixels on your screen — covering DNS, networking, parsing, rendering, JavaScript, the event loop, and rendering strategies.</p>
+</div>
+
+<!-- TABLE OF CONTENTS (STICKY NAV) -->
+<nav class="toc" id="toc">
+  <a href="#ch1">1 The Big Picture</a>
+  <a href="#ch2">2 DNS & Networking</a>
+  <a href="#ch3">3 HTTP / TLS</a>
+  <a href="#ch4">4 Browser Architecture</a>
+  <a href="#ch5">5 Parsing HTML</a>
+  <a href="#ch6">6 CSS & the CSSOM</a>
+  <a href="#ch7">7 Render Pipeline</a>
+  <a href="#ch8">8 JavaScript Engine</a>
+  <a href="#ch9">9 The Event Loop</a>
+  <a href="#ch10">10 Rendering Strategies</a>
+  <a href="#ch11">11 Performance</a>
+  <a href="#ch12">12 Security</a>
+</nav>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- CHAPTER 1 -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="ch1">
+<h2><span class="num" style="background:var(--gradient1)">01</span> The Big Picture</h2>
+
+<p>When you type <code>https://example.com</code> and press Enter, an extraordinary chain of events unfolds in milliseconds. Here's the 30,000-foot view before we dive into each layer:</p>
+
+<div class="diagram">
+<svg viewBox="0 0 860 520" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+  <!-- Background -->
+  <rect width="860" height="520" rx="12" fill="#1a1d27"/>
+
+  <!-- Title -->
+  <text x="430" y="35" text-anchor="middle" fill="#8b8fa7" font-size="13" font-weight="600">THE COMPLETE BROWSER PIPELINE</text>
+
+  <!-- Step boxes -->
+  <g>
+    <!-- Row 1 -->
+    <rect x="30" y="60" width="160" height="70" rx="10" fill="#232736" stroke="#6c8cff" stroke-width="1.5"/>
+    <text x="110" y="88" text-anchor="middle" fill="#6c8cff" font-size="11" font-weight="700">STEP 1</text>
+    <text x="110" y="112" text-anchor="middle" fill="#e2e4ed" font-size="13" font-weight="600">URL Parsing</text>
+
+    <text x="208" y="98" fill="#6c8cff" font-size="18" font-weight="700">→</text>
+
+    <rect x="230" y="60" width="160" height="70" rx="10" fill="#232736" stroke="#6c8cff" stroke-width="1.5"/>
+    <text x="310" y="88" text-anchor="middle" fill="#6c8cff" font-size="11" font-weight="700">STEP 2</text>
+    <text x="310" y="112" text-anchor="middle" fill="#e2e4ed" font-size="13" font-weight="600">DNS Lookup</text>
+
+    <text x="408" y="98" fill="#6c8cff" font-size="18" font-weight="700">→</text>
+
+    <rect x="430" y="60" width="160" height="70" rx="10" fill="#232736" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="510" y="88" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="700">STEP 3</text>
+    <text x="510" y="112" text-anchor="middle" fill="#e2e4ed" font-size="13" font-weight="600">TCP + TLS</text>
+
+    <text x="608" y="98" fill="#a78bfa" font-size="18" font-weight="700">→</text>
+
+    <rect x="630" y="60" width="190" height="70" rx="10" fill="#232736" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="725" y="88" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="700">STEP 4</text>
+    <text x="725" y="112" text-anchor="middle" fill="#e2e4ed" font-size="13" font-weight="600">HTTP Request/Response</text>
+  </g>
+
+  <g>
+    <!-- Row 2 -->
+    <rect x="30" y="170" width="160" height="70" rx="10" fill="#232736" stroke="#34d399" stroke-width="1.5"/>
+    <text x="110" y="198" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700">STEP 5</text>
+    <text x="110" y="222" text-anchor="middle" fill="#e2e4ed" font-size="13" font-weight="600">HTML Parsing</text>
+
+    <text x="208" y="208" fill="#34d399" font-size="18" font-weight="700">→</text>
+
+    <rect x="230" y="170" width="160" height="70" rx="10" fill="#232736" stroke="#34d399" stroke-width="1.5"/>
+    <text x="310" y="198" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700">STEP 6</text>
+    <text x="310" y="222" text-anchor="middle" fill="#e2e4ed" font-size="13" font-weight="600">Build DOM + CSSOM</text>
+
+    <text x="408" y="208" fill="#34d399" font-size="18" font-weight="700">→</text>
+
+    <rect x="430" y="170" width="160" height="70" rx="10" fill="#232736" stroke="#f59e0b" stroke-width="1.5"/>
+    <text x="510" y="198" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="700">STEP 7</text>
+    <text x="510" y="222" text-anchor="middle" fill="#e2e4ed" font-size="13" font-weight="600">Render Tree</text>
+
+    <text x="608" y="208" fill="#f59e0b" font-size="18" font-weight="700">→</text>
+
+    <rect x="630" y="170" width="190" height="70" rx="10" fill="#232736" stroke="#f59e0b" stroke-width="1.5"/>
+    <text x="725" y="198" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="700">STEP 8</text>
+    <text x="725" y="222" text-anchor="middle" fill="#e2e4ed" font-size="13" font-weight="600">Layout (Reflow)</text>
+  </g>
+
+  <g>
+    <!-- Row 3 -->
+    <rect x="30" y="280" width="160" height="70" rx="10" fill="#232736" stroke="#f87171" stroke-width="1.5"/>
+    <text x="110" y="308" text-anchor="middle" fill="#f87171" font-size="11" font-weight="700">STEP 9</text>
+    <text x="110" y="332" text-anchor="middle" fill="#e2e4ed" font-size="13" font-weight="600">Paint</text>
+
+    <text x="208" y="318" fill="#f87171" font-size="18" font-weight="700">→</text>
+
+    <rect x="230" y="280" width="160" height="70" rx="10" fill="#232736" stroke="#f87171" stroke-width="1.5"/>
+    <text x="310" y="308" text-anchor="middle" fill="#f87171" font-size="11" font-weight="700">STEP 10</text>
+    <text x="310" y="332" text-anchor="middle" fill="#e2e4ed" font-size="13" font-weight="600">Composite</text>
+
+    <text x="408" y="318" fill="#38bdf8" font-size="18" font-weight="700">→</text>
+
+    <rect x="430" y="280" width="160" height="70" rx="10" fill="#232736" stroke="#38bdf8" stroke-width="1.5"/>
+    <text x="510" y="308" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="700">STEP 11</text>
+    <text x="510" y="332" text-anchor="middle" fill="#e2e4ed" font-size="13" font-weight="600">GPU → Pixels</text>
+
+    <text x="608" y="318" fill="#38bdf8" font-size="18" font-weight="700">→</text>
+
+    <rect x="630" y="280" width="190" height="70" rx="10" fill="#232736" stroke="#38bdf8" stroke-width="1.5"/>
+    <text x="725" y="298" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="700">ONGOING</text>
+    <text x="725" y="322" text-anchor="middle" fill="#e2e4ed" font-size="13" font-weight="600">JS Execution +</text>
+    <text x="725" y="342" text-anchor="middle" fill="#e2e4ed" font-size="13" font-weight="600">Event Loop</text>
+  </g>
+
+  <!-- Timing annotations -->
+  <rect x="30" y="390" width="820" height="110" rx="10" fill="#232736" stroke="#2e3347" stroke-width="1"/>
+  <text x="440" y="415" text-anchor="middle" fill="#8b8fa7" font-size="12" font-weight="700">TYPICAL TIMING (FIRST VISIT, FAST CONNECTION)</text>
+  <line x1="80" y1="440" x2="800" y2="440" stroke="#2e3347" stroke-width="1"/>
+
+  <rect x="80" y="448" width="80" height="22" rx="4" fill="rgba(108,140,255,0.2)"/>
+  <text x="120" y="464" text-anchor="middle" fill="#6c8cff" font-size="10" font-weight="600">DNS ~20ms</text>
+
+  <rect x="170" y="448" width="110" height="22" rx="4" fill="rgba(167,139,250,0.2)"/>
+  <text x="225" y="464" text-anchor="middle" fill="#a78bfa" font-size="10" font-weight="600">TCP+TLS ~80ms</text>
+
+  <rect x="290" y="448" width="120" height="22" rx="4" fill="rgba(52,211,153,0.2)"/>
+  <text x="350" y="464" text-anchor="middle" fill="#34d399" font-size="10" font-weight="600">HTTP+Parse ~100ms</text>
+
+  <rect x="420" y="448" width="140" height="22" rx="4" fill="rgba(245,158,11,0.2)"/>
+  <text x="490" y="464" text-anchor="middle" fill="#f59e0b" font-size="10" font-weight="600">Layout+Paint ~60ms</text>
+
+  <rect x="570" y="448" width="230" height="22" rx="4" fill="rgba(56,189,248,0.2)"/>
+  <text x="685" y="464" text-anchor="middle" fill="#38bdf8" font-size="10" font-weight="600">JS Execution + Interactive → ongoing</text>
+
+  <text x="440" y="490" text-anchor="middle" fill="#8b8fa7" font-size="11">Total to First Contentful Paint: typically 200-600ms on fast connections</text>
+</svg>
+</div>
+
+<p>Every single one of these steps is a deep topic. Let's explore each one in detail.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- CHAPTER 2 — DNS & NETWORKING -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="ch2">
+<h2><span class="num" style="background:var(--gradient1)">02</span> DNS & Networking: From Domain to IP</h2>
+
+<h3>2.1 What is DNS?</h3>
+<p>The Domain Name System (DNS) is the internet's phonebook. Humans use domain names like <code>www.google.com</code>, but computers communicate using IP addresses like <code>142.250.185.46</code>. DNS translates one to the other.</p>
+
+<p>DNS is a globally distributed, hierarchical database. There is no single computer that knows all mappings — instead, the work is split across millions of servers organized in a tree structure.</p>
+
+<h3>2.2 The DNS Resolution Process — Step by Step</h3>
+
+<div class="diagram">
+<svg viewBox="0 0 860 650" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+  <rect width="860" height="650" rx="12" fill="#1a1d27"/>
+  <text x="430" y="30" text-anchor="middle" fill="#8b8fa7" font-size="13" font-weight="600">DNS RESOLUTION: RECURSIVE QUERY FLOW</text>
+
+  <!-- Browser -->
+  <rect x="30" y="60" width="140" height="55" rx="8" fill="#232736" stroke="#6c8cff" stroke-width="1.5"/>
+  <text x="100" y="82" text-anchor="middle" fill="#6c8cff" font-size="10" font-weight="700">YOUR BROWSER</text>
+  <text x="100" y="100" text-anchor="middle" fill="#e2e4ed" font-size="12" font-weight="600">Type URL</text>
+
+  <!-- OS Stub Resolver -->
+  <rect x="30" y="150" width="140" height="55" rx="8" fill="#232736" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="100" y="172" text-anchor="middle" fill="#a78bfa" font-size="10" font-weight="700">OS RESOLVER</text>
+  <text x="100" y="190" text-anchor="middle" fill="#e2e4ed" font-size="12" font-weight="600">Stub Resolver</text>
+
+  <!-- Arrows and labels -->
+  <line x1="100" y1="115" x2="100" y2="150" stroke="#6c8cff" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <text x="170" y="136" fill="#8b8fa7" font-size="10">① Check browser cache</text>
+
+  <!-- Recursive Resolver -->
+  <rect x="250" y="150" width="170" height="70" rx="8" fill="#232736" stroke="#34d399" stroke-width="1.5"/>
+  <text x="335" y="172" text-anchor="middle" fill="#34d399" font-size="10" font-weight="700">RECURSIVE RESOLVER</text>
+  <text x="335" y="192" text-anchor="middle" fill="#e2e4ed" font-size="12" font-weight="600">ISP / Google 8.8.8.8</text>
+  <text x="335" y="210" text-anchor="middle" fill="#8b8fa7" font-size="10">Cloudflare 1.1.1.1</text>
+
+  <line x1="170" y1="177" x2="250" y2="177" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+  <text x="210" y="170" fill="#8b8fa7" font-size="10">②</text>
+
+  <!-- Root Server -->
+  <rect x="520" y="60" width="160" height="55" rx="8" fill="#232736" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="600" y="82" text-anchor="middle" fill="#f59e0b" font-size="10" font-weight="700">ROOT SERVER</text>
+  <text x="600" y="100" text-anchor="middle" fill="#e2e4ed" font-size="12" font-weight="600">. (13 clusters)</text>
+
+  <path d="M420 165 L500 90" stroke="#34d399" stroke-width="1.2" fill="none" stroke-dasharray="5,3" marker-end="url(#arrow-green)"/>
+  <text x="440" y="115" fill="#8b8fa7" font-size="10">③ "Who handles .com?"</text>
+
+  <!-- TLD Server -->
+  <rect x="520" y="160" width="160" height="55" rx="8" fill="#232736" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="600" y="182" text-anchor="middle" fill="#f59e0b" font-size="10" font-weight="700">TLD SERVER</text>
+  <text x="600" y="200" text-anchor="middle" fill="#e2e4ed" font-size="12" font-weight="600">.com nameserver</text>
+
+  <path d="M600 115 L600 160" stroke="#f59e0b" stroke-width="1.2" fill="none" marker-end="url(#arrow-orange)"/>
+  <text x="620" y="142" fill="#8b8fa7" font-size="10">④ Referral</text>
+
+  <path d="M420 185 L520 185" stroke="#34d399" stroke-width="1.2" fill="none" stroke-dasharray="5,3" marker-end="url(#arrow-green)"/>
+  <text x="460" y="180" fill="#8b8fa7" font-size="10">⑤</text>
+
+  <!-- Authoritative Server -->
+  <rect x="520" y="260" width="160" height="55" rx="8" fill="#232736" stroke="#f87171" stroke-width="1.5"/>
+  <text x="600" y="278" text-anchor="middle" fill="#f87171" font-size="10" font-weight="700">AUTHORITATIVE NS</text>
+  <text x="600" y="298" text-anchor="middle" fill="#e2e4ed" font-size="12" font-weight="600">example.com NS</text>
+
+  <path d="M600 215 L600 260" stroke="#f59e0b" stroke-width="1.2" fill="none" marker-end="url(#arrow-orange)"/>
+  <text x="620" y="242" fill="#8b8fa7" font-size="10">⑥ Referral</text>
+
+  <path d="M420 195 L520 275" stroke="#34d399" stroke-width="1.2" fill="none" stroke-dasharray="5,3" marker-end="url(#arrow-green)"/>
+  <text x="440" y="250" fill="#8b8fa7" font-size="10">⑦ "IP for example.com?"</text>
+
+  <!-- Response back -->
+  <path d="M520 290 L420 200" stroke="#f87171" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)"/>
+  <text x="445" y="268" fill="#f87171" font-size="10" font-weight="600">⑧ 93.184.216.34</text>
+
+  <line x1="250" y1="195" x2="170" y2="195" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow-green2)"/>
+  <text x="210" y="210" fill="#8b8fa7" font-size="10">⑨ cached + return</text>
+
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6c8cff"/></marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#a78bfa"/></marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#34d399"/></marker>
+    <marker id="arrow-green2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#34d399"/></marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b"/></marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f87171"/></marker>
+  </defs>
+
+  <!-- DNS Caching Layers -->
+  <rect x="30" y="340" width="800" height="290" rx="10" fill="#232736" stroke="#2e3347" stroke-width="1"/>
+  <text x="430" y="370" text-anchor="middle" fill="#8b8fa7" font-size="13" font-weight="700">DNS CACHING LAYERS (CHECKED IN ORDER)</text>
+
+  <rect x="60" y="395" width="170" height="70" rx="8" fill="rgba(108,140,255,0.1)" stroke="#6c8cff" stroke-width="1"/>
+  <text x="145" y="418" text-anchor="middle" fill="#6c8cff" font-size="11" font-weight="700">Layer 1: Browser</text>
+  <text x="145" y="438" text-anchor="middle" fill="#e2e4ed" font-size="10">Chrome: chrome://net-internals</text>
+  <text x="145" y="453" text-anchor="middle" fill="#8b8fa7" font-size="10">TTL: ~60 seconds</text>
+
+  <rect x="250" y="395" width="170" height="70" rx="8" fill="rgba(167,139,250,0.1)" stroke="#a78bfa" stroke-width="1"/>
+  <text x="335" y="418" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="700">Layer 2: OS</text>
+  <text x="335" y="438" text-anchor="middle" fill="#e2e4ed" font-size="10">hosts file + OS cache</text>
+  <text x="335" y="453" text-anchor="middle" fill="#8b8fa7" font-size="10">TTL: varies</text>
+
+  <rect x="440" y="395" width="170" height="70" rx="8" fill="rgba(52,211,153,0.1)" stroke="#34d399" stroke-width="1"/>
+  <text x="525" y="418" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700">Layer 3: Router</text>
+  <text x="525" y="438" text-anchor="middle" fill="#e2e4ed" font-size="10">Home/office router cache</text>
+  <text x="525" y="453" text-anchor="middle" fill="#8b8fa7" font-size="10">TTL: varies</text>
+
+  <rect x="630" y="395" width="170" height="70" rx="8" fill="rgba(245,158,11,0.1)" stroke="#f59e0b" stroke-width="1"/>
+  <text x="715" y="418" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="700">Layer 4: ISP Resolver</text>
+  <text x="715" y="438" text-anchor="middle" fill="#e2e4ed" font-size="10">Recursive resolver cache</text>
+  <text x="715" y="453" text-anchor="middle" fill="#8b8fa7" font-size="10">TTL: per DNS record</text>
+
+  <!-- DNS Record Types -->
+  <text x="70" y="500" fill="#8b8fa7" font-size="11" font-weight="700">COMMON DNS RECORD TYPES:</text>
+  <text x="70" y="520" fill="#6c8cff" font-size="11" font-weight="600">A</text>
+  <text x="100" y="520" fill="#e2e4ed" font-size="11">→ Maps domain to IPv4 (93.184.216.34)</text>
+
+  <text x="70" y="540" fill="#a78bfa" font-size="11" font-weight="600">AAAA</text>
+  <text x="115" y="540" fill="#e2e4ed" font-size="11">→ Maps domain to IPv6</text>
+
+  <text x="70" y="560" fill="#34d399" font-size="11" font-weight="600">CNAME</text>
+  <text x="125" y="560" fill="#e2e4ed" font-size="11">→ Alias to another domain</text>
+
+  <text x="70" y="580" fill="#f59e0b" font-size="11" font-weight="600">MX</text>
+  <text x="100" y="580" fill="#e2e4ed" font-size="11">→ Mail server routing</text>
+
+  <text x="430" y="520" fill="#f87171" font-size="11" font-weight="600">NS</text>
+  <text x="460" y="520" fill="#e2e4ed" font-size="11">→ Nameserver delegation</text>
+
+  <text x="430" y="540" fill="#38bdf8" font-size="11" font-weight="600">TXT</text>
+  <text x="465" y="540" fill="#e2e4ed" font-size="11">→ Verification, SPF, DKIM</text>
+
+  <text x="430" y="560" fill="#6c8cff" font-size="11" font-weight="600">SRV</text>
+  <text x="465" y="560" fill="#e2e4ed" font-size="11">→ Service discovery (host + port)</text>
+
+  <text x="430" y="580" fill="#a78bfa" font-size="11" font-weight="600">SOA</text>
+  <text x="468" y="580" fill="#e2e4ed" font-size="11">→ Zone authority + refresh timers</text>
+
+  <text x="70" y="612" fill="#8b8fa7" font-size="10">Each record has a TTL (Time To Live) that controls how long resolvers can cache it before re-querying.</text>
+</svg>
+</div>
+
+<h3>2.3 The Detailed DNS Journey</h3>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <h4>Step 1 — Browser Cache Check</h4>
+    <p>The browser first checks its own internal DNS cache. Chrome, for example, keeps recently resolved domains in memory. If the domain was visited recently and the cached record hasn't expired (based on its TTL — Time To Live), the browser skips all network queries and uses the cached IP immediately.</p>
+  </div>
+  <div class="timeline-item">
+    <h4>Step 2 — OS Resolver (Stub Resolver)</h4>
+    <p>If the browser cache misses, it calls the operating system's resolver. On Linux/macOS, this goes through <code>getaddrinfo()</code>. The OS checks its own cache and also the <code>/etc/hosts</code> file (a local mapping file where you can manually define domain→IP pairs, e.g. <code>127.0.0.1 localhost</code>).</p>
+  </div>
+  <div class="timeline-item">
+    <h4>Step 3 — Router Cache</h4>
+    <p>If the OS doesn't have the answer, the query goes to your home/office router, which maintains its own small DNS cache for all devices on the network.</p>
+  </div>
+  <div class="timeline-item">
+    <h4>Step 4 — Recursive Resolver (ISP or Public)</h4>
+    <p>This is the workhorse. Your ISP runs recursive resolvers, or you might use public ones like Google's <code>8.8.8.8</code> or Cloudflare's <code>1.1.1.1</code>. The recursive resolver is the one that does the heavy lifting — it talks to multiple servers on your behalf.</p>
+  </div>
+  <div class="timeline-item">
+    <h4>Step 5 — Root Nameservers</h4>
+    <p>If the recursive resolver doesn't have the answer cached, it starts at the very top of the DNS hierarchy: the root nameservers. There are 13 root server clusters (named a.root-servers.net through m.root-servers.net), operated by organizations like ICANN, Verisign, and NASA. Each cluster runs hundreds of actual machines globally using anycast routing. The root doesn't know the final IP — it only knows which servers handle top-level domains (TLDs).</p>
+    <p>Query: "Where can I find <code>.com</code>?"<br>Answer: "Try the .com TLD servers at <code>192.5.6.30</code>."</p>
+  </div>
+  <div class="timeline-item">
+    <h4>Step 6 — TLD Nameservers</h4>
+    <p>The TLD servers (managed by registries like Verisign for .com) don't know the final IP either. They know which authoritative nameservers are responsible for each registered domain.</p>
+    <p>Query: "Where can I find <code>example.com</code>?"<br>Answer: "The authoritative nameservers for example.com are <code>ns1.example.com</code> and <code>ns2.example.com</code>."</p>
+  </div>
+  <div class="timeline-item">
+    <h4>Step 7 — Authoritative Nameserver</h4>
+    <p>This is the server that actually has the definitive DNS records for the domain. It's usually run by the domain owner's hosting provider or DNS service (like Cloudflare, Route53, etc.).</p>
+    <p>Query: "What is the A record for <code>example.com</code>?"<br>Answer: "<code>93.184.216.34</code>, TTL: 3600 seconds."</p>
+  </div>
+  <div class="timeline-item">
+    <h4>Step 8 — Response Propagates Back</h4>
+    <p>The IP address travels back through the chain: Authoritative → Recursive Resolver (which caches it for the TTL duration) → OS → Browser. Each layer caches the result to speed up future queries. The browser now has the IP and can initiate a connection.</p>
+  </div>
+</div>
+
+<div class="callout info">
+  <strong>DNS over HTTPS (DoH) and DNS over TLS (DoT)</strong>
+  Traditional DNS queries are sent in plaintext UDP — anyone on the network can see what domains you're resolving. Modern browsers increasingly use DNS over HTTPS (DoH), which encrypts DNS queries inside HTTPS requests, typically to resolvers like Cloudflare (1.1.1.1) or Google (8.8.8.8). This prevents ISPs and network operators from snooping on your browsing. Firefox, Chrome, and Edge all support DoH.
+</div>
+
+<h3>2.4 DNS Performance & Optimization</h3>
+
+<p>DNS lookups are blocking — nothing else can happen until the browser knows the IP. Several techniques minimize this delay:</p>
+
+<ul>
+  <li><strong>DNS Prefetching:</strong> Browsers scan HTML for links and speculatively resolve domains before the user clicks. You can hint this with <code>&lt;link rel="dns-prefetch" href="//cdn.example.com"&gt;</code>.</li>
+  <li><strong>Preconnect:</strong> Goes further than DNS — <code>&lt;link rel="preconnect" href="https://cdn.example.com"&gt;</code> does DNS + TCP + TLS handshake ahead of time.</li>
+  <li><strong>Low TTLs vs. High TTLs:</strong> Short TTLs (e.g., 60s) enable fast failover but increase DNS queries. Long TTLs (e.g., 86400s = 1 day) reduce lookups but make changes slow to propagate.</li>
+  <li><strong>Anycast:</strong> Major DNS providers use anycast routing, where the same IP address is advertised from multiple geographic locations. Your query automatically reaches the nearest server.</li>
+</ul>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- CHAPTER 3 — HTTP / TLS -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="ch3">
+<h2><span class="num" style="background:var(--gradient1)">03</span> TCP, TLS & HTTP: The Connection</h2>
+
+<h3>3.1 TCP Three-Way Handshake</h3>
+<p>Once we have an IP address, the browser needs to establish a reliable connection. TCP (Transmission Control Protocol) ensures data arrives in order and without corruption, using a three-step handshake:</p>
+
+<div class="diagram">
+<svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+  <rect width="700" height="280" rx="12" fill="#1a1d27"/>
+  <text x="350" y="30" text-anchor="middle" fill="#8b8fa7" font-size="13" font-weight="600">TCP THREE-WAY HANDSHAKE</text>
+
+  <!-- Client and Server -->
+  <rect x="60" y="50" width="120" height="40" rx="8" fill="#232736" stroke="#6c8cff" stroke-width="1.5"/>
+  <text x="120" y="75" text-anchor="middle" fill="#6c8cff" font-size="13" font-weight="700">Client</text>
+  <line x1="120" y1="90" x2="120" y2="260" stroke="#2e3347" stroke-width="1.5"/>
+
+  <rect x="500" y="50" width="140" height="40" rx="8" fill="#232736" stroke="#34d399" stroke-width="1.5"/>
+  <text x="570" y="75" text-anchor="middle" fill="#34d399" font-size="13" font-weight="700">Server</text>
+  <line x1="570" y1="90" x2="570" y2="260" stroke="#2e3347" stroke-width="1.5"/>
+
+  <!-- SYN -->
+  <line x1="130" y1="120" x2="560" y2="145" stroke="#6c8cff" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <text x="345" y="118" text-anchor="middle" fill="#6c8cff" font-size="12" font-weight="700">SYN (seq=x)</text>
+  <text x="345" y="134" text-anchor="middle" fill="#8b8fa7" font-size="10">"Hello, I want to connect"</text>
+
+  <!-- SYN-ACK -->
+  <line x1="560" y1="170" x2="130" y2="195" stroke="#34d399" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <text x="345" y="168" text-anchor="middle" fill="#34d399" font-size="12" font-weight="700">SYN-ACK (seq=y, ack=x+1)</text>
+  <text x="345" y="184" text-anchor="middle" fill="#8b8fa7" font-size="10">"Got it, I'm ready too"</text>
+
+  <!-- ACK -->
+  <line x1="130" y1="220" x2="560" y2="245" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrow-orange)"/>
+  <text x="345" y="218" text-anchor="middle" fill="#f59e0b" font-size="12" font-weight="700">ACK (ack=y+1)</text>
+  <text x="345" y="234" text-anchor="middle" fill="#8b8fa7" font-size="10">"Confirmed, let's go!" — Connection established</text>
+</svg>
+</div>
+
+<p>This handshake costs one full round-trip (RTT). On a connection with 40ms latency, that's 40ms before any data is exchanged.</p>
+
+<h3>3.2 TLS Handshake (HTTPS)</h3>
+<p>For HTTPS connections, after TCP is established, a TLS (Transport Layer Security) handshake adds encryption. With TLS 1.3 (the modern standard), this takes just <strong>one additional round-trip</strong>:</p>
+
+<ol>
+  <li><strong>Client Hello:</strong> The browser sends supported cipher suites and a key share.</li>
+  <li><strong>Server Hello:</strong> The server picks a cipher, sends its certificate and key share.</li>
+  <li><strong>Verification:</strong> The browser verifies the server's certificate against trusted Certificate Authorities (CAs) stored in the OS/browser. If valid, both sides derive the encryption keys.</li>
+  <li><strong>Encrypted data flows.</strong></li>
+</ol>
+
+<div class="callout tip">
+  <strong>Connection reuse matters!</strong>
+  HTTP/1.1 introduced <code>keep-alive</code> to reuse TCP connections. HTTP/2 multiplexes many requests over a single connection. HTTP/3 uses QUIC (built on UDP), which combines the TCP and TLS handshakes into a single round-trip — and even supports 0-RTT for repeat connections.
+</div>
+
+<h3>3.3 HTTP Request & Response</h3>
+<p>Once the secure connection is established, the browser sends an HTTP request:</p>
+
+<pre><code>GET / HTTP/2
+Host: example.com
+User-Agent: Chrome/120
+Accept: text/html,application/xhtml+xml
+Accept-Encoding: gzip, br
+Accept-Language: en-US
+Cookie: session=abc123</code></pre>
+
+<p>The server processes this (through its web server, application code, database, etc.) and returns a response:</p>
+
+<pre><code>HTTP/2 200 OK
+Content-Type: text/html; charset=UTF-8
+Content-Encoding: br
+Cache-Control: max-age=3600
+Content-Length: 42381
+
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;...the HTML document...&lt;/html&gt;</code></pre>
+
+<p>This response is what the browser's rendering engine will process. The HTML is sent as a stream of bytes — the browser doesn't wait for the entire document to arrive before starting to parse it.</p>
+
+<h3>3.4 HTTP/1.1 vs HTTP/2 vs HTTP/3</h3>
+
+<table class="comparison-table">
+  <tr>
+    <th>Feature</th>
+    <th>HTTP/1.1</th>
+    <th>HTTP/2</th>
+    <th>HTTP/3</th>
+  </tr>
+  <tr>
+    <td>Transport</td>
+    <td>TCP</td>
+    <td>TCP</td>
+    <td>QUIC (UDP)</td>
+  </tr>
+  <tr>
+    <td>Multiplexing</td>
+    <td>No (1 request at a time per connection)</td>
+    <td>Yes (many streams, 1 connection)</td>
+    <td>Yes + no head-of-line blocking</td>
+  </tr>
+  <tr>
+    <td>Header compression</td>
+    <td>None</td>
+    <td>HPACK</td>
+    <td>QPACK</td>
+  </tr>
+  <tr>
+    <td>Server Push</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>Yes (rarely used)</td>
+  </tr>
+  <tr>
+    <td>Connection setup</td>
+    <td>TCP + TLS = 2-3 RTT</td>
+    <td>TCP + TLS = 2-3 RTT</td>
+    <td>1 RTT (0 RTT for resumption)</td>
+  </tr>
+</table>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- CHAPTER 4 — BROWSER ARCHITECTURE -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="ch4">
+<h2><span class="num" style="background:var(--gradient2)">04</span> Browser Architecture</h2>
+
+<p>A modern browser like Chrome is not one program — it's multiple <strong>processes</strong>, each sandboxed for security and stability. If one tab crashes, others keep running.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 860 560" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+  <rect width="860" height="560" rx="12" fill="#1a1d27"/>
+  <text x="430" y="30" text-anchor="middle" fill="#8b8fa7" font-size="13" font-weight="600">CHROME'S MULTI-PROCESS ARCHITECTURE</text>
+
+  <!-- Browser Process -->
+  <rect x="250" y="50" width="360" height="80" rx="10" fill="#232736" stroke="#6c8cff" stroke-width="2"/>
+  <text x="430" y="75" text-anchor="middle" fill="#6c8cff" font-size="13" font-weight="700">BROWSER PROCESS (1 per browser)</text>
+  <text x="430" y="97" text-anchor="middle" fill="#e2e4ed" font-size="11">UI · Navigation · Storage · Tabs · Network dispatch</text>
+  <text x="430" y="117" text-anchor="middle" fill="#8b8fa7" font-size="10">Manages everything, coordinates other processes</text>
+
+  <!-- Renderer Processes -->
+  <rect x="30" y="180" width="200" height="100" rx="10" fill="#232736" stroke="#34d399" stroke-width="2"/>
+  <text x="130" y="205" text-anchor="middle" fill="#34d399" font-size="12" font-weight="700">RENDERER PROCESS</text>
+  <text x="130" y="225" text-anchor="middle" fill="#e2e4ed" font-size="11">Tab 1: example.com</text>
+  <text x="130" y="245" text-anchor="middle" fill="#8b8fa7" font-size="9">HTML Parser · CSS Engine</text>
+  <text x="130" y="260" text-anchor="middle" fill="#8b8fa7" font-size="9">JS Engine (V8) · Layout · Paint</text>
+
+  <rect x="250" y="180" width="200" height="100" rx="10" fill="#232736" stroke="#34d399" stroke-width="2"/>
+  <text x="350" y="205" text-anchor="middle" fill="#34d399" font-size="12" font-weight="700">RENDERER PROCESS</text>
+  <text x="350" y="225" text-anchor="middle" fill="#e2e4ed" font-size="11">Tab 2: gmail.com</text>
+  <text x="350" y="245" text-anchor="middle" fill="#8b8fa7" font-size="9">Each tab = isolated process</text>
+  <text x="350" y="260" text-anchor="middle" fill="#8b8fa7" font-size="9">Sandboxed, limited OS access</text>
+
+  <rect x="470" y="180" width="200" height="100" rx="10" fill="#232736" stroke="#34d399" stroke-width="2"/>
+  <text x="570" y="205" text-anchor="middle" fill="#34d399" font-size="12" font-weight="700">RENDERER PROCESS</text>
+  <text x="570" y="225" text-anchor="middle" fill="#e2e4ed" font-size="11">Tab 3: youtube.com</text>
+  <text x="570" y="245" text-anchor="middle" fill="#8b8fa7" font-size="9">Blink (render) + V8 (JS)</text>
+  <text x="570" y="260" text-anchor="middle" fill="#8b8fa7" font-size="9">run inside this process</text>
+
+  <!-- Lines from browser to renderers -->
+  <line x1="350" y1="130" x2="130" y2="180" stroke="#2e3347" stroke-width="1.2"/>
+  <line x1="430" y1="130" x2="350" y2="180" stroke="#2e3347" stroke-width="1.2"/>
+  <line x1="500" y1="130" x2="570" y2="180" stroke="#2e3347" stroke-width="1.2"/>
+
+  <!-- GPU Process -->
+  <rect x="690" y="180" width="140" height="100" rx="10" fill="#232736" stroke="#f59e0b" stroke-width="2"/>
+  <text x="760" y="205" text-anchor="middle" fill="#f59e0b" font-size="12" font-weight="700">GPU PROCESS</text>
+  <text x="760" y="228" text-anchor="middle" fill="#e2e4ed" font-size="10">Compositing</text>
+  <text x="760" y="245" text-anchor="middle" fill="#e2e4ed" font-size="10">Rasterization</text>
+  <text x="760" y="262" text-anchor="middle" fill="#e2e4ed" font-size="10">Drawing to screen</text>
+  <line x1="610" y1="130" x2="760" y2="180" stroke="#2e3347" stroke-width="1.2"/>
+
+  <!-- Network Service -->
+  <rect x="30" y="330" width="200" height="75" rx="10" fill="#232736" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="130" y="355" text-anchor="middle" fill="#a78bfa" font-size="12" font-weight="700">NETWORK SERVICE</text>
+  <text x="130" y="378" text-anchor="middle" fill="#e2e4ed" font-size="10">HTTP fetching, caching</text>
+  <text x="130" y="393" text-anchor="middle" fill="#8b8fa7" font-size="10">DNS, TLS, HTTP/2, QUIC</text>
+
+  <!-- Storage Service -->
+  <rect x="250" y="330" width="200" height="75" rx="10" fill="#232736" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="350" y="355" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="700">STORAGE SERVICE</text>
+  <text x="350" y="378" text-anchor="middle" fill="#e2e4ed" font-size="10">IndexedDB, localStorage</text>
+  <text x="350" y="393" text-anchor="middle" fill="#8b8fa7" font-size="10">Cookies, Cache API</text>
+
+  <!-- Plugin / Extension -->
+  <rect x="470" y="330" width="200" height="75" rx="10" fill="#232736" stroke="#f87171" stroke-width="1.5"/>
+  <text x="570" y="355" text-anchor="middle" fill="#f87171" font-size="12" font-weight="700">EXTENSION PROCESSES</text>
+  <text x="570" y="378" text-anchor="middle" fill="#e2e4ed" font-size="10">Each extension = own process</text>
+  <text x="570" y="393" text-anchor="middle" fill="#8b8fa7" font-size="10">Isolated from page content</text>
+
+  <!-- Utility -->
+  <rect x="690" y="330" width="140" height="75" rx="10" fill="#232736" stroke="#8b8fa7" stroke-width="1.5"/>
+  <text x="760" y="355" text-anchor="middle" fill="#8b8fa7" font-size="12" font-weight="700">UTILITY</text>
+  <text x="760" y="378" text-anchor="middle" fill="#e2e4ed" font-size="10">Audio, video</text>
+  <text x="760" y="393" text-anchor="middle" fill="#e2e4ed" font-size="10">codecs, etc.</text>
+
+  <!-- Inside the Renderer -->
+  <rect x="30" y="440" width="800" height="100" rx="10" fill="rgba(52,211,153,0.05)" stroke="#34d399" stroke-width="1" stroke-dasharray="5,3"/>
+  <text x="430" y="465" text-anchor="middle" fill="#34d399" font-size="13" font-weight="700">INSIDE A RENDERER PROCESS (where the magic happens)</text>
+  <text x="100" y="495" fill="#6c8cff" font-size="11" font-weight="600">Main Thread:</text>
+  <text x="195" y="495" fill="#e2e4ed" font-size="11">HTML parsing, CSS calc, JS execution (V8), layout, paint — ALL on one thread!</text>
+  <text x="100" y="515" fill="#f59e0b" font-size="11" font-weight="600">Compositor Thread:</text>
+  <text x="230" y="515" fill="#e2e4ed" font-size="11">Handles scrolling &amp; animations on layers — can work even if main thread is busy</text>
+  <text x="100" y="535" fill="#a78bfa" font-size="11" font-weight="600">Raster Threads:</text>
+  <text x="210" y="535" fill="#e2e4ed" font-size="11">Convert paint records to pixels (bitmaps). Multiple threads for parallelism.</text>
+</svg>
+</div>
+
+<div class="callout warn">
+  <strong>The Critical Insight: The Main Thread Bottleneck</strong>
+  Inside each renderer process, there is one <strong>main thread</strong> that handles HTML parsing, CSS calculation, JavaScript execution, layout, and paint. If your JavaScript runs a heavy computation, it blocks everything — the page freezes because layout and paint can't happen. This is why understanding the event loop (covered later) is so important.
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- CHAPTER 5 — HTML PARSING & THE DOM -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="ch5">
+<h2><span class="num" style="background:var(--gradient2)">05</span> HTML Parsing & The DOM</h2>
+
+<h3>5.1 From Bytes to DOM</h3>
+<p>The HTML document arrives as a stream of raw bytes. The browser must transform this into a structured, programmable tree — the <strong>DOM (Document Object Model)</strong>. Here's the pipeline:</p>
+
+<div class="flow-row">
+  <div class="flow-box" style="border-color:#6c8cff"><span class="tag blue">1</span> Bytes<br><small style="color:var(--text-dim)">Raw network data</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#a78bfa"><span class="tag purple">2</span> Characters<br><small style="color:var(--text-dim)">UTF-8 decoding</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#34d399"><span class="tag green">3</span> Tokens<br><small style="color:var(--text-dim)">Tokenizer / Lexer</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#f59e0b"><span class="tag orange">4</span> Nodes<br><small style="color:var(--text-dim)">Tree construction</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#f87171"><span class="tag red">5</span> DOM Tree<br><small style="color:var(--text-dim)">Object model</small></div>
+</div>
+
+<p>The <strong>tokenizer</strong> reads the character stream and identifies tokens: start tags (<code>&lt;div&gt;</code>), end tags (<code>&lt;/div&gt;</code>), attributes, text content, and comments. The <strong>tree builder</strong> takes these tokens and constructs the DOM tree according to the HTML specification's rules (which handle malformed HTML, auto-closing tags, etc.).</p>
+
+<h3>5.2 The DOM Tree</h3>
+<p>For this HTML:</p>
+<pre><code>&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;My Page&lt;/title&gt;
+    &lt;link rel="stylesheet" href="style.css"&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello&lt;/h1&gt;
+    &lt;p&gt;World&lt;/p&gt;
+    &lt;script src="app.js"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<div class="diagram">
+<svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+  <rect width="700" height="340" rx="12" fill="#1a1d27"/>
+  <text x="350" y="28" text-anchor="middle" fill="#8b8fa7" font-size="13" font-weight="600">DOM TREE STRUCTURE</text>
+
+  <!-- Document -->
+  <rect x="290" y="45" width="120" height="32" rx="8" fill="#232736" stroke="#6c8cff" stroke-width="1.5"/>
+  <text x="350" y="66" text-anchor="middle" fill="#6c8cff" font-size="12" font-weight="700">Document</text>
+
+  <!-- html -->
+  <rect x="290" y="100" width="120" height="32" rx="8" fill="#232736" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="350" y="121" text-anchor="middle" fill="#a78bfa" font-size="12" font-weight="700">&lt;html&gt;</text>
+  <line x1="350" y1="77" x2="350" y2="100" stroke="#2e3347" stroke-width="1.5"/>
+
+  <!-- head & body -->
+  <rect x="120" y="160" width="120" height="32" rx="8" fill="#232736" stroke="#34d399" stroke-width="1.5"/>
+  <text x="180" y="181" text-anchor="middle" fill="#34d399" font-size="12" font-weight="700">&lt;head&gt;</text>
+  <line x1="350" y1="132" x2="180" y2="160" stroke="#2e3347" stroke-width="1.2"/>
+
+  <rect x="460" y="160" width="120" height="32" rx="8" fill="#232736" stroke="#34d399" stroke-width="1.5"/>
+  <text x="520" y="181" text-anchor="middle" fill="#34d399" font-size="12" font-weight="700">&lt;body&gt;</text>
+  <line x1="350" y1="132" x2="520" y2="160" stroke="#2e3347" stroke-width="1.2"/>
+
+  <!-- head children -->
+  <rect x="50" y="220" width="110" height="32" rx="8" fill="#232736" stroke="#f59e0b" stroke-width="1"/>
+  <text x="105" y="241" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="600">&lt;title&gt;</text>
+  <line x1="180" y1="192" x2="105" y2="220" stroke="#2e3347" stroke-width="1"/>
+
+  <rect x="180" y="220" width="110" height="32" rx="8" fill="#232736" stroke="#f59e0b" stroke-width="1"/>
+  <text x="235" y="241" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="600">&lt;link&gt;</text>
+  <line x1="180" y1="192" x2="235" y2="220" stroke="#2e3347" stroke-width="1"/>
+
+  <!-- text node -->
+  <rect x="50" y="270" width="110" height="28" rx="6" fill="rgba(245,158,11,0.1)" stroke="none"/>
+  <text x="105" y="289" text-anchor="middle" fill="#f59e0b" font-size="10">"My Page"</text>
+  <line x1="105" y1="252" x2="105" y2="270" stroke="#2e3347" stroke-width="1"/>
+
+  <!-- body children -->
+  <rect x="400" y="220" width="80" height="32" rx="8" fill="#232736" stroke="#f87171" stroke-width="1"/>
+  <text x="440" y="241" text-anchor="middle" fill="#f87171" font-size="11" font-weight="600">&lt;h1&gt;</text>
+  <line x1="520" y1="192" x2="440" y2="220" stroke="#2e3347" stroke-width="1"/>
+
+  <rect x="500" y="220" width="80" height="32" rx="8" fill="#232736" stroke="#f87171" stroke-width="1"/>
+  <text x="540" y="241" text-anchor="middle" fill="#f87171" font-size="11" font-weight="600">&lt;p&gt;</text>
+  <line x1="520" y1="192" x2="540" y2="220" stroke="#2e3347" stroke-width="1"/>
+
+  <rect x="600" y="220" width="80" height="32" rx="8" fill="#232736" stroke="#f87171" stroke-width="1"/>
+  <text x="640" y="241" text-anchor="middle" fill="#f87171" font-size="11" font-weight="600">&lt;script&gt;</text>
+  <line x1="520" y1="192" x2="640" y2="220" stroke="#2e3347" stroke-width="1"/>
+
+  <!-- text nodes -->
+  <rect x="400" y="270" width="80" height="28" rx="6" fill="rgba(248,113,113,0.1)" stroke="none"/>
+  <text x="440" y="289" text-anchor="middle" fill="#f87171" font-size="10">"Hello"</text>
+  <line x1="440" y1="252" x2="440" y2="270" stroke="#2e3347" stroke-width="1"/>
+
+  <rect x="500" y="270" width="80" height="28" rx="6" fill="rgba(248,113,113,0.1)" stroke="none"/>
+  <text x="540" y="289" text-anchor="middle" fill="#f87171" font-size="10">"World"</text>
+  <line x1="540" y1="252" x2="540" y2="270" stroke="#2e3347" stroke-width="1"/>
+
+  <text x="350" y="325" text-anchor="middle" fill="#8b8fa7" font-size="10">Every element, text, and comment becomes a node in the tree. JavaScript accesses this via the DOM API.</text>
+</svg>
+</div>
+
+<h3>5.3 Parser-Blocking Resources</h3>
+<p>While parsing HTML, the browser encounters external resources that can <strong>block</strong> the parser:</p>
+
+<div class="grid-2">
+  <div class="card">
+    <h4>&lt;script&gt; (default)</h4>
+    <p><span class="tag red">BLOCKS</span> Parsing stops. The browser must download and execute the script before continuing, because the script might modify the DOM with <code>document.write()</code>.</p>
+  </div>
+  <div class="card">
+    <h4>&lt;script async&gt;</h4>
+    <p><span class="tag green">NON-BLOCKING</span> Downloads in parallel, executes as soon as it's ready (may execute out of order). Parsing continues during download.</p>
+  </div>
+  <div class="card">
+    <h4>&lt;script defer&gt;</h4>
+    <p><span class="tag green">NON-BLOCKING</span> Downloads in parallel, executes <em>after</em> HTML parsing is complete, in order. Best for scripts that need the full DOM.</p>
+  </div>
+  <div class="card">
+    <h4>&lt;link rel="stylesheet"&gt;</h4>
+    <p><span class="tag orange">RENDER-BLOCKING</span> Doesn't block parsing, but blocks rendering. The browser won't paint until all CSS is loaded and the CSSOM is built — otherwise you'd see a flash of unstyled content (FOUC).</p>
+  </div>
+</div>
+
+<div class="callout tip">
+  <strong>The Preload Scanner</strong>
+  While the main parser is blocked by a script, a secondary "preload scanner" continues scanning the rest of the HTML to discover resources (images, stylesheets, scripts) and start downloading them in parallel. This is one of the most important browser optimizations.
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- CHAPTER 6 — CSS & CSSOM -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="ch6">
+<h2><span class="num" style="background:var(--gradient2)">06</span> CSS & The CSSOM</h2>
+
+<h3>6.1 Building the CSSOM</h3>
+<p>Just like HTML becomes the DOM, CSS becomes the <strong>CSSOM (CSS Object Model)</strong>. The browser parses all CSS — from external stylesheets, <code>&lt;style&gt;</code> tags, and inline styles — into a tree structure that mirrors the DOM:</p>
+
+<div class="flow-row">
+  <div class="flow-box" style="border-color:#a78bfa"><span class="tag purple">1</span> CSS Bytes</div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#a78bfa"><span class="tag purple">2</span> Tokenize</div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#a78bfa"><span class="tag purple">3</span> Parse Rules</div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#a78bfa"><span class="tag purple">4</span> CSSOM Tree</div>
+</div>
+
+<h3>6.2 Style Computation (Cascade & Inheritance)</h3>
+<p>The browser must figure out the <strong>final computed style</strong> for every single DOM element. This involves resolving the CSS cascade:</p>
+<ol>
+  <li><strong>Origin:</strong> User-agent styles (browser defaults) → Author styles → User styles → <code>!important</code></li>
+  <li><strong>Specificity:</strong> Inline > ID > Class > Element (the famous specificity calculation)</li>
+  <li><strong>Order:</strong> Later rules win over earlier ones at equal specificity</li>
+  <li><strong>Inheritance:</strong> Some properties (like <code>color</code>, <code>font-family</code>) cascade down from parent to child. Others (like <code>border</code>, <code>margin</code>) don't.</li>
+</ol>
+<p>The result is a "computed style" for every DOM node — every element gets hundreds of resolved CSS properties, even if you only wrote a few rules.</p>
+
+<div class="callout info">
+  <strong>Why CSS blocks rendering</strong>
+  The browser refuses to render anything until the CSSOM is complete. Why? Because without knowing all the styles, the browser can't lay anything out. A late-loading stylesheet could completely change the page layout, causing an ugly flash. So CSS is <strong>render-blocking by design</strong>.
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- CHAPTER 7 — THE RENDER PIPELINE -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="ch7">
+<h2><span class="num" style="background:var(--gradient3)">07</span> The Render Pipeline: From Trees to Pixels</h2>
+
+<p>Once both the DOM and CSSOM are ready, the browser's rendering engine kicks into gear. This is the most complex part:</p>
+
+<div class="diagram">
+<svg viewBox="0 0 860 320" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+  <rect width="860" height="320" rx="12" fill="#1a1d27"/>
+  <text x="430" y="30" text-anchor="middle" fill="#8b8fa7" font-size="13" font-weight="600">THE PIXEL PIPELINE (CRITICAL RENDERING PATH)</text>
+
+  <!-- DOM + CSSOM -->
+  <rect x="20" y="60" width="110" height="55" rx="8" fill="#232736" stroke="#6c8cff" stroke-width="1.5"/>
+  <text x="75" y="82" text-anchor="middle" fill="#6c8cff" font-size="10" font-weight="700">DOM</text>
+  <text x="75" y="100" text-anchor="middle" fill="#e2e4ed" font-size="10">Tree of nodes</text>
+
+  <text x="140" y="92" fill="#8b8fa7" font-size="16">+</text>
+
+  <rect x="155" y="60" width="110" height="55" rx="8" fill="#232736" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="210" y="82" text-anchor="middle" fill="#a78bfa" font-size="10" font-weight="700">CSSOM</text>
+  <text x="210" y="100" text-anchor="middle" fill="#e2e4ed" font-size="10">Computed styles</text>
+
+  <!-- Arrow -->
+  <text x="280" y="92" fill="#34d399" font-size="18" font-weight="700">→</text>
+
+  <!-- Render Tree -->
+  <rect x="300" y="55" width="130" height="65" rx="8" fill="#232736" stroke="#34d399" stroke-width="2"/>
+  <text x="365" y="78" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700">RENDER TREE</text>
+  <text x="365" y="97" text-anchor="middle" fill="#e2e4ed" font-size="10">Visible nodes only</text>
+  <text x="365" y="110" text-anchor="middle" fill="#8b8fa7" font-size="9">(no &lt;head&gt;, display:none)</text>
+
+  <text x="445" y="92" fill="#f59e0b" font-size="18" font-weight="700">→</text>
+
+  <!-- Layout -->
+  <rect x="465" y="55" width="120" height="65" rx="8" fill="#232736" stroke="#f59e0b" stroke-width="2"/>
+  <text x="525" y="78" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="700">LAYOUT</text>
+  <text x="525" y="97" text-anchor="middle" fill="#e2e4ed" font-size="10">Box model calc</text>
+  <text x="525" y="110" text-anchor="middle" fill="#8b8fa7" font-size="9">position, size</text>
+
+  <text x="600" y="92" fill="#f87171" font-size="18" font-weight="700">→</text>
+
+  <!-- Paint -->
+  <rect x="615" y="55" width="100" height="65" rx="8" fill="#232736" stroke="#f87171" stroke-width="2"/>
+  <text x="665" y="78" text-anchor="middle" fill="#f87171" font-size="11" font-weight="700">PAINT</text>
+  <text x="665" y="97" text-anchor="middle" fill="#e2e4ed" font-size="10">Draw commands</text>
+  <text x="665" y="110" text-anchor="middle" fill="#8b8fa7" font-size="9">per layer</text>
+
+  <text x="730" y="92" fill="#38bdf8" font-size="18" font-weight="700">→</text>
+
+  <!-- Composite -->
+  <rect x="745" y="55" width="100" height="65" rx="8" fill="#232736" stroke="#38bdf8" stroke-width="2"/>
+  <text x="795" y="78" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="700">COMPOSITE</text>
+  <text x="795" y="97" text-anchor="middle" fill="#e2e4ed" font-size="10">GPU layers</text>
+  <text x="795" y="110" text-anchor="middle" fill="#8b8fa7" font-size="9">→ screen pixels</text>
+
+  <!-- Details row -->
+  <rect x="20" y="155" width="820" height="150" rx="10" fill="#232736" stroke="#2e3347" stroke-width="1"/>
+  <text x="430" y="178" text-anchor="middle" fill="#8b8fa7" font-size="12" font-weight="700">WHAT TRIGGERS EACH STAGE (PERFORMANCE IMPACT)</text>
+
+  <text x="40" y="205" fill="#f59e0b" font-size="11" font-weight="700">Layout (Reflow):</text>
+  <text x="165" y="205" fill="#e2e4ed" font-size="11">Triggered by: changing width, height, margin, padding, position, font-size, adding/removing elements.</text>
+  <text x="165" y="222" fill="#f87171" font-size="10" font-weight="600">Most expensive. Recalculates geometry for potentially many elements.</text>
+
+  <text x="40" y="248" fill="#f87171" font-size="11" font-weight="700">Paint:</text>
+  <text x="90" y="248" fill="#e2e4ed" font-size="11">Triggered by: changing color, background, shadows, border-radius, visibility.</text>
+  <text x="90" y="265" fill="#f59e0b" font-size="10" font-weight="600">Expensive. Re-draws affected areas, but doesn't need geometry recalculation.</text>
+
+  <text x="40" y="291" fill="#38bdf8" font-size="11" font-weight="700">Composite only:</text>
+  <text x="160" y="291" fill="#e2e4ed" font-size="11">Triggered by: transform, opacity. These run on the GPU compositor thread.</text>
+  <text x="160" y="308" fill="#34d399" font-size="10" font-weight="600">Cheapest! No main thread involvement. This is why transform/opacity animations are fast.</text>
+</svg>
+</div>
+
+<h3>7.1 Render Tree Construction</h3>
+<p>The browser walks the DOM tree and for each visible node, looks up the computed style from the CSSOM. Nodes that aren't visible (like <code>&lt;head&gt;</code>, <code>&lt;meta&gt;</code>, or elements with <code>display: none</code>) are excluded. <code>visibility: hidden</code> elements ARE included (they take space, they're just invisible).</p>
+
+<h3>7.2 Layout (Reflow)</h3>
+<p>Starting from the root, the engine calculates the exact position and size of every element in the render tree. This uses the CSS box model: content → padding → border → margin. Layout is recursive — a parent's size depends on its children, and children may depend on their parent (percentage widths, flex/grid, etc.).</p>
+
+<h3>7.3 Paint</h3>
+<p>The layout tree is converted into a series of paint instructions — essentially a list of drawing commands: "draw a blue rectangle at (10, 20) with size 200×50", "draw text 'Hello' at (15, 35) in 16px Arial". These are organized into layers.</p>
+
+<h3>7.4 Layering & Compositing</h3>
+<p>The browser promotes certain elements to their own <strong>compositing layers</strong> — elements with <code>will-change</code>, <code>transform</code>, <code>position: fixed</code>, <code>opacity</code> animations, or <code>&lt;video&gt;</code>/<code>&lt;canvas&gt;</code> tags. Each layer is rasterized (turned into pixels) independently by raster threads, then the <strong>compositor thread</strong> combines them into the final image and sends it to the GPU for display.</p>
+
+<div class="callout tip">
+  <strong>Why this matters for performance</strong>
+  If you animate using <code>left</code>/<code>top</code>, the browser must recalculate Layout → Paint → Composite on every frame. If you animate using <code>transform: translateX()</code>, only the Composite step runs — it's handled entirely on the compositor thread without touching the main thread, giving you smooth 60fps animations.
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- CHAPTER 8 — JAVASCRIPT ENGINE -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="ch8">
+<h2><span class="num" style="background:var(--gradient3)">08</span> The JavaScript Engine (V8 Deep Dive)</h2>
+
+<p>The JS engine (V8 in Chrome/Edge/Node.js, SpiderMonkey in Firefox, JavaScriptCore in Safari) is what gives web pages their behavior. Here's how V8 works:</p>
+
+<div class="diagram">
+<svg viewBox="0 0 860 460" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+  <rect width="860" height="460" rx="12" fill="#1a1d27"/>
+  <text x="430" y="30" text-anchor="middle" fill="#8b8fa7" font-size="13" font-weight="600">V8 JAVASCRIPT ENGINE PIPELINE</text>
+
+  <!-- Source Code -->
+  <rect x="30" y="55" width="160" height="50" rx="8" fill="#232736" stroke="#6c8cff" stroke-width="1.5"/>
+  <text x="110" y="75" text-anchor="middle" fill="#6c8cff" font-size="11" font-weight="700">JavaScript Source</text>
+  <text x="110" y="94" text-anchor="middle" fill="#8b8fa7" font-size="10">const x = a + b;</text>
+
+  <text x="208" y="83" fill="#6c8cff" font-size="16" font-weight="700">→</text>
+
+  <!-- Parser / AST -->
+  <rect x="230" y="55" width="140" height="50" rx="8" fill="#232736" stroke="#a78bfa" stroke-width="1.5"/>
+  <text x="300" y="75" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="700">Parser</text>
+  <text x="300" y="94" text-anchor="middle" fill="#e2e4ed" font-size="10">→ AST (Abstract Syntax Tree)</text>
+
+  <text x="388" y="83" fill="#a78bfa" font-size="16" font-weight="700">→</text>
+
+  <!-- Ignition -->
+  <rect x="410" y="45" width="190" height="70" rx="8" fill="#232736" stroke="#34d399" stroke-width="2"/>
+  <text x="505" y="68" text-anchor="middle" fill="#34d399" font-size="12" font-weight="700">IGNITION</text>
+  <text x="505" y="87" text-anchor="middle" fill="#e2e4ed" font-size="11">Bytecode Interpreter</text>
+  <text x="505" y="103" text-anchor="middle" fill="#8b8fa7" font-size="10">Executes immediately. Collects profiling data.</text>
+
+  <text x="618" y="83" fill="#f59e0b" font-size="16" font-weight="700">→</text>
+
+  <!-- TurboFan -->
+  <rect x="640" y="45" width="190" height="70" rx="8" fill="#232736" stroke="#f59e0b" stroke-width="2"/>
+  <text x="735" y="68" text-anchor="middle" fill="#f59e0b" font-size="12" font-weight="700">TURBOFAN</text>
+  <text x="735" y="87" text-anchor="middle" fill="#e2e4ed" font-size="11">Optimizing Compiler</text>
+  <text x="735" y="103" text-anchor="middle" fill="#8b8fa7" font-size="10">JIT compiles hot code to machine code</text>
+
+  <!-- Feedback arrow -->
+  <path d="M735 115 L735 145 Q735 155 725 155 L515 155 Q505 155 505 145 L505 115" stroke="#f87171" stroke-width="1.5" fill="none" stroke-dasharray="5,3" marker-end="url(#arrow-red2)"/>
+  <text x="620" y="170" text-anchor="middle" fill="#f87171" font-size="10" font-weight="600">Deoptimize (if assumptions break)</text>
+  <defs>
+    <marker id="arrow-red2" viewBox="0 0 10 10" refX="5" refY="10" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f87171"/></marker>
+  </defs>
+
+  <!-- Memory Management -->
+  <rect x="30" y="200" width="400" height="240" rx="10" fill="#232736" stroke="#2e3347" stroke-width="1"/>
+  <text x="230" y="225" text-anchor="middle" fill="#6c8cff" font-size="13" font-weight="700">MEMORY MODEL: THE HEAP & STACK</text>
+
+  <!-- Call Stack -->
+  <rect x="50" y="245" width="160" height="175" rx="8" fill="rgba(167,139,250,0.1)" stroke="#a78bfa" stroke-width="1"/>
+  <text x="130" y="268" text-anchor="middle" fill="#a78bfa" font-size="11" font-weight="700">CALL STACK</text>
+  <text x="130" y="286" text-anchor="middle" fill="#8b8fa7" font-size="9">Execution contexts (LIFO)</text>
+
+  <rect x="65" y="298" width="130" height="24" rx="4" fill="rgba(248,113,113,0.15)"/>
+  <text x="130" y="315" text-anchor="middle" fill="#f87171" font-size="10">innerFunc()</text>
+  <rect x="65" y="328" width="130" height="24" rx="4" fill="rgba(245,158,11,0.15)"/>
+  <text x="130" y="345" text-anchor="middle" fill="#f59e0b" font-size="10">outerFunc()</text>
+  <rect x="65" y="358" width="130" height="24" rx="4" fill="rgba(52,211,153,0.15)"/>
+  <text x="130" y="375" text-anchor="middle" fill="#34d399" font-size="10">global()</text>
+  <text x="130" y="410" text-anchor="middle" fill="#8b8fa7" font-size="9">Primitives & references</text>
+
+  <!-- Heap -->
+  <rect x="240" y="245" width="170" height="175" rx="8" fill="rgba(52,211,153,0.1)" stroke="#34d399" stroke-width="1"/>
+  <text x="325" y="268" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700">HEAP</text>
+  <text x="325" y="286" text-anchor="middle" fill="#8b8fa7" font-size="9">Objects, arrays, functions</text>
+
+  <rect x="255" y="298" width="65" height="35" rx="4" fill="rgba(108,140,255,0.15)"/>
+  <text x="288" y="320" text-anchor="middle" fill="#6c8cff" font-size="9">{obj A}</text>
+
+  <rect x="330" y="298" width="65" height="35" rx="4" fill="rgba(245,158,11,0.15)"/>
+  <text x="363" y="320" text-anchor="middle" fill="#f59e0b" font-size="9">[arr B]</text>
+
+  <rect x="270" y="345" width="80" height="35" rx="4" fill="rgba(248,113,113,0.15)"/>
+  <text x="310" y="367" text-anchor="middle" fill="#f87171" font-size="9">fn() closure</text>
+
+  <text x="325" y="410" text-anchor="middle" fill="#8b8fa7" font-size="9">Garbage collected (Mark & Sweep)</text>
+
+  <!-- JIT explanation -->
+  <rect x="460" y="200" width="370" height="240" rx="10" fill="#232736" stroke="#2e3347" stroke-width="1"/>
+  <text x="645" y="225" text-anchor="middle" fill="#f59e0b" font-size="13" font-weight="700">HOW JIT COMPILATION WORKS</text>
+
+  <text x="480" y="255" fill="#34d399" font-size="11" font-weight="700">1. Cold Start (Ignition):</text>
+  <text x="480" y="275" fill="#e2e4ed" font-size="10">Code runs as interpreted bytecode.</text>
+  <text x="480" y="290" fill="#e2e4ed" font-size="10">Fast startup, slower execution.</text>
+
+  <text x="480" y="318" fill="#f59e0b" font-size="11" font-weight="700">2. Warm Up (Profiling):</text>
+  <text x="480" y="338" fill="#e2e4ed" font-size="10">V8 tracks which functions run often</text>
+  <text x="480" y="353" fill="#e2e4ed" font-size="10">(hot), what types variables hold.</text>
+
+  <text x="480" y="381" fill="#f87171" font-size="11" font-weight="700">3. Hot Code (TurboFan):</text>
+  <text x="480" y="401" fill="#e2e4ed" font-size="10">Hot functions compiled to optimized</text>
+  <text x="480" y="416" fill="#e2e4ed" font-size="10">machine code. Type-specialized.</text>
+
+  <text x="480" y="434" fill="#8b8fa7" font-size="9">If types change → deoptimize back to bytecode</text>
+</svg>
+</div>
+
+<h3>8.1 Key Concepts</h3>
+<ul>
+  <li><strong>Parsing:</strong> Source code → tokens → Abstract Syntax Tree (AST). V8 uses "lazy parsing" — it only fully parses functions when they're about to be called.</li>
+  <li><strong>Ignition (Interpreter):</strong> Walks the AST and produces bytecode — a compact, platform-independent representation. Bytecode executes immediately via the interpreter, providing fast startup.</li>
+  <li><strong>TurboFan (JIT Compiler):</strong> When Ignition notices a function is called frequently ("hot"), TurboFan compiles it to highly optimized machine code using the type information collected during interpretation. This is Just-In-Time compilation.</li>
+  <li><strong>Deoptimization:</strong> If the assumptions TurboFan made prove wrong (e.g., a variable that was always a number suddenly gets a string), the engine "deoptimizes" — throwing away the machine code and falling back to interpreted bytecode.</li>
+  <li><strong>Hidden Classes:</strong> V8 creates internal "shapes" (hidden classes) for objects. Objects with the same property names added in the same order share a hidden class, enabling fast property access. Changing object shapes at runtime hurts performance.</li>
+  <li><strong>Garbage Collection:</strong> V8 uses a generational garbage collector. The "minor GC" (Scavenger) handles short-lived objects in the young generation. The "major GC" (Mark-Compact) handles the old generation. Both use concurrent and parallel techniques to minimize pauses.</li>
+</ul>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- CHAPTER 9 — THE EVENT LOOP -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="ch9">
+<h2><span class="num" style="background:var(--gradient1)">09</span> The Event Loop: The Heart of the Browser</h2>
+
+<p>JavaScript is <strong>single-threaded</strong> — it has one call stack and can do one thing at a time. Yet browsers handle thousands of concurrent operations (network requests, timers, user events, animations). How? The <strong>event loop</strong>.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 860 580" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+  <rect width="860" height="580" rx="12" fill="#1a1d27"/>
+  <text x="430" y="30" text-anchor="middle" fill="#8b8fa7" font-size="13" font-weight="600">THE EVENT LOOP — COMPLETE MODEL</text>
+
+  <!-- Call Stack -->
+  <rect x="30" y="55" width="180" height="210" rx="10" fill="#232736" stroke="#6c8cff" stroke-width="2"/>
+  <text x="120" y="80" text-anchor="middle" fill="#6c8cff" font-size="13" font-weight="700">CALL STACK</text>
+  <text x="120" y="100" text-anchor="middle" fill="#8b8fa7" font-size="10">(Main Thread)</text>
+
+  <rect x="45" y="115" width="150" height="24" rx="4" fill="rgba(248,113,113,0.15)"/>
+  <text x="120" y="132" text-anchor="middle" fill="#f87171" font-size="10">callback()</text>
+  <rect x="45" y="145" width="150" height="24" rx="4" fill="rgba(245,158,11,0.15)"/>
+  <text x="120" y="162" text-anchor="middle" fill="#f59e0b" font-size="10">handleClick()</text>
+  <rect x="45" y="175" width="150" height="24" rx="4" fill="rgba(52,211,153,0.15)"/>
+  <text x="120" y="192" text-anchor="middle" fill="#34d399" font-size="10">processData()</text>
+  <rect x="45" y="205" width="150" height="24" rx="4" fill="rgba(108,140,255,0.15)"/>
+  <text x="120" y="222" text-anchor="middle" fill="#6c8cff" font-size="10">main()</text>
+  <text x="120" y="252" text-anchor="middle" fill="#8b8fa7" font-size="9">Synchronous, LIFO order</text>
+
+  <!-- Web APIs -->
+  <rect x="250" y="55" width="240" height="210" rx="10" fill="#232736" stroke="#34d399" stroke-width="2"/>
+  <text x="370" y="80" text-anchor="middle" fill="#34d399" font-size="13" font-weight="700">WEB APIs (Browser-provided)</text>
+  <text x="370" y="100" text-anchor="middle" fill="#8b8fa7" font-size="10">Run in separate threads!</text>
+
+  <text x="270" y="128" fill="#e2e4ed" font-size="11">⏱ setTimeout / setInterval</text>
+  <text x="270" y="150" fill="#e2e4ed" font-size="11">🌐 fetch / XMLHttpRequest</text>
+  <text x="270" y="172" fill="#e2e4ed" font-size="11">📍 Geolocation API</text>
+  <text x="270" y="194" fill="#e2e4ed" font-size="11">👆 DOM Event listeners</text>
+  <text x="270" y="216" fill="#e2e4ed" font-size="11">🖥 requestAnimationFrame</text>
+  <text x="270" y="238" fill="#e2e4ed" font-size="11">📡 WebSocket connections</text>
+  <text x="270" y="256" fill="#8b8fa7" font-size="9">These are NOT JavaScript — they're C++ browser code</text>
+
+  <!-- Arrow: stack to web apis -->
+  <path d="M210 150 L250 150" stroke="#6c8cff" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <text x="225" y="142" fill="#8b8fa7" font-size="8">call</text>
+
+  <!-- Microtask Queue -->
+  <rect x="530" y="55" width="300" height="100" rx="10" fill="#232736" stroke="#a78bfa" stroke-width="2"/>
+  <text x="680" y="80" text-anchor="middle" fill="#a78bfa" font-size="12" font-weight="700">MICROTASK QUEUE (higher priority)</text>
+
+  <rect x="545" y="95" width="90" height="24" rx="4" fill="rgba(167,139,250,0.15)"/>
+  <text x="590" y="112" text-anchor="middle" fill="#a78bfa" font-size="9">Promise.then</text>
+  <rect x="645" y="95" width="90" height="24" rx="4" fill="rgba(167,139,250,0.15)"/>
+  <text x="690" y="112" text-anchor="middle" fill="#a78bfa" font-size="9">queueMicrotask</text>
+  <rect x="545" y="125" width="90" height="24" rx="4" fill="rgba(167,139,250,0.15)"/>
+  <text x="590" y="142" text-anchor="middle" fill="#a78bfa" font-size="9">MutationObserver</text>
+
+  <!-- Macrotask Queue -->
+  <rect x="530" y="175" width="300" height="90" rx="10" fill="#232736" stroke="#f59e0b" stroke-width="2"/>
+  <text x="680" y="200" text-anchor="middle" fill="#f59e0b" font-size="12" font-weight="700">MACROTASK QUEUE (lower priority)</text>
+
+  <rect x="545" y="215" width="80" height="24" rx="4" fill="rgba(245,158,11,0.15)"/>
+  <text x="585" y="232" text-anchor="middle" fill="#f59e0b" font-size="9">setTimeout</text>
+  <rect x="635" y="215" width="80" height="24" rx="4" fill="rgba(245,158,11,0.15)"/>
+  <text x="675" y="232" text-anchor="middle" fill="#f59e0b" font-size="9">click event</text>
+  <rect x="725" y="215" width="80" height="24" rx="4" fill="rgba(245,158,11,0.15)"/>
+  <text x="765" y="232" text-anchor="middle" fill="#f59e0b" font-size="9">I/O callback</text>
+
+  <!-- Arrow from Web APIs to queues -->
+  <path d="M490 130 L530 100" stroke="#34d399" stroke-width="1.2" fill="none" marker-end="url(#arrow-green)"/>
+  <path d="M490 200 L530 210" stroke="#34d399" stroke-width="1.2" fill="none" marker-end="url(#arrow-green)"/>
+  <text x="500" y="170" fill="#34d399" font-size="9" font-weight="600">done →</text>
+
+  <!-- Event Loop -->
+  <rect x="30" y="300" width="800" height="260" rx="10" fill="rgba(56,189,248,0.05)" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="430" y="325" text-anchor="middle" fill="#38bdf8" font-size="14" font-weight="700">THE EVENT LOOP ALGORITHM</text>
+
+  <text x="60" y="360" fill="#6c8cff" font-size="12" font-weight="700">Step 1:</text>
+  <text x="130" y="360" fill="#e2e4ed" font-size="12">Execute all synchronous code on the call stack until it's empty.</text>
+
+  <text x="60" y="390" fill="#a78bfa" font-size="12" font-weight="700">Step 2:</text>
+  <text x="130" y="390" fill="#e2e4ed" font-size="12">Drain the ENTIRE microtask queue. Every microtask runs, including new ones added during execution.</text>
+
+  <text x="60" y="420" fill="#f87171" font-size="12" font-weight="700">Step 3:</text>
+  <text x="130" y="420" fill="#e2e4ed" font-size="12">If it's time to render (~every 16.6ms for 60fps): run requestAnimationFrame callbacks → Style → Layout → Paint.</text>
+
+  <text x="60" y="450" fill="#f59e0b" font-size="12" font-weight="700">Step 4:</text>
+  <text x="130" y="450" fill="#e2e4ed" font-size="12">Pick ONE macrotask from the queue and execute it.</text>
+
+  <text x="60" y="480" fill="#34d399" font-size="12" font-weight="700">Step 5:</text>
+  <text x="130" y="480" fill="#e2e4ed" font-size="12">Go back to Step 2 (drain microtasks again).</text>
+
+  <text x="60" y="510" fill="#38bdf8" font-size="12" font-weight="700">Repeat:</text>
+  <text x="130" y="510" fill="#e2e4ed" font-size="12">This loop runs forever. It's what keeps your page alive and responsive.</text>
+
+  <text x="430" y="545" text-anchor="middle" fill="#8b8fa7" font-size="10">Key insight: Microtasks (Promises) run BETWEEN macrotasks and BEFORE rendering. A microtask loop can starve the renderer!</text>
+</svg>
+</div>
+
+<h3>9.1 Practical Example</h3>
+<pre><code>console.log('1');                          // Sync — runs immediately
+
+setTimeout(() => console.log('2'), 0);     // Macrotask — queued
+
+Promise.resolve().then(() => {
+  console.log('3');                        // Microtask — queued
+});
+
+console.log('4');                          // Sync — runs immediately
+
+// Output: 1, 4, 3, 2
+// Why? Sync first (1, 4), then microtasks (3), then macrotasks (2)</code></pre>
+
+<h3>9.2 requestAnimationFrame</h3>
+<p><code>requestAnimationFrame</code> (rAF) is special — it's tied to the rendering step. Its callbacks run right before the browser does Style/Layout/Paint, making it ideal for animations. It fires at the display's refresh rate (typically 60fps = every 16.6ms).</p>
+
+<div class="callout warn">
+  <strong>Common mistake: infinite microtask loops</strong>
+  If a microtask schedules another microtask endlessly, the event loop never reaches Step 3 (rendering) or Step 4 (macrotasks). The page freezes completely because the microtask queue never empties. <code>while(true)</code> in a Promise chain is a guaranteed freeze.
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- CHAPTER 10 — RENDERING STRATEGIES -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="ch10">
+<h2><span class="num" style="background:var(--gradient1)">10</span> Rendering Strategies: SSR, CSR, SSG & More</h2>
+
+<p>How you deliver HTML to the browser fundamentally changes what the browser does and when. Here's the complete comparison:</p>
+
+<h3>10.1 Client-Side Rendering (CSR)</h3>
+<p>The server sends a nearly empty HTML shell. JavaScript downloads, parses, executes, and builds the entire page in the browser.</p>
+<pre><code>&lt;!-- What the server sends --&gt;
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;div id="root"&gt;&lt;/div&gt;  &lt;!-- Empty! --&gt;
+    &lt;script src="app.js"&gt;&lt;/script&gt;  &lt;!-- ~500KB bundle --&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+<h3>10.2 Server-Side Rendering (SSR)</h3>
+<p>The server runs your application code, generates full HTML, and sends it to the browser. The browser can display content immediately. Then JavaScript "hydrates" the page — attaching event listeners to the server-rendered HTML to make it interactive.</p>
+
+<h3>10.3 Static Site Generation (SSG)</h3>
+<p>HTML is generated at <strong>build time</strong>, not request time. Every page is pre-built into a static HTML file. Extremely fast because pages can be served from a CDN with zero server computation.</p>
+
+<h3>10.4 Incremental Static Regeneration (ISR)</h3>
+<p>A hybrid: pages are statically generated, but can be re-generated on the server after a set time interval. Stale-while-revalidate: serve the cached page, rebuild in the background.</p>
+
+<h3>10.5 Streaming SSR</h3>
+<p>Instead of waiting for the entire HTML to be generated on the server, chunks of HTML are streamed to the browser as they become ready. The browser can start parsing and rendering the top of the page while the server is still generating the bottom. React 18's <code>renderToPipeableStream</code> enables this.</p>
+
+<h3>10.6 How Each Strategy Affects the Browser</h3>
+
+<table class="comparison-table">
+  <tr>
+    <th>Strategy</th>
+    <th>First Paint</th>
+    <th>Time to Interactive</th>
+    <th>SEO</th>
+    <th>Server Load</th>
+  </tr>
+  <tr>
+    <td><span class="tag red">CSR</span></td>
+    <td>Slow (wait for JS)</td>
+    <td>Slow (wait for JS)</td>
+    <td>Poor (empty HTML)</td>
+    <td>Low (static files)</td>
+  </tr>
+  <tr>
+    <td><span class="tag blue">SSR</span></td>
+    <td>Fast (full HTML)</td>
+    <td>Medium (hydration delay)</td>
+    <td>Great (full HTML)</td>
+    <td>High (per-request rendering)</td>
+  </tr>
+  <tr>
+    <td><span class="tag green">SSG</span></td>
+    <td>Fastest (CDN)</td>
+    <td>Fast</td>
+    <td>Great</td>
+    <td>None (static files)</td>
+  </tr>
+  <tr>
+    <td><span class="tag orange">ISR</span></td>
+    <td>Fast (cached HTML)</td>
+    <td>Fast</td>
+    <td>Great</td>
+    <td>Low (revalidation only)</td>
+  </tr>
+  <tr>
+    <td><span class="tag purple">Streaming SSR</span></td>
+    <td>Very fast (partial HTML)</td>
+    <td>Progressive</td>
+    <td>Great</td>
+    <td>Medium</td>
+  </tr>
+</table>
+
+<div class="diagram">
+<svg viewBox="0 0 860 350" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+  <rect width="860" height="350" rx="12" fill="#1a1d27"/>
+  <text x="430" y="30" text-anchor="middle" fill="#8b8fa7" font-size="13" font-weight="600">BROWSER TIMELINE: CSR vs SSR vs SSG</text>
+
+  <!-- CSR Timeline -->
+  <text x="30" y="70" fill="#f87171" font-size="12" font-weight="700">CSR</text>
+  <rect x="100" y="55" width="120" height="28" rx="4" fill="rgba(108,140,255,0.15)"/>
+  <text x="160" y="74" text-anchor="middle" fill="#6c8cff" font-size="9">Download JS bundle</text>
+  <rect x="225" y="55" width="100" height="28" rx="4" fill="rgba(167,139,250,0.15)"/>
+  <text x="275" y="74" text-anchor="middle" fill="#a78bfa" font-size="9">Parse + Execute JS</text>
+  <rect x="330" y="55" width="80" height="28" rx="4" fill="rgba(52,211,153,0.15)"/>
+  <text x="370" y="74" text-anchor="middle" fill="#34d399" font-size="9">API calls</text>
+  <rect x="415" y="55" width="100" height="28" rx="4" fill="rgba(245,158,11,0.15)"/>
+  <text x="465" y="74" text-anchor="middle" fill="#f59e0b" font-size="9">Render DOM</text>
+  <line x1="515" y1="69" x2="515" y2="45" stroke="#f87171" stroke-width="2"/>
+  <text x="520" y="50" fill="#f87171" font-size="9" font-weight="700">FCP ↑</text>
+  <rect x="520" y="55" width="60" height="28" rx="4" fill="rgba(56,189,248,0.15)"/>
+  <text x="550" y="74" text-anchor="middle" fill="#38bdf8" font-size="9">Interactive</text>
+  <text x="600" y="74" fill="#8b8fa7" font-size="10">Blank screen for a long time!</text>
+
+  <!-- SSR Timeline -->
+  <text x="30" y="140" fill="#6c8cff" font-size="12" font-weight="700">SSR</text>
+  <rect x="100" y="125" width="90" height="28" rx="4" fill="rgba(108,140,255,0.15)"/>
+  <text x="145" y="144" text-anchor="middle" fill="#6c8cff" font-size="9">Server renders</text>
+  <rect x="195" y="125" width="80" height="28" rx="4" fill="rgba(52,211,153,0.15)"/>
+  <text x="235" y="144" text-anchor="middle" fill="#34d399" font-size="9">Full HTML</text>
+  <line x1="275" y1="139" x2="275" y2="115" stroke="#34d399" stroke-width="2"/>
+  <text x="280" y="118" fill="#34d399" font-size="9" font-weight="700">FCP ↑</text>
+  <rect x="280" y="125" width="120" height="28" rx="4" fill="rgba(167,139,250,0.15)"/>
+  <text x="340" y="144" text-anchor="middle" fill="#a78bfa" font-size="9">Download + Hydrate JS</text>
+  <line x1="400" y1="139" x2="400" y2="115" stroke="#38bdf8" stroke-width="2"/>
+  <text x="405" y="110" fill="#38bdf8" font-size="9" font-weight="700">TTI ↑</text>
+  <text x="420" y="144" fill="#8b8fa7" font-size="10">Content visible early, interactive later</text>
+
+  <!-- SSG Timeline -->
+  <text x="30" y="210" fill="#34d399" font-size="12" font-weight="700">SSG</text>
+  <rect x="100" y="195" width="70" height="28" rx="4" fill="rgba(52,211,153,0.15)"/>
+  <text x="135" y="214" text-anchor="middle" fill="#34d399" font-size="9">CDN serve</text>
+  <line x1="170" y1="209" x2="170" y2="185" stroke="#34d399" stroke-width="2"/>
+  <text x="175" y="188" fill="#34d399" font-size="9" font-weight="700">FCP ↑</text>
+  <rect x="175" y="195" width="100" height="28" rx="4" fill="rgba(167,139,250,0.15)"/>
+  <text x="225" y="214" text-anchor="middle" fill="#a78bfa" font-size="9">Hydrate (minimal)</text>
+  <line x1="275" y1="209" x2="275" y2="185" stroke="#38bdf8" stroke-width="2"/>
+  <text x="280" y="188" fill="#38bdf8" font-size="9" font-weight="700">TTI ↑</text>
+  <text x="295" y="214" fill="#8b8fa7" font-size="10">Fastest possible — pre-built HTML from CDN edge</text>
+
+  <!-- Hydration explanation -->
+  <rect x="30" y="250" width="800" height="80" rx="10" fill="#232736" stroke="#2e3347" stroke-width="1"/>
+  <text x="430" y="275" text-anchor="middle" fill="#a78bfa" font-size="13" font-weight="700">WHAT IS HYDRATION?</text>
+  <text x="50" y="300" fill="#e2e4ed" font-size="11">After SSR/SSG deliver HTML, the page looks right but isn't interactive. Hydration is where JavaScript re-attaches to the existing</text>
+  <text x="50" y="318" fill="#e2e4ed" font-size="11">HTML — React walks the server-rendered DOM, matches it with its component tree, and wires up event handlers. Until hydration</text>
+  <text x="50" y="336" fill="#8b8fa7" font-size="11">completes, buttons don't work, forms don't submit, and client-side routing doesn't function.</text>
+</svg>
+</div>
+
+<div class="callout info">
+  <strong>React Server Components (RSC) — the latest evolution</strong>
+  RSCs stay on the server and never ship to the client's JS bundle. They can directly access databases and file systems. Only interactive components ("use client") are sent to the browser. This reduces the JavaScript bundle dramatically and eliminates hydration for server-only components.
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- CHAPTER 11 — PERFORMANCE -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="ch11">
+<h2><span class="num" style="background:var(--gradient2)">11</span> Performance: Core Web Vitals & Optimization</h2>
+
+<h3>11.1 Core Web Vitals</h3>
+<div class="grid-2">
+  <div class="card">
+    <h4>LCP — Largest Contentful Paint</h4>
+    <p>Time until the largest visible content element (image, heading, etc.) is rendered. Target: <strong>under 2.5 seconds</strong>. Affected by: server response time, CSS/JS blocking, resource load times.</p>
+  </div>
+  <div class="card">
+    <h4>INP — Interaction to Next Paint</h4>
+    <p>Time from user interaction (click, tap, key) to the next visual update. Target: <strong>under 200ms</strong>. Affected by: JavaScript execution time, main thread blocking, rendering time.</p>
+  </div>
+  <div class="card">
+    <h4>CLS — Cumulative Layout Shift</h4>
+    <p>Measures visual stability — how much content unexpectedly shifts while loading. Target: <strong>under 0.1</strong>. Caused by: images without dimensions, dynamic content injection, web fonts loading.</p>
+  </div>
+  <div class="card">
+    <h4>FCP — First Contentful Paint</h4>
+    <p>Time until the first text or image is rendered. Affected by: render-blocking resources, server response time, DOM size.</p>
+  </div>
+</div>
+
+<h3>11.2 The Critical Rendering Path</h3>
+<p>The critical rendering path is the minimum set of steps the browser must complete before it can display the first pixel. Optimizing it means:</p>
+<ul>
+  <li><strong>Minimize critical resources:</strong> Only include CSS/JS needed for above-the-fold content. Defer the rest.</li>
+  <li><strong>Minimize critical bytes:</strong> Compress (gzip/Brotli), minify, and tree-shake.</li>
+  <li><strong>Minimize critical path length:</strong> Reduce the number of sequential round-trips required. Inline critical CSS, use <code>preload</code>/<code>preconnect</code>.</li>
+</ul>
+
+<h3>11.3 Common Optimizations</h3>
+<ul>
+  <li><strong>Code splitting:</strong> Don't send 2MB of JavaScript if the user only needs 200KB for the current page. Dynamic <code>import()</code> loads code on demand.</li>
+  <li><strong>Image optimization:</strong> Use modern formats (WebP, AVIF), lazy-load offscreen images (<code>loading="lazy"</code>), provide <code>width</code>/<code>height</code> to prevent CLS.</li>
+  <li><strong>Font optimization:</strong> <code>font-display: swap</code> prevents invisible text during load. Preload critical fonts. Subset fonts to include only needed characters.</li>
+  <li><strong>Caching:</strong> HTTP cache headers (<code>Cache-Control</code>), Service Workers for offline/custom caching, CDNs for global distribution.</li>
+  <li><strong>Bundle analysis:</strong> Use tools like Webpack Bundle Analyzer, Lighthouse, or Chrome DevTools Performance tab to find bottlenecks.</li>
+</ul>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- CHAPTER 12 — SECURITY -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="ch12">
+<h2><span class="num" style="background:var(--gradient3)">12</span> Browser Security Model</h2>
+
+<h3>12.1 Same-Origin Policy</h3>
+<p>The foundation of web security. An "origin" is defined as <strong>scheme + host + port</strong> (e.g., <code>https://example.com:443</code>). Scripts from one origin cannot read data from a different origin. This prevents a malicious page from reading your bank's cookies or DOM.</p>
+
+<h3>12.2 CORS (Cross-Origin Resource Sharing)</h3>
+<p>A controlled mechanism to relax the same-origin policy. The server includes headers like <code>Access-Control-Allow-Origin: https://myapp.com</code> to grant specific origins access to its resources. For "complex" requests (PUT, DELETE, custom headers), the browser sends a <strong>preflight OPTIONS request</strong> first to check permission.</p>
+
+<h3>12.3 Key Security Features</h3>
+<ul>
+  <li><strong>CSP (Content Security Policy):</strong> HTTP header that restricts where scripts, styles, and other resources can be loaded from. Prevents XSS by blocking inline scripts and unauthorized sources.</li>
+  <li><strong>Process isolation:</strong> Each site gets its own renderer process (Site Isolation). Even if a malicious page exploits a renderer bug, it can't access other sites' memory.</li>
+  <li><strong>HTTPS:</strong> Encrypts all data in transit. Modern browsers mark HTTP sites as "Not Secure."</li>
+  <li><strong>SameSite cookies:</strong> Controls when cookies are sent cross-site, mitigating CSRF attacks.</li>
+  <li><strong>Sandboxing:</strong> Renderer processes run with restricted OS permissions — they can't access the filesystem, system calls, or other processes directly.</li>
+</ul>
+</section>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- FINAL OVERVIEW -->
+<!-- ═══════════════════════════════════════════════════ -->
+<section id="summary">
+<h2>The Complete Flow: From URL to Pixels</h2>
+
+<p>Let's trace the entire journey one more time, end to end:</p>
+
+<div class="timeline">
+  <div class="timeline-item">
+    <h4>1. URL Input & Parsing</h4>
+    <p>Browser parses the URL into scheme, host, port, path. Checks HSTS preload list. Determines if this needs a new connection.</p>
+  </div>
+  <div class="timeline-item">
+    <h4>2. DNS Resolution</h4>
+    <p>Browser cache → OS cache → Router → Recursive resolver → Root → TLD → Authoritative NS. Returns an IP address.</p>
+  </div>
+  <div class="timeline-item">
+    <h4>3. TCP + TLS Connection</h4>
+    <p>Three-way TCP handshake (SYN → SYN-ACK → ACK), then TLS handshake for encryption. HTTP/3 does this in one step with QUIC.</p>
+  </div>
+  <div class="timeline-item">
+    <h4>4. HTTP Request/Response</h4>
+    <p>Browser sends GET request with headers. Server processes (routing, application logic, DB queries) and returns HTML + headers.</p>
+  </div>
+  <div class="timeline-item">
+    <h4>5. HTML Parsing → DOM</h4>
+    <p>Bytes → Characters → Tokens → Nodes → DOM Tree. Preload scanner discovers resources. Parser blocks on synchronous scripts.</p>
+  </div>
+  <div class="timeline-item">
+    <h4>6. CSS Parsing → CSSOM</h4>
+    <p>All CSS parsed into CSSOM. Cascade, specificity, inheritance resolved. Computed styles calculated for every element. Render-blocking until complete.</p>
+  </div>
+  <div class="timeline-item">
+    <h4>7. Render Tree</h4>
+    <p>DOM + CSSOM combined. Only visible nodes included (no <code>display:none</code>, no <code>&lt;head&gt;</code>).</p>
+  </div>
+  <div class="timeline-item">
+    <h4>8. Layout (Reflow)</h4>
+    <p>Box model calculations: exact position and size of every element, starting from the viewport root.</p>
+  </div>
+  <div class="timeline-item">
+    <h4>9. Paint</h4>
+    <p>Convert layout tree to paint records — ordered lists of drawing commands organized into layers.</p>
+  </div>
+  <div class="timeline-item">
+    <h4>10. Compositing</h4>
+    <p>Layers are rasterized into bitmaps by raster threads, then the compositor thread sends them to the GPU which draws the final pixels to the screen.</p>
+  </div>
+  <div class="timeline-item">
+    <h4>11. JavaScript + Event Loop</h4>
+    <p>V8 parses and executes JavaScript. The event loop manages async operations: microtasks (Promises) → render → macrotasks (timers, events). The page stays alive and interactive.</p>
+  </div>
+</div>
+</section>
+
+</div>
+
+<footer>
+  <p>How Browsers Work: A to Z — A comprehensive reference guide</p>
+  <p>Last updated: March 2026 · Save this file and revisit anytime</p>
+</footer>
+
+<script>
+  // Sticky nav active state
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav.toc a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`nav.toc a[href="#${e.target.id}"]`);
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

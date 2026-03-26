@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dev Knowledge Base</title>
+<style>
+  :root {
+    --bg:#0a0e1a;--s1:#111827;--s2:#1e293b;--s3:#293548;
+    --b:#334155;--t:#e2e8f0;--t2:#94a3b8;--t3:#64748b;
+    --a:#6366f1;--a2:#818cf8;--g:#34d399;--y:#fbbf24;--r:#f87171;--c:#22d3ee;--p:#f472b6;--o:#fb923c;--bl:#3b82f6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--t);line-height:1.7;min-height:100vh}
+  ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
+  a{color:var(--c);text-decoration:none}a:hover{text-decoration:underline}
+
+  /* HERO */
+  .hero{text-align:center;padding:clamp(3rem,8vw,6rem) 1.5rem 2rem;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 40%,rgba(99,102,241,.1),transparent 60%),radial-gradient(ellipse at 70% 60%,rgba(34,211,238,.07),transparent 55%);pointer-events:none}
+  .hero h1{font-size:clamp(2.2rem,5.5vw,4rem);font-weight:900;line-height:1.1;margin-bottom:.75rem;position:relative}
+  .hero h1 .gr{background:linear-gradient(135deg,var(--a2),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .hero p{font-size:clamp(.95rem,1.8vw,1.15rem);color:var(--t2);max-width:640px;margin:0 auto .5rem;position:relative}
+  .hero-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:1.2rem;position:relative}
+  .pill{font-size:.75rem;background:var(--s2);border:1px solid var(--b);border-radius:20px;padding:4px 14px;color:var(--t2)}
+  .pill b{color:var(--a2)}
+
+  .wrap{max-width:1060px;margin:0 auto;padding:0 1.5rem 4rem}
+
+  /* SECTION TITLES */
+  .sec-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--t3);margin:2.5rem 0 1rem;display:flex;align-items:center;gap:10px}
+  .sec-title::after{content:'';flex:1;height:1px;background:var(--b)}
+
+  /* GUIDE CARDS */
+  .guides{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+  .gc{background:var(--s1);border:1px solid var(--b);border-radius:14px;padding:1.5rem;display:flex;flex-direction:column;transition:.25s;text-decoration:none!important;position:relative;overflow:hidden}
+  .gc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0}
+  .gc:hover{border-color:var(--a);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+  .gc .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+  .gc .top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .gc .badge{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3)}
+  .gc h3{font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:6px}
+  .gc p{font-size:.85rem;color:var(--t2);flex:1}
+  .gc .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+  .gc .tag{font-size:.68rem;padding:2px 8px;border-radius:8px;font-weight:600}
+  .gc .cta{font-size:.82rem;color:var(--c);font-weight:600;margin-top:12px;display:flex;align-items:center;gap:4px}
+
+  /* COLOR VARIANTS */
+  .gc.browsers::before{background:linear-gradient(90deg,#6c8cff,#a78bfa)}.gc.browsers .dot{background:#6c8cff}
+  .gc.networking::before{background:linear-gradient(90deg,#3b82f6,#8b5cf6)}.gc.networking .dot{background:#3b82f6}
+  .gc.tooling::before{background:linear-gradient(90deg,#2dd4a8,#38bdf8)}.gc.tooling .dot{background:#2dd4a8}
+  .gc.architecture::before{background:linear-gradient(90deg,#818cf8,#22d3ee)}.gc.architecture .dot{background:#818cf8}
+  .gc.startup::before{background:linear-gradient(90deg,#f59e0b,#ef4444)}.gc.startup .dot{background:#f59e0b}
+  .gc.stack::before{background:linear-gradient(90deg,#61dafb,#6366f1)}.gc.stack .dot{background:#61dafb}
+
+  /* IMAGES */
+  .img-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:1rem 0}
+  .img-grid img{width:100%;border-radius:12px;border:1px solid var(--b);transition:.2s;cursor:pointer}
+  .img-grid img:hover{border-color:var(--a);transform:scale(1.02)}
+  .img-full{width:100%;max-width:700px;border-radius:12px;border:1px solid var(--b);margin:1rem 0}
+
+  /* CARDS */
+  .card{background:var(--s1);border:1px solid var(--b);border-radius:12px;padding:1.25rem;margin-bottom:14px}
+  .card h4{color:var(--a2);margin-bottom:6px;font-size:1rem}
+
+  /* CALLOUT */
+  .callout{border-left:4px solid var(--a);background:var(--s1);padding:1rem 1.2rem;border-radius:0 10px 10px 0;margin:1rem 0}
+  .callout.tip{border-color:var(--g);background:rgba(52,211,153,.04)}
+  .callout.warn{border-color:var(--y);background:rgba(251,191,36,.04)}
+  .callout strong{display:block;margin-bottom:.25rem;color:var(--a2)}
+  .callout.tip strong{color:var(--g)}
+
+  /* NOTES */
+  .note-area{background:var(--s1);border:1px solid var(--b);border-radius:12px;padding:1.5rem;margin:1rem 0}
+  .note-area h4{color:var(--p);margin-bottom:8px}
+  .note-area ul{padding-left:1.3rem;color:var(--t2)}
+  .note-area li{margin-bottom:4px}
+
+  /* FOOTER */
+  footer{text-align:center;padding:2rem;color:var(--t3);font-size:.8rem;border-top:1px solid var(--b);margin-top:2rem}
+
+  /* TAG COLORS */
+  .tag-blue{background:rgba(99,102,241,.15);color:var(--a2)}
+  .tag-green{background:rgba(52,211,153,.15);color:var(--g)}
+  .tag-yellow{background:rgba(251,191,36,.15);color:var(--y)}
+  .tag-cyan{background:rgba(34,211,238,.15);color:var(--c)}
+  .tag-pink{background:rgba(244,114,182,.15);color:var(--p)}
+  .tag-red{background:rgba(248,113,113,.15);color:var(--r)}
+  .tag-orange{background:rgba(251,146,60,.15);color:var(--o)}
+
+  @media(max-width:640px){.guides{grid-template-columns:1fr}.img-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1><span class="gr">Dev Knowledge Base</span></h1>
+  <p>Everything I'm learning — browsers, networking, frontend tooling, architecture, fullstack patterns, startup literacy. Click any guide to dive deep.</p>
+  <div class="hero-pills">
+    <span class="pill"><b>7</b> guides</span>
+    <span class="pill"><b>60+</b> topics</span>
+    <span class="pill">Updated <b>Mar 2026</b></span>
+    <span class="pill">Hosted on <b>GitHub Pages</b></span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ═══════ GUIDES ═══════ -->
+  <div class="sec-title">Guides</div>
+  <div class="guides">
+
+    <a href="browsers.html" class="gc browsers">
+      <div class="top"><span class="dot"></span><span class="badge">Core CS</span></div>
+      <h3>How Browsers Work</h3>
+      <p>DNS → TCP → HTTP → Parse → Render → Paint → JS Engine → Event Loop. The complete pipeline from URL to pixels.</p>
+      <div class="tags">
+        <span class="tag tag-blue">DNS</span><span class="tag tag-blue">TCP/TLS</span><span class="tag tag-green">DOM</span><span class="tag tag-yellow">Render Pipeline</span><span class="tag tag-cyan">Event Loop</span><span class="tag tag-red">V8</span>
+      </div>
+      <span class="cta">Read guide →</span>
+    </a>
+
+    <a href="networking.html" class="gc networking">
+      <div class="top"><span class="dot"></span><span class="badge">Core CS</span></div>
+      <h3>Networking A to Z</h3>
+      <p>OSI model, TCP/UDP, IP routing, DNS, encapsulation, security. Interactive quizzes included.</p>
+      <div class="tags">
+        <span class="tag tag-blue">OSI</span><span class="tag tag-green">TCP/UDP</span><span class="tag tag-yellow">IP</span><span class="tag tag-cyan">DNS</span><span class="tag tag-pink">Security</span>
+      </div>
+      <span class="cta">Read guide →</span>
+    </a>
+
+    <a href="tooling.html" class="gc tooling">
+      <div class="top"><span class="dot"></span><span class="badge">Frontend</span></div>
+      <h3>Frontend Tooling Ecosystem</h3>
+      <p>Bundlers, compilers, build tools, meta-frameworks, deployment platforms. Webpack vs Vite, the Rust revolution, and 2026 defaults.</p>
+      <div class="tags">
+        <span class="tag tag-green">Vite</span><span class="tag tag-orange">Webpack</span><span class="tag tag-blue">Next.js</span><span class="tag tag-cyan">Turbopack</span><span class="tag tag-red">SWC</span>
+      </div>
+      <span class="cta">Read guide →</span>
+    </a>
+
+    <a href="architecture.html" class="gc architecture">
+      <div class="top"><span class="dot"></span><span class="badge">Frontend</span></div>
+      <h3>Frontend Architecture</h3>
+      <p>Rendering strategies, SOLID principles, state management, component patterns, performance, testing, monorepos.</p>
+      <div class="tags">
+        <span class="tag tag-blue">SOLID</span><span class="tag tag-green">State</span><span class="tag tag-yellow">Patterns</span><span class="tag tag-pink">Testing</span><span class="tag tag-cyan">Micro-FE</span>
+      </div>
+      <span class="cta">Read guide →</span>
+    </a>
+
+    <a href="stack.html" class="gc stack">
+      <div class="top"><span class="dot"></span><span class="badge">Fullstack</span></div>
+      <h3>Fullstack Map</h3>
+      <p>React, Next.js, TanStack Query, Tailwind, Storybook, NestJS, Prisma — each demystified down to JS primitives.</p>
+      <div class="tags">
+        <span class="tag tag-cyan">React</span><span class="tag tag-blue">Next.js</span><span class="tag tag-red">TanStack</span><span class="tag tag-green">Tailwind</span><span class="tag tag-pink">NestJS</span><span class="tag tag-blue">Prisma</span>
+      </div>
+      <span class="cta">Read guide →</span>
+    </a>
+
+    <a href="startup.html" class="gc startup">
+      <div class="top"><span class="dot"></span><span class="badge">Career &amp; Business</span></div>
+      <h3>Startup &amp; Business Literacy</h3>
+      <p>Funding, equity, cap tables, engineering ladder, key metrics, fundraising process, legal basics.</p>
+      <div class="tags">
+        <span class="tag tag-yellow">Equity</span><span class="tag tag-green">Metrics</span><span class="tag tag-orange">Fundraising</span><span class="tag tag-red">Legal</span><span class="tag tag-blue">Eng Ladder</span>
+      </div>
+      <span class="cta">Read guide →</span>
+    </a>
+
+  </div>
+
+  <!-- ═══════ READING LIST ═══════ -->
+  <div class="sec-title">Reading List &amp; Inspiration</div>
+
+  <div class="img-grid">
+    <!-- Replace these src values with your actual image paths once in the repo -->
+    <!-- e.g., src="images/books.jpg" -->
+    <img src="images/book-must-read.png" alt="Books to read" title="Books to read">
+  </div>
+
+  <div class="callout tip">
+    <strong>Key Books</strong>
+    <b>Designing Data-Intensive Applications</b> — Martin Kleppmann. The bible of distributed systems. 2nd edition expected 2026.<br>
+    <b>Structure and Interpretation of Computer Programs</b> — Foundational CS thinking. Teaches you to think in abstractions.<br>
+    <b>Computer Systems: A Programmer's Perspective</b> — How computers actually work, from bits to programs.
+  </div>
+
+ 
+  <div class="card">
+    <h4>Be a T-shaped engineer</h4>
+    <p style="color:var(--t2)">The answer for most: <b style="color:var(--t)">broad understanding across the stack, deep expertise in 1-2 areas</b>. This knowledge base is the "broad understanding" part — the horizontal bar of the T. Go deep where it matters for your career.</p>
+  </div>
+
+  <!-- ═══════ DDIA 2nd Edition ═══════ -->
+  <div class="sec-title">Notes &amp; Updates</div>
+
+
+  <!-- ═══════ TO LEARN NEXT ═══════ -->
+  <div class="note-area">
+    <h4>To Learn Next</h4>
+    <ul>
+      <li>System Design patterns (load balancing, caching, message queues)</li>
+      <li>Database internals (B-trees, WAL, MVCC)</li>
+      <li>Kubernetes &amp; containerization basics</li>
+      <li>WebSockets &amp; real-time architectures</li>
+      <li>GraphQL vs REST trade-offs</li>
+      <li>CI/CD pipelines &amp; GitHub Actions</li>
+      <li>AWS / Cloud fundamentals</li>
+    </ul>
+  </div>
+
+  <!-- ═══════ HOW TO ADD ═══════ -->
+  <div class="callout">
+    <strong>How to Add New Guides</strong>
+    1. Create a new <code style="background:var(--s2);padding:2px 6px;border-radius:4px;color:var(--g)">.html</code> file in the root (copy the structure from any existing guide)<br>
+    2. Add a new card in this <code style="background:var(--s2);padding:2px 6px;border-radius:4px;color:var(--g)">index.html</code> inside the <code style="background:var(--s2);padding:2px 6px;border-radius:4px;color:var(--g)">.guides</code> grid<br>
+    3. <code style="background:var(--s2);padding:2px 6px;border-radius:4px;color:var(--g)">git push</code> — GitHub Pages auto-deploys
+  </div>
+
+</div>
+
+<footer>
+  Dev Knowledge Base Last updated March 2026<br>
+  <span style="color:var(--t3)">Keep learning, keep building.</span>
+</footer>
+
+</body>
+</html>

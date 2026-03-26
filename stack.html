@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#0d1117;color:#e6edf3;min-height:100vh}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#161b22}
+::-webkit-scrollbar-thumb{background:#30363d;border-radius:3px}
+
+/* NAV */
+.topbar{position:sticky;top:0;z-index:100;background:#010409;border-bottom:1px solid #21262d;padding:0 16px;display:flex;align-items:center;gap:8px;overflow-x:auto;white-space:nowrap}
+.topbar-title{font-size:.8rem;font-weight:700;color:#484f58;padding:12px 8px 12px 0;border-right:1px solid #21262d;margin-right:4px;flex-shrink:0}
+.tab-btn{padding:12px 14px;border:none;background:none;color:#8b949e;font-size:.82rem;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;flex-shrink:0;display:flex;align-items:center;gap:6px}
+.tab-btn:hover{color:#e6edf3}
+.tab-btn.active{color:#fff;border-bottom-color:var(--accent)}
+.tab-dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+
+/* LAYOUT */
+.content{max-width:960px;margin:0 auto;padding:28px 16px 60px}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--accent-dim) 0%,transparent 60%);border:1px solid var(--accent-border);border-radius:14px;padding:24px;margin-bottom:24px}
+.hero-badge{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:8px}
+.hero-title{font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:8px}
+.hero-sub{font-size:.9rem;color:#8b949e;line-height:1.7;max-width:680px}
+.hero-meta{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap}
+.meta-pill{font-size:.75rem;background:#161b22;border:1px solid #30363d;border-radius:20px;padding:4px 12px;color:#8b949e}
+.meta-pill b{color:var(--accent)}
+
+/* SECTIONS */
+.section{margin-bottom:28px}
+.section-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#484f58;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:#21262d}
+
+/* PROBLEM BOX */
+.problem-box{background:#161b22;border:1px solid #30363d;border-left:3px solid var(--accent);border-radius:8px;padding:14px 16px;font-size:.85rem;color:#8b949e;line-height:1.7}
+.problem-box b{color:#c9d1d9}
+
+/* ALTERNATIVES */
+.alt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.alt-card{background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px}
+.alt-name{font-size:.85rem;font-weight:700;color:#e6edf3;margin-bottom:4px}
+.alt-desc{font-size:.76rem;color:#6e7681;line-height:1.5}
+.alt-tag{display:inline-block;font-size:.68rem;padding:2px 7px;border-radius:10px;margin-top:6px;font-weight:600}
+.tag-similar{background:#1a2d1a;color:#3fb950}
+.tag-heavier{background:#2d1a2d;color:#bc8cff}
+.tag-lighter{background:#1a2d2d;color:#56d364}
+.tag-diff{background:#2d2a1a;color:#e3b341}
+
+/* MAPPING — the core section */
+.map-list{display:flex;flex-direction:column;gap:10px}
+.map-item{background:#161b22;border:1px solid #21262d;border-radius:10px;overflow:hidden}
+.map-header{display:grid;grid-template-columns:1fr 40px 1fr;align-items:center;gap:0;padding:12px 14px;cursor:pointer}
+.map-fw{font-size:.83rem;font-weight:600;color:var(--accent)}
+.map-arrow{text-align:center;color:#484f58;font-size:.9rem}
+.map-js{font-size:.83rem;font-weight:600;color:#e3b341}
+.map-body{padding:0 14px 14px;border-top:1px solid #21262d;display:none}
+.map-body.open{display:block}
+.map-explain{font-size:.8rem;color:#8b949e;line-height:1.6;margin-top:10px}
+.code{background:#0d1117;border:1px solid #21262d;border-radius:6px;padding:10px 12px;margin-top:8px;overflow-x:auto}
+.code pre{font-family:'Cascadia Code','Fira Code',monospace;font-size:.76rem;color:#e6edf3;line-height:1.6}
+.kw{color:#ff7b72}
+.fn{color:#d2a8ff}
+.str{color:#a5d6ff}
+.cm{color:#484f58}
+.num{color:#79c0ff}
+.hl{color:#3fb950}
+
+/* CONCEPTS */
+.concept-grid{display:flex;flex-direction:column;gap:8px}
+.concept{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:12px 14px;cursor:pointer}
+.concept-top{display:flex;justify-content:space-between;align-items:center}
+.concept-name{font-size:.85rem;font-weight:600;color:#e6edf3}
+.concept-short{font-size:.75rem;color:#6e7681}
+.concept-chevron{color:#484f58;font-size:.8rem;transition:transform .2s}
+.concept.open .concept-chevron{transform:rotate(180deg)}
+.concept-detail{font-size:.8rem;color:#8b949e;line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid #21262d;display:none}
+.concept.open .concept-detail{display:block}
+.primitive-tag{display:inline-block;font-size:.7rem;padding:2px 8px;border-radius:20px;background:#1a2d4d;color:#79c0ff;margin-bottom:6px;font-weight:600}
+
+/* HIDDEN */
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* COLORS per tech */
+.react    {--accent:#61dafb;--accent-dim:rgba(97,218,251,.04);--accent-border:rgba(97,218,251,.15)}
+.nextjs   {--accent:#fff;--accent-dim:rgba(255,255,255,.03);--accent-border:rgba(255,255,255,.1)}
+.tanstack {--accent:#ef4444;--accent-dim:rgba(239,68,68,.04);--accent-border:rgba(239,68,68,.15)}
+.tailwind {--accent:#38bdf8;--accent-dim:rgba(56,189,248,.04);--accent-border:rgba(56,189,248,.15)}
+.storybook{--accent:#ff4785;--accent-dim:rgba(255,71,133,.04);--accent-border:rgba(255,71,133,.15)}
+.nestjs   {--accent:#e0234e;--accent-dim:rgba(224,35,78,.04);--accent-border:rgba(224,35,78,.15)}
+.prisma   {--accent:#5a67d8;--accent-dim:rgba(90,103,216,.04);--accent-border:rgba(90,103,216,.15)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-title">STACK MAP</span>
+  <button class="tab-btn active react" style="--accent:#61dafb" onclick="switchTab('react',this)"><span class="tab-dot" style="background:#61dafb"></span>React</button>
+  <button class="tab-btn nextjs" style="--accent:#fff" onclick="switchTab('nextjs',this)"><span class="tab-dot" style="background:#aaa"></span>Next.js</button>
+  <button class="tab-btn tanstack" style="--accent:#ef4444" onclick="switchTab('tanstack',this)"><span class="tab-dot" style="background:#ef4444"></span>TanStack Query</button>
+  <button class="tab-btn tailwind" style="--accent:#38bdf8" onclick="switchTab('tailwind',this)"><span class="tab-dot" style="background:#38bdf8"></span>Tailwind</button>
+  <button class="tab-btn storybook" style="--accent:#ff4785" onclick="switchTab('storybook',this)"><span class="tab-dot" style="background:#ff4785"></span>Storybook</button>
+  <button class="tab-btn nestjs" style="--accent:#e0234e" onclick="switchTab('nestjs',this)"><span class="tab-dot" style="background:#e0234e"></span>NestJS</button>
+  <button class="tab-btn prisma" style="--accent:#5a67d8" onclick="switchTab('prisma',this)"><span class="tab-dot" style="background:#5a67d8"></span>Prisma</button>
+</div>
+
+<!-- ═══════════════ REACT ═══════════════ -->
+<div id="tab-react" class="tab-panel active react">
+<div class="content">
+  <div class="hero">
+    <div class="hero-badge">Frontend UI Library</div>
+    <div class="hero-title">React</div>
+    <div class="hero-sub">A JS library for building UIs as a tree of components. You describe <em>what</em> the UI should look like given current data — React figures out <em>how</em> to update the DOM efficiently.</div>
+    <div class="hero-meta">
+      <span class="meta-pill">Made by <b>Meta</b></span>
+      <span class="meta-pill">Problem it solves: <b>Manual DOM manipulation hell</b></span>
+      <span class="meta-pill">Core idea: <b>UI = f(state)</b></span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Problem it solves</div>
+    <div class="problem-box">Without React, you'd manually do <b>document.querySelector()</b>, update DOM nodes, track state in global variables, and sync the UI yourself every time data changes. With 10+ interactive elements it becomes spaghetti fast. React makes you just <b>describe the UI</b> and it handles the DOM updates.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Alternatives & how they differ</div>
+    <div class="alt-grid">
+      <div class="alt-card"><div class="alt-name">Vue</div><div class="alt-desc">Same component idea, but uses HTML templates instead of JSX. More beginner friendly syntax.</div><span class="alt-tag tag-similar">Similar concept</span></div>
+      <div class="alt-card"><div class="alt-name">Svelte</div><div class="alt-desc">No virtual DOM. Compiles your components to vanilla JS at build time. Faster runtime, smaller bundle.</div><span class="alt-tag tag-diff">No runtime</span></div>
+      <div class="alt-card"><div class="alt-name">Angular</div><div class="alt-desc">Full framework (routing, forms, HTTP all built in). Much more opinionated, uses TypeScript by default.</div><span class="alt-tag tag-heavier">Full framework</span></div>
+      <div class="alt-card"><div class="alt-name">Solid.js</div><div class="alt-desc">React-like syntax but no virtual DOM, fine-grained reactivity. Very fast.</div><span class="alt-tag tag-diff">Fine-grained</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">It's just… (Framework → JS/HTML primitive)</div>
+    <div class="map-list">
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">JSX / Component</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">JS function returning an object</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">JSX is not HTML. Babel compiles it to <code>React.createElement()</code> which returns a plain JS object — a "virtual DOM node".</div>
+          <div class="code"><pre><span class="cm">// What you write</span>
+<span class="kw">const</span> <span class="fn">Button</span> = ({ label }) => (
+  &lt;button <span class="kw">className</span>=<span class="str">"btn"</span>&gt;{label}&lt;/button&gt;
+)
+
+<span class="cm">// What Babel compiles it to</span>
+<span class="kw">const</span> <span class="fn">Button</span> = ({ label }) =>
+  React.<span class="fn">createElement</span>(<span class="str">'button'</span>, { className: <span class="str">'btn'</span> }, label)
+
+<span class="cm">// What createElement actually returns — just a JS object</span>
+{ type: <span class="str">'button'</span>, props: { className: <span class="str">'btn'</span>, children: label } }</pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Props</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Function arguments (plain JS object)</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">Props are literally just the first argument of your component function. When you write &lt;Button label="Click" /&gt;, React calls Button({ label: "Click" }).</div>
+          <div class="code"><pre><span class="cm">// Calling a component</span>
+&lt;Button label=<span class="str">"Click"</span> disabled={<span class="kw">true</span>} /&gt;
+
+<span class="cm">// React literally does this under the hood</span>
+<span class="fn">Button</span>({ label: <span class="str">"Click"</span>, disabled: <span class="kw">true</span> })</pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">useState</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">JS variable + setter that triggers re-render</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">useState is just a way to have a variable that, when changed, tells React "re-run this function (component)". The value persists between renders via React's internal storage (not a regular variable).</div>
+          <div class="code"><pre><span class="kw">const</span> [count, setCount] = <span class="fn">useState</span>(<span class="num">0</span>)
+<span class="cm">// count  → current value (read-only snapshot)</span>
+<span class="cm">// setCount → calling this re-renders the component</span>
+<span class="cm">// useState(0) → returns [currentValue, setterFn]</span>
+
+<span class="cm">// Equivalent mental model in vanilla JS (simplified):</span>
+<span class="kw">let</span> count = <span class="num">0</span>
+<span class="kw">const</span> <span class="fn">setCount</span> = (val) => { count = val; <span class="fn">rerenderComponent</span>() }</pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">useEffect</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">"Run this JS code after render"</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">useEffect is just a way to run side effects (fetching, subscriptions, timers) after the component renders. The dependency array controls when it re-runs.</div>
+          <div class="code"><pre><span class="fn">useEffect</span>(() => {
+  <span class="cm">// runs after every render</span>
+})
+
+<span class="fn">useEffect</span>(() => {
+  <span class="cm">// runs only once — on mount (like componentDidMount)</span>
+}, [])
+
+<span class="fn">useEffect</span>(() => {
+  <span class="cm">// runs when 'userId' changes</span>
+}, [userId])
+
+<span class="fn">useEffect</span>(() => {
+  <span class="kw">const</span> timer = <span class="fn">setInterval</span>(fn, <span class="num">1000</span>)
+  <span class="kw">return</span> () => <span class="fn">clearInterval</span>(timer) <span class="cm">// cleanup on unmount</span>
+}, [])</pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">useRef</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">{ current: value } — a box that persists</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">A ref is literally just an object { current: something } that persists across renders without triggering re-renders. Use it to hold DOM nodes or mutable values.</div>
+          <div class="code"><pre><span class="kw">const</span> inputRef = <span class="fn">useRef</span>(<span class="kw">null</span>)
+<span class="cm">// inputRef is just: { current: null }</span>
+<span class="cm">// After &lt;input ref={inputRef} /&gt;, React sets:</span>
+<span class="cm">// inputRef.current = &lt;the actual DOM input element&gt;</span>
+
+inputRef.current.<span class="fn">focus</span>() <span class="cm">// direct DOM access, plain JS</span></pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Context / Provider</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Global JS object passed down the tree</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">Context is just a way to pass a JS value to any descendant component without manually passing it as props at every level.</div>
+          <div class="code"><pre><span class="kw">const</span> ThemeCtx = React.<span class="fn">createContext</span>(<span class="str">'light'</span>)
+<span class="cm">// Creates: { Provider, Consumer, _currentValue }</span>
+
+<span class="cm">// Provider just puts the value in scope</span>
+&lt;ThemeCtx.Provider value=<span class="str">"dark"</span>&gt;
+  &lt;App /&gt;
+&lt;/ThemeCtx.Provider&gt;
+
+<span class="cm">// Any child can grab it</span>
+<span class="kw">const</span> theme = <span class="fn">useContext</span>(ThemeCtx) <span class="cm">// → "dark"</span></pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Custom Hook</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Plain JS function that uses other hooks</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">A custom hook is literally just a function that starts with "use". That's the only rule. It can call useState, useEffect, etc. and returns whatever you want.</div>
+          <div class="code"><pre><span class="cm">// Custom hook = plain JS function</span>
+<span class="kw">function</span> <span class="fn">useWindowWidth</span>() {
+  <span class="kw">const</span> [width, setWidth] = <span class="fn">useState</span>(window.innerWidth)
+  <span class="fn">useEffect</span>(() => {
+    <span class="kw">const</span> <span class="fn">handler</span> = () => <span class="fn">setWidth</span>(window.innerWidth)
+    window.<span class="fn">addEventListener</span>(<span class="str">'resize'</span>, handler)
+    <span class="kw">return</span> () => window.<span class="fn">removeEventListener</span>(<span class="str">'resize'</span>, handler)
+  }, [])
+  <span class="kw">return</span> width <span class="cm">// returns plain JS value</span>
+}</pre></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Essential Concepts A–Z</div>
+    <div class="concept-grid">
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Conditional Rendering</span><span class="concept-short">if/else inside JSX</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">JS Ternary / &&</div>JSX is JS, so you use <code>&&</code> for "show if true" and <code>? :</code> for if/else. <code>{isLoggedIn && &lt;Dashboard /&gt;}</code> is just <code>true && value</code> in JS.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Lists & Keys</span><span class="concept-short">array.map() in JSX</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">Array.map()</div>Rendering a list is just <code>array.map(item => &lt;Li&gt;{item}&lt;/Li&gt;)</code>. The <code>key</code> prop is just a string/number React uses internally to track which item is which — it's not in the DOM.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Event Handlers</span><span class="concept-short">JS functions on props</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">JS Function Reference</div><code>onClick={handleClick}</code> is just passing a JS function as a prop. React attaches it as an event listener on the DOM node. It's <code>element.addEventListener('click', handleClick)</code>.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Lifting State Up</span><span class="concept-short">Move state to common parent</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">JS Closure / Props</div>When two sibling components need to share state, move the useState to their parent and pass it down as props. The children communicate upward via callback props (plain JS functions passed down).</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">useMemo / useCallback</span><span class="concept-short">Memoization — avoid re-computing</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">JS Memoization pattern</div>useMemo caches a computed value. useCallback caches a function reference. Both only recompute when dependencies change. It's the same as manually caching: <code>if deps haven't changed, return cached result</code>.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">useReducer</span><span class="concept-short">Complex state logic</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">JS Switch/Case + Object</div>Like useState but for complex state. You dispatch actions (plain objects like <code>{type: 'increment'}</code>) and a reducer function (switch/case) returns the new state. It's the Redux pattern in miniature.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Portals</span><span class="concept-short">Render outside parent DOM</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">DOM appendChild to different node</div>ReactDOM.createPortal lets you render a component into a different DOM node (like document.body) regardless of where it is in the React tree. Used for modals, tooltips.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Error Boundaries</span><span class="concept-short">try/catch for components</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">try/catch equivalent</div>A class component that wraps children and catches JS errors in the render tree. If a child throws, the error boundary shows a fallback UI instead of crashing the whole app.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ NEXT.JS ═══════════════ -->
+<div id="tab-nextjs" class="tab-panel nextjs">
+<div class="content">
+  <div class="hero">
+    <div class="hero-badge">React Framework</div>
+    <div class="hero-title">Next.js</div>
+    <div class="hero-sub">A framework built on top of React that adds routing, server-side rendering, static generation, API routes, and project conventions. React is the engine — Next.js is the car.</div>
+    <div class="hero-meta">
+      <span class="meta-pill">Made by <b>Vercel</b></span>
+      <span class="meta-pill">Problem: <b>React has no router, no SSR, no conventions</b></span>
+      <span class="meta-pill">Core idea: <b>Folder = Route</b></span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Problem it solves</div>
+    <div class="problem-box">React alone gives you a blank canvas — no routing, no server rendering, no structure. You'd have to wire up React Router, configure Webpack/Vite, set up SSR yourself. Next.js gives you all of that out of the box with zero config. Also solves SEO — search engines struggle with client-rendered React. Next.js renders HTML on the server so crawlers see real content.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Alternatives & how they differ</div>
+    <div class="alt-grid">
+      <div class="alt-card"><div class="alt-name">Remix</div><div class="alt-desc">More web-standards focused. Leans on native browser APIs (form, fetch). Better error handling model.</div><span class="alt-tag tag-diff">Web standards first</span></div>
+      <div class="alt-card"><div class="alt-name">Gatsby</div><div class="alt-desc">Static-site focused. Pulls data from any source at build time. Not great for dynamic apps.</div><span class="alt-tag tag-lighter">Static-first</span></div>
+      <div class="alt-card"><div class="alt-name">Astro</div><div class="alt-desc">Ships zero JS by default. Works with React, Vue, Svelte. Best for content sites.</div><span class="alt-tag tag-diff">Island architecture</span></div>
+      <div class="alt-card"><div class="alt-name">Vite + React</div><div class="alt-desc">Just a fast build tool + React. No routing, no SSR. SPA only. You wire everything yourself.</div><span class="alt-tag tag-lighter">Manual setup</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">It's just… (Framework → JS/HTML primitive)</div>
+    <div class="map-list">
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">File-based Routing (App Router)</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Folder structure → URL mapping convention</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">Next.js looks at your folder structure and builds routes from it. No routing config file needed. The folder name IS the URL segment.</div>
+          <div class="code"><pre>app/
+  page.tsx          <span class="cm">→ /</span>
+  dashboard/
+    page.tsx        <span class="cm">→ /dashboard</span>
+  users/
+    [id]/
+      page.tsx      <span class="cm">→ /users/123  (id = "123")</span>
+  (auth)/           <span class="cm">→ group folder, doesn't affect URL</span>
+    login/page.tsx  <span class="cm">→ /login</span></pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Server Component (default in App Router)</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Async JS function that runs on server, returns HTML</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">By default, every component in the App Router is a Server Component — it runs on the server, can await data directly, and ships only HTML to the client. No JS bundle sent for these.</div>
+          <div class="code"><pre><span class="cm">// This runs on the SERVER — no useEffect needed</span>
+<span class="kw">async function</span> <span class="fn">UserProfile</span>({ id }) {
+  <span class="kw">const</span> user = <span class="kw">await</span> db.user.<span class="fn">findById</span>(id) <span class="cm">// direct DB call!</span>
+  <span class="kw">return</span> &lt;div&gt;{user.name}&lt;/div&gt; <span class="cm">// renders to HTML string</span>
+}
+<span class="cm">// Client gets: &lt;div&gt;John Doe&lt;/div&gt; — no JS, just HTML</span></pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">"use client"</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Boundary marker: "send this JS to the browser"</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">'use client' at the top of a file tells Next.js this component and its children run in the browser. Required whenever you use useState, useEffect, event handlers, or browser APIs.</div>
+          <div class="code"><pre><span class="str">'use client'</span> <span class="cm">// ← this file runs in browser</span>
+
+<span class="kw">import</span> { useState } <span class="kw">from</span> <span class="str">'react'</span>
+
+<span class="kw">export function</span> <span class="fn">Counter</span>() {
+  <span class="kw">const</span> [n, setN] = <span class="fn">useState</span>(<span class="num">0</span>)
+  <span class="kw">return</span> &lt;button onClick={() => <span class="fn">setN</span>(n+<span class="num">1</span>)}&gt;{n}&lt;/button&gt;
+}</pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">layout.tsx</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">React component wrapping {children}</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">A layout is just a component that wraps child pages. It persists across route changes — the layout doesn't re-mount when you navigate between pages in the same segment.</div>
+          <div class="code"><pre><span class="kw">export default function</span> <span class="fn">DashboardLayout</span>({ children }) {
+  <span class="kw">return</span> (
+    &lt;div&gt;
+      &lt;Sidebar /&gt;       <span class="cm">// always rendered</span>
+      &lt;main&gt;{children}&lt;/main&gt; <span class="cm">// page content goes here</span>
+    &lt;/div&gt;
+  )
+}</pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">API Route (route.ts)</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Exported async functions named GET, POST, etc.</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">API routes are just exported functions named after HTTP methods. Next.js maps incoming requests to the right function.</div>
+          <div class="code"><pre><span class="cm">// app/api/users/route.ts</span>
+<span class="kw">export async function</span> <span class="fn">GET</span>(request) {
+  <span class="kw">const</span> users = <span class="kw">await</span> db.<span class="fn">getUsers</span>()
+  <span class="kw">return</span> Response.<span class="fn">json</span>(users) <span class="cm">// native Web API</span>
+}
+
+<span class="kw">export async function</span> <span class="fn">POST</span>(request) {
+  <span class="kw">const</span> body = <span class="kw">await</span> request.<span class="fn">json</span>() <span class="cm">// plain JS object</span>
+  <span class="kw">return</span> Response.<span class="fn">json</span>({ created: <span class="kw">true</span> }, { status: <span class="num">201</span> })
+}</pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Server Actions</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Async server functions called from client like normal JS</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">'use server' marks a function to run on the server. You call it from a client component like any async function — Next.js handles the HTTP request behind the scenes.</div>
+          <div class="code"><pre><span class="str">'use server'</span>
+<span class="kw">export async function</span> <span class="fn">createUser</span>(formData) {
+  <span class="kw">await</span> db.user.<span class="fn">create</span>({ name: formData.<span class="fn">get</span>(<span class="str">'name'</span>) })
+}
+
+<span class="cm">// Client component calls it like plain JS:</span>
+&lt;button onClick={() => <span class="fn">createUser</span>(data)}&gt;Save&lt;/button&gt;
+<span class="cm">// Next.js auto-creates a POST endpoint for this</span></pre></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Essential Concepts A–Z</div>
+    <div class="concept-grid">
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Dynamic Routes [id]</span><span class="concept-short">URL params as folder name</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">URL Pattern Matching</div>A folder named <code>[id]</code> catches any URL segment. The value is passed as <code>params.id</code> to your page component — it's just a JS string from the URL.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Middleware</span><span class="concept-short">Runs before every request</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">JS Function (req) => response</div>A function in <code>middleware.ts</code> at the root. Gets every request before it hits a route. Used for auth checks, redirects, A/B testing. Returns NextResponse to redirect/rewrite/continue.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Static vs Dynamic Rendering</span><span class="concept-short">Build time vs request time</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">HTML generation timing</div>Static = HTML built once at deploy time (fast, cacheable). Dynamic = HTML built on every request. Next.js decides automatically: if you use cookies(), headers(), or searchParams, it becomes dynamic.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Image Component</span><span class="concept-short">Optimized &lt;img&gt; tag</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">HTML &lt;img&gt; + lazy load + WebP</div>Next's <code>&lt;Image&gt;</code> is just an <code>&lt;img&gt;</code> tag with automatic WebP conversion, lazy loading, and size optimization baked in. Always specify width/height or fill.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Link Component</span><span class="concept-short">Client-side navigation</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">HTML &lt;a&gt; + pushState</div>Next's <code>&lt;Link&gt;</code> renders as a regular <code>&lt;a&gt;</code> tag but intercepts the click and does a client-side navigation using the History API — no full page reload.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">loading.tsx / error.tsx</span><span class="concept-short">Automatic suspense/error UI</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">React Suspense + Error Boundary</div>Drop a <code>loading.tsx</code> next to a page and Next.js wraps that route in a React Suspense boundary automatically. <code>error.tsx</code> becomes an Error Boundary. Just convention-over-configuration wiring.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ TANSTACK QUERY ═══════════════ -->
+<div id="tab-tanstack" class="tab-panel tanstack">
+<div class="content">
+  <div class="hero">
+    <div class="hero-badge">Server State Management</div>
+    <div class="hero-title">TanStack Query</div>
+    <div class="hero-sub">A library that manages the lifecycle of async data — fetching, caching, background refetching, loading states, error states — so you don't have to manually handle all that with useState + useEffect.</div>
+    <div class="hero-meta">
+      <span class="meta-pill">Formerly <b>React Query</b></span>
+      <span class="meta-pill">Problem: <b>Async data lifecycle is repetitive and error-prone</b></span>
+      <span class="meta-pill">Core idea: <b>Cache keyed by queryKey</b></span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Problem it solves</div>
+    <div class="problem-box">Every time you fetch data, you manually write: <b>useState(null), useState(false), useState(null)</b> for data/loading/error, then a useEffect to fetch, then cleanup. And you get no caching, no background refetching, no deduplication. TanStack Query gives you all that with one hook call.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Alternatives & how they differ</div>
+    <div class="alt-grid">
+      <div class="alt-card"><div class="alt-name">SWR</div><div class="alt-desc">Vercel's answer. Simpler API, same core idea. Smaller feature set than TanStack Query.</div><span class="alt-tag tag-lighter">Simpler</span></div>
+      <div class="alt-card"><div class="alt-name">RTK Query</div><div class="alt-desc">Redux Toolkit's built-in fetching. Best if you're already using Redux for everything.</div><span class="alt-tag tag-heavier">Redux-coupled</span></div>
+      <div class="alt-card"><div class="alt-name">Apollo Client</div><div class="alt-desc">Same concept but built for GraphQL specifically. Normalised cache.</div><span class="alt-tag tag-diff">GraphQL-specific</span></div>
+      <div class="alt-card"><div class="alt-name">Zustand + fetch</div><div class="alt-desc">Manual — you manage async state yourself in a Zustand store. More control, more boilerplate.</div><span class="alt-tag tag-diff">Manual</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">It's just… (Framework → JS/HTML primitive)</div>
+    <div class="map-list">
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">useQuery</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">{ data, isLoading, error } from a cached Promise</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">useQuery runs your async function, caches the result by queryKey, and gives you a reactive object with the current state. If another component requests the same key, it gets the cached value — no duplicate fetch.</div>
+          <div class="code"><pre><span class="kw">const</span> { data, isLoading, error } = <span class="fn">useQuery</span>({
+  queryKey: [<span class="str">'users'</span>, userId],   <span class="cm">// cache key — JS array</span>
+  queryFn: () => <span class="fn">fetchUser</span>(userId) <span class="cm">// async fn returning data</span>
+})
+
+<span class="cm">// Is essentially this, done automatically:</span>
+<span class="kw">const</span> [data, setData] = <span class="fn">useState</span>(<span class="kw">null</span>)
+<span class="kw">const</span> [isLoading, setLoading] = <span class="fn">useState</span>(<span class="kw">true</span>)
+<span class="fn">useEffect</span>(() => { <span class="fn">fetchUser</span>(userId).<span class="fn">then</span>(setData) }, [userId])</pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">useMutation</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">{ mutate fn, isLoading, error } for write operations</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">useMutation wraps any async function that changes data (POST/PUT/DELETE). You call mutate() and get loading/error/success states back.</div>
+          <div class="code"><pre><span class="kw">const</span> { mutate, isPending } = <span class="fn">useMutation</span>({
+  mutationFn: (newUser) => <span class="fn">postUser</span>(newUser),
+  onSuccess: () => {
+    queryClient.<span class="fn">invalidateQueries</span>({ queryKey: [<span class="str">'users'</span>] })
+    <span class="cm">// ↑ tells the 'users' query: your cache is stale, refetch</span>
+  }
+})
+
+<span class="cm">// Call it like a plain JS function:</span>
+<span class="fn">mutate</span>({ name: <span class="str">'Alice'</span>, email: <span class="str">'a@b.com'</span> })</pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">QueryClient & QueryClientProvider</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Global JS Map (cache) passed via React Context</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">QueryClient is the cache store — a JS object holding all fetched data keyed by queryKey. The Provider passes it to all components via Context.</div>
+          <div class="code"><pre><span class="cm">// QueryClient is essentially:</span>
+<span class="kw">class</span> <span class="fn">QueryClient</span> {
+  cache = <span class="kw">new</span> <span class="fn">Map</span>() <span class="cm">// queryKey → { data, status, updatedAt }</span>
+  <span class="fn">invalidateQueries</span>({ queryKey }) { <span class="cm">/* mark stale → refetch */</span> }
+  <span class="fn">setQueryData</span>(key, data) { <span class="cm">/* manually set cache */</span> }
+  <span class="fn">getQueryData</span>(key) { <span class="cm">/* read cache */</span> }
+}</pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">queryKey</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">JS array used as a cache key (like Map key)</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">The queryKey is how TanStack Query identifies and deduplicates cache entries. Arrays are compared by value — same contents = same cache entry.</div>
+          <div class="code"><pre>[<span class="str">'users'</span>]               <span class="cm">→ all users</span>
+[<span class="str">'users'</span>, <span class="num">42</span>]          <span class="cm">→ user with id 42</span>
+[<span class="str">'users'</span>, <span class="num">42</span>, <span class="str">'posts'</span>] <span class="cm">→ posts of user 42</span>
+
+<span class="cm">// invalidateQueries(['users']) invalidates ALL of the above</span>
+<span class="cm">// because it matches the prefix — like a namespace</span></pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">staleTime / gcTime</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Numbers (milliseconds) controlling cache freshness</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">staleTime = how long (ms) data is considered fresh. During this window, no refetch happens. gcTime = how long unused cache data is kept in memory before garbage collected.</div>
+          <div class="code"><pre><span class="fn">useQuery</span>({
+  queryKey: [<span class="str">'config'</span>],
+  queryFn: <span class="fn">fetchConfig</span>,
+  staleTime: <span class="num">5</span> * <span class="num">60</span> * <span class="num">1000</span>,  <span class="cm">// 5 min — don't refetch for 5 min</span>
+  gcTime: <span class="num">10</span> * <span class="num">60</span> * <span class="num">1000</span>,   <span class="cm">// 10 min — keep in memory 10 min</span>
+})</pre></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Essential Concepts A–Z</div>
+    <div class="concept-grid">
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Optimistic Updates</span><span class="concept-short">Update UI before server confirms</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">Cache manipulation</div>Before the mutation resolves, you manually update the cache (setQueryData) to show the expected result immediately. If the server fails, you roll back using the previous cache value saved in onMutate.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Infinite Queries</span><span class="concept-short">Pagination / infinite scroll</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">Array of pages (JS arrays)</div>useInfiniteQuery manages paginated data. Each page is a JS array. fetchNextPage() fetches the next page and appends it. data.pages is just an array of page results.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Query Invalidation</span><span class="concept-short">Mark cache as stale → refetch</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">Cache key lookup + refetch trigger</div>invalidateQueries tells TanStack Query "this cached data is outdated". Any component currently displaying that data will automatically refetch in the background.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">enabled flag</span><span class="concept-short">Conditionally run the query</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">Boolean condition</div><code>enabled: !!userId</code> — the query only runs when userId is truthy. It's just a boolean that controls whether the queryFn gets called. Used for dependent queries (query B depends on result of query A).</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">select</span><span class="concept-short">Transform/filter returned data</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">Array.map / Array.filter on cache data</div>select is a function applied to the cached data before returning it to your component. Like doing .map() or .filter() — the raw cache stays unchanged, you just get a transformed view.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ TAILWIND ═══════════════ -->
+<div id="tab-tailwind" class="tab-panel tailwind">
+<div class="content">
+  <div class="hero">
+    <div class="hero-badge">Utility-First CSS Framework</div>
+    <div class="hero-title">Tailwind CSS</div>
+    <div class="hero-sub">A CSS framework where instead of writing custom CSS, you compose pre-defined utility classes directly in your HTML/JSX. Each class maps to one (or a few) CSS properties.</div>
+    <div class="hero-meta">
+      <span class="meta-pill">Problem: <b>Custom CSS is slow, inconsistent & hard to maintain</b></span>
+      <span class="meta-pill">Core idea: <b>1 class = 1 CSS rule</b></span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Problem it solves</div>
+    <div class="problem-box">Without Tailwind, you write class names, then jump to a CSS file to write the styles, then come back. You end up with hundreds of one-off class names that are hard to maintain. Tailwind keeps everything in one place — the class IS the style.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Alternatives & how they differ</div>
+    <div class="alt-grid">
+      <div class="alt-card"><div class="alt-name">Bootstrap</div><div class="alt-desc">Pre-built components. Less flexible — everything looks "Bootstrap-y". Opinionated design.</div><span class="alt-tag tag-heavier">Component-based</span></div>
+      <div class="alt-card"><div class="alt-name">CSS Modules</div><div class="alt-desc">Scoped CSS files per component. You still write CSS, but names are locally scoped.</div><span class="alt-tag tag-diff">Scoped CSS</span></div>
+      <div class="alt-card"><div class="alt-name">styled-components</div><div class="alt-desc">Write CSS in JS template literals. Dynamic styles tied to props. Runtime overhead.</div><span class="alt-tag tag-diff">CSS-in-JS</span></div>
+      <div class="alt-card"><div class="alt-name">UnoCSS</div><div class="alt-desc">Same utility concept but on-demand — generates only the CSS you use, faster build.</div><span class="alt-tag tag-similar">Same concept</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">It's just… (Class → CSS property)</div>
+    <div class="map-list">
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Layout classes</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">display, flex, grid CSS properties</span>
+        </div>
+        <div class="map-body">
+          <div class="code"><pre>flex        → display: flex
+grid        → display: grid
+hidden      → display: none
+block       → display: block
+inline-flex → display: inline-flex
+
+flex-col    → flex-direction: column
+flex-row    → flex-direction: row
+flex-wrap   → flex-wrap: wrap
+items-center → align-items: center
+justify-between → justify-content: space-between
+gap-4       → gap: 1rem</pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Spacing classes</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">padding / margin in rem (1 unit = 0.25rem = 4px)</span>
+        </div>
+        <div class="map-body">
+          <div class="code"><pre>p-4   → padding: 1rem        (4 × 0.25rem)
+p-2   → padding: 0.5rem
+px-4  → padding-left: 1rem; padding-right: 1rem
+py-2  → padding-top: 0.5rem; padding-bottom: 0.5rem
+pt-6  → padding-top: 1.5rem
+m-4   → margin: 1rem
+mx-auto → margin-left: auto; margin-right: auto
+mt-8  → margin-top: 2rem
+-mt-4 → margin-top: -1rem   (negative margin!)</pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Responsive prefixes</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">@media (min-width: X) { ... }</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">Tailwind is mobile-first. No prefix = all screens. sm/md/lg/xl = "at this breakpoint and above".</div>
+          <div class="code"><pre>sm:flex   → @media (min-width: 640px)  { display: flex }
+md:hidden → @media (min-width: 768px)  { display: none }
+lg:text-xl→ @media (min-width: 1024px) { font-size: 1.25rem }
+xl:p-8    → @media (min-width: 1280px) { padding: 2rem }
+
+<span class="cm">// Usage: stack vertically on mobile, horizontal on desktop</span>
+&lt;div className=<span class="str">"flex flex-col md:flex-row"</span>&gt;</pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">State prefixes</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">CSS pseudo-classes (:hover, :focus, :active)</span>
+        </div>
+        <div class="map-body">
+          <div class="code"><pre>hover:bg-blue-500  → .el:hover { background-color: #3b82f6 }
+focus:ring-2       → .el:focus { box-shadow: 0 0 0 2px ... }
+active:scale-95    → .el:active { transform: scale(.95) }
+disabled:opacity-50→ .el:disabled { opacity: .5 }
+group-hover:block  → .group:hover .el { display: block }
+dark:text-white    → @media(prefers-color-scheme:dark){ color:#fff }</pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Typography classes</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">font-size, font-weight, color, line-height</span>
+        </div>
+        <div class="map-body">
+          <div class="code"><pre>text-sm     → font-size: 0.875rem
+text-xl     → font-size: 1.25rem
+text-4xl    → font-size: 2.25rem
+font-bold   → font-weight: 700
+font-medium → font-weight: 500
+leading-6   → line-height: 1.5rem
+tracking-wide → letter-spacing: 0.025em
+text-gray-500 → color: #6b7280
+uppercase   → text-transform: uppercase
+truncate    → overflow:hidden; text-overflow:ellipsis; white-space:nowrap</pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Arbitrary values [...]</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Escape hatch — any CSS value inline</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">When no utility class fits, use square brackets to write any CSS value directly.</div>
+          <div class="code"><pre>w-[350px]         → width: 350px
+top-[117px]       → top: 117px
+bg-[#ff6b35]      → background-color: #ff6b35
+text-[14px]       → font-size: 14px
+grid-cols-[1fr,2fr] → grid-template-columns: 1fr 2fr</pre></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Essential Concepts A–Z</div>
+    <div class="concept-grid">
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">cn() / clsx / cva</span><span class="concept-short">Conditional class merging</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">JS String Concatenation</div><code>cn('base', isActive && 'active', variant === 'primary' && 'bg-blue')</code> — just builds a class string conditionally. clsx/cn are tiny JS utilities. cva (Class Variance Authority) organises component variants cleanly.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">tailwind.config.js</span><span class="concept-short">Design system customization</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">Plain JS/TS export default object</div>The config file is just a JS object where you extend Tailwind's defaults — custom colors, fonts, spacing, breakpoints. Whatever you add becomes a new utility class.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">@apply directive</span><span class="concept-short">Use Tailwind classes in CSS files</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">CSS macro expansion</div>In a .css file, <code>@apply flex items-center p-4</code> expands to the full CSS those classes represent. Useful for extracting repeated class combinations into a named class.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">JIT (Just-in-Time)</span><span class="concept-short">Only generates CSS you actually use</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">Build-time CSS pruning</div>Tailwind scans your code at build time, finds every class name you use, and generates only those CSS rules. The final CSS bundle is tiny. This is why you can't build class names dynamically with string concatenation.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ STORYBOOK ═══════════════ -->
+<div id="tab-storybook" class="tab-panel storybook">
+<div class="content">
+  <div class="hero">
+    <div class="hero-badge">Component Development Environment</div>
+    <div class="hero-title">Storybook</div>
+    <div class="hero-sub">A tool that lets you build and test UI components in isolation — outside of your actual app. Each "story" is just your component rendered with specific props.</div>
+    <div class="hero-meta">
+      <span class="meta-pill">Problem: <b>Testing components requires running the whole app</b></span>
+      <span class="meta-pill">Core idea: <b>Story = component + props snapshot</b></span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Problem it solves</div>
+    <div class="problem-box">Without Storybook, to test a button's <b>disabled</b> state you'd navigate to the right page, trigger the right condition, wait for the app to load. With Storybook, you just open the Button story in "disabled" state directly — instant. Great for design systems and component libraries.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">It's just… (Framework → JS/HTML primitive)</div>
+    <div class="map-list">
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Story (CSF format)</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Exported JS object/function with props</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">A story is literally just an exported function or object that renders your component with specific props. Storybook renders it in an iframe. That's it.</div>
+          <div class="code"><pre><span class="cm">// Button.stories.tsx</span>
+<span class="kw">import</span> { Button } <span class="kw">from</span> <span class="str">'./Button'</span>
+
+<span class="cm">// Default export: metadata about the component</span>
+<span class="kw">export default</span> {
+  title: <span class="str">'Components/Button'</span>,
+  component: Button,
+}
+
+<span class="cm">// Named exports: each one is a story (a state)</span>
+<span class="kw">export const</span> Primary = { args: { label: <span class="str">'Click me'</span>, variant: <span class="str">'primary'</span> }}
+<span class="kw">export const</span> Disabled = { args: { label: <span class="str">'Click me'</span>, disabled: <span class="kw">true</span> }}
+<span class="kw">export const</span> Loading  = { args: { label: <span class="str">'Loading'</span>, loading: <span class="kw">true</span> }}
+
+<span class="cm">// Storybook just does: &lt;Button {...story.args} /&gt;</span></pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Args</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Plain JS object of props passed to component</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">Args are just the props you want to pass to your component in this story. Storybook auto-generates interactive controls (sliders, checkboxes, text inputs) from the arg types.</div>
+          <div class="code"><pre><span class="kw">export const</span> Story = {
+  args: {
+    label: <span class="str">'Submit'</span>,     <span class="cm">// → text input in Controls panel</span>
+    disabled: <span class="kw">false</span>,   <span class="cm">// → checkbox in Controls panel</span>
+    size: <span class="str">'md'</span>,         <span class="cm">// → dropdown in Controls panel</span>
+  }
+}
+<span class="cm">// Storybook reads the types and builds the UI controls automatically</span></pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Decorators</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">React wrapper components (Providers, padding, etc.)</span>
+        </div>
+        <div class="map-body">
+          <div class="map-explain">Decorators wrap your stories with additional React components — like adding a ThemeProvider, or centering the component. Just React wrapper components in an array.</div>
+          <div class="code"><pre><span class="kw">export default</span> {
+  decorators: [
+    (Story) => (
+      &lt;ThemeProvider theme=<span class="str">"dark"</span>&gt;
+        &lt;div style={{ padding: <span class="str">'2rem'</span> }}&gt;
+          &lt;Story /&gt;  <span class="cm">// your component renders here</span>
+        &lt;/div&gt;
+      &lt;/ThemeProvider&gt;
+    )
+  ]
+}</pre></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Essential Concepts A–Z</div>
+    <div class="concept-grid">
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Controls</span><span class="concept-short">Auto-generated prop UI</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">HTML form inputs bound to args</div>Storybook reads your TypeScript prop types and auto-generates a panel of form controls (text, checkbox, select, number) to tweak args in real time. You don't write the controls — it infers them.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Actions</span><span class="concept-short">Logs event handler calls</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">Console.log for event props</div>When a story has an onClick/onChange etc., Storybook replaces it with a spy function that logs to the Actions panel. You can see "button was clicked with args: …" without writing any test code.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">play function</span><span class="concept-short">Interaction testing</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">Async JS function simulating user interactions</div>A play() function on a story runs after render — you use Testing Library utilities to click, type, and assert. Basically an automated integration test that runs inside Storybook itself.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Addons</span><span class="concept-short">Plugins for extra panels/features</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">JS plugins registered in .storybook/main.ts</div>Addons add extra panels to the Storybook UI — accessibility checker (a11y), viewport switcher, design tokens viewer, etc. Registered as an array of npm package names in the config.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ NESTJS ═══════════════ -->
+<div id="tab-nestjs" class="tab-panel nestjs">
+<div class="content">
+  <div class="hero">
+    <div class="hero-badge">Backend Node.js Framework</div>
+    <div class="hero-title">NestJS</div>
+    <div class="hero-sub">An opinionated Node.js framework that brings structure (modules, controllers, services) to Express/Fastify using TypeScript decorators. Think Angular, but for the backend.</div>
+    <div class="hero-meta">
+      <span class="meta-pill">Runs on <b>Express or Fastify</b> underneath</span>
+      <span class="meta-pill">Problem: <b>Express has no structure conventions</b></span>
+      <span class="meta-pill">Core idea: <b>Decorator-based dependency injection</b></span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">It's just… (Framework → JS primitive)</div>
+    <div class="map-list">
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Decorator (@Controller, @Get...)</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Function that wraps a class/method and attaches metadata</span>
+        </div>
+        <div class="map-body">
+          <div class="code"><pre>@<span class="fn">Controller</span>(<span class="str">'users'</span>)
+<span class="kw">class</span> <span class="fn">UserController</span> {}
+
+<span class="cm">// Is exactly equivalent to:</span>
+<span class="fn">Controller</span>(<span class="str">'users'</span>)(<span class="fn">UserController</span>)
+<span class="cm">// Which just does: Reflect.metadata('path', 'users', UserController)</span>
+<span class="cm">// Attaches metadata that Nest reads at bootstrap to map routes</span></pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Service / Injectable</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Plain JS class with business logic</span>
+        </div>
+        <div class="map-body">
+          <div class="code"><pre>@<span class="fn">Injectable</span>()
+<span class="kw">class</span> <span class="fn">UserService</span> {
+  <span class="kw">async</span> <span class="fn">findAll</span>() {
+    <span class="kw">return</span> db.user.<span class="fn">findMany</span>() <span class="cm">// just a plain async method</span>
+  }
+}
+<span class="cm">// @Injectable() just marks it for Nest's DI container</span>
+<span class="cm">// The class itself is plain JS — no magic inside it</span></pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Module</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">JS object grouping controllers + services</span>
+        </div>
+        <div class="map-body">
+          <div class="code"><pre>@<span class="fn">Module</span>({
+  controllers: [UserController],  <span class="cm">// route handlers</span>
+  providers:   [UserService],     <span class="cm">// injectable services</span>
+  imports:     [DatabaseModule],  <span class="cm">// other modules</span>
+  exports:     [UserService],     <span class="cm">// share with other modules</span>
+})
+<span class="kw">class</span> <span class="fn">UserModule</span> {}
+<span class="cm">// It's just a manifest — tells Nest what belongs together</span></pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Guard</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Function that returns true/false (allow or block)</span>
+        </div>
+        <div class="map-body">
+          <div class="code"><pre>@<span class="fn">Injectable</span>()
+<span class="kw">class</span> <span class="fn">AuthGuard</span> <span class="kw">implements</span> CanActivate {
+  <span class="fn">canActivate</span>(context): <span class="kw">boolean</span> {
+    <span class="kw">const</span> req = context.<span class="fn">switchToHttp</span>().<span class="fn">getRequest</span>()
+    <span class="kw">return</span> <span class="fn">validateToken</span>(req.headers.authorization)
+    <span class="cm">// true → request proceeds, false → 403</span>
+  }
+}</pre></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ PRISMA ═══════════════ -->
+<div id="tab-prisma" class="tab-panel prisma">
+<div class="content">
+  <div class="hero">
+    <div class="hero-badge">ORM / Database Toolkit</div>
+    <div class="hero-title">Prisma</div>
+    <div class="hero-sub">A type-safe ORM that generates a JS client from your schema. Instead of writing SQL strings, you call JS methods on objects and get fully-typed results back.</div>
+    <div class="hero-meta">
+      <span class="meta-pill">Problem: <b>Raw SQL has no type safety and is verbose</b></span>
+      <span class="meta-pill">Core idea: <b>Schema → generated JS client</b></span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">It's just… (Framework → JS primitive)</div>
+    <div class="map-list">
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Prisma Client</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">JS object with async methods for each DB table</span>
+        </div>
+        <div class="map-body">
+          <div class="code"><pre><span class="kw">const</span> prisma = <span class="kw">new</span> <span class="fn">PrismaClient</span>()
+
+<span class="cm">// prisma.user → JS object for the "user" table</span>
+<span class="cm">// Every method is just an async function returning plain JS objects</span>
+
+<span class="kw">const</span> user = <span class="kw">await</span> prisma.user.<span class="fn">findUnique</span>({ where: { id: <span class="num">1</span> } })
+<span class="cm">// Returns: { id: 1, name: "Alice", email: "..." } — plain JS object</span>
+
+<span class="kw">const</span> users = <span class="kw">await</span> prisma.user.<span class="fn">findMany</span>({ where: { active: <span class="kw">true</span> } })
+<span class="cm">// Returns: plain JS array of objects</span></pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Schema (schema.prisma)</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Type definitions → generates TS types + SQL migrations</span>
+        </div>
+        <div class="map-body">
+          <div class="code"><pre><span class="cm">// schema.prisma</span>
+model User {
+  id    Int    @id @default(autoincrement())
+  name  String
+  posts Post[]  <span class="cm">// relation → nested JS object when queried</span>
+}
+
+<span class="cm">// Prisma generates from this:</span>
+<span class="cm">// 1. SQL CREATE TABLE migration</span>
+<span class="cm">// 2. TypeScript type: type User = { id: number, name: string }</span>
+<span class="cm">// 3. prisma.user.findMany() with full type safety</span></pre></div>
+        </div>
+      </div>
+
+      <div class="map-item">
+        <div class="map-header" onclick="toggleMap(this)">
+          <span class="map-fw">Relations / include</span>
+          <span class="map-arrow">→</span>
+          <span class="map-js">Nested JS objects (JOIN under the hood)</span>
+        </div>
+        <div class="map-body">
+          <div class="code"><pre><span class="kw">const</span> user = <span class="kw">await</span> prisma.user.<span class="fn">findUnique</span>({
+  where: { id: <span class="num">1</span> },
+  include: { posts: <span class="kw">true</span> }  <span class="cm">// SQL JOIN</span>
+})
+
+<span class="cm">// Returns nested plain JS object:</span>
+{
+  id: <span class="num">1</span>, name: <span class="str">"Alice"</span>,
+  posts: [                   <span class="cm">// just a JS array</span>
+    { id: <span class="num">10</span>, title: <span class="str">"Hello"</span> }
+  ]
+}</pre></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Essential Concepts A–Z</div>
+    <div class="concept-grid">
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Migrations</span><span class="concept-short">Schema change → SQL file</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">Generated SQL files</div>When you change schema.prisma and run <code>prisma migrate dev</code>, Prisma generates a SQL migration file and runs it. The migrations folder is just .sql files tracking your DB history.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">select vs include</span><span class="concept-short">Choose fields vs join relations</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">SQL SELECT columns vs JOIN</div><code>select</code> lets you pick specific columns (like SQL SELECT name, email). <code>include</code> does a JOIN to bring in related table data as nested objects. They can't be used together at the same level.</div></div>
+      <div class="concept" onclick="toggleConcept(this)"><div class="concept-top"><span class="concept-name">Transactions</span><span class="concept-short">Multiple operations atomically</span><span class="concept-chevron">▾</span></div><div class="concept-detail"><div class="primitive-tag">SQL TRANSACTION</div><code>prisma.$transaction([op1, op2])</code> — if any operation fails, all are rolled back. You pass an array of Prisma operations and they all succeed or all fail together.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'))
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+  document.getElementById('tab-' + id).classList.add('active')
+  btn.classList.add('active')
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+function toggleMap(header) {
+  const body = header.nextElementSibling
+  body.classList.toggle('open')
+}
+
+function toggleConcept(el) {
+  el.classList.toggle('open')
+}
+</script>
+</body>
+</html>

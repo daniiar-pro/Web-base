@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frontend Tooling Ecosystem: A to Z — Bundlers, Build Tools, Platforms & Beyond</title>
+<style>
+  :root {
+    --bg: #0c0e14;
+    --surface: #161923;
+    --surface2: #1e2233;
+    --border: #2a2f45;
+    --text: #dfe2ed;
+    --text-dim: #7d83a0;
+    --accent: #7c8cf5;
+    --accent2: #c084fc;
+    --accent3: #2dd4a8;
+    --accent4: #f5a623;
+    --accent5: #f87171;
+    --accent6: #38bdf8;
+    --accent7: #fb923c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
+  .hero{min-height:55vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;top:-30%;left:-10%;width:120%;height:160%;background:radial-gradient(ellipse at 40% 40%,rgba(124,140,245,0.1) 0%,transparent 55%),radial-gradient(ellipse at 65% 60%,rgba(192,132,252,0.08) 0%,transparent 50%);z-index:0}
+  .hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;background:linear-gradient(135deg,#7c8cf5,#c084fc,#2dd4a8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;position:relative;z-index:1;margin-bottom:1rem}
+  .hero p{font-size:1.15rem;color:var(--text-dim);max-width:640px;position:relative;z-index:1}
+  nav.toc{position:sticky;top:0;z-index:100;background:rgba(12,14,20,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0.7rem 1rem;overflow-x:auto;white-space:nowrap}
+  nav.toc a{display:inline-block;color:var(--text-dim);text-decoration:none;font-size:.8rem;font-weight:600;padding:.35rem .8rem;border-radius:6px;transition:all .2s;margin-right:.2rem}
+  nav.toc a:hover,nav.toc a.active{color:#fff;background:var(--surface2)}
+  .container{max-width:980px;margin:0 auto;padding:0 1.5rem}
+  section{padding:3.5rem 0 2rem}
+  h2{font-size:1.9rem;font-weight:800;margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem}
+  h2 .num{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;font-size:.95rem;font-weight:700;color:#fff;flex-shrink:0}
+  h3{font-size:1.25rem;font-weight:700;margin:2rem 0 1rem;color:var(--accent6)}
+  h4{font-size:1.05rem;font-weight:700;margin:1.5rem 0 .75rem;color:var(--accent2)}
+  p,li{color:var(--text);margin-bottom:.75rem}
+  ul,ol{padding-left:1.5rem;margin-bottom:1rem}
+  li{margin-bottom:.4rem}
+  .callout{border-radius:12px;padding:1.2rem 1.4rem;margin:1.5rem 0;border-left:4px solid}
+  .callout.info{background:rgba(124,140,245,0.07);border-color:var(--accent)}
+  .callout.tip{background:rgba(45,212,168,0.07);border-color:var(--accent3)}
+  .callout.warn{background:rgba(245,166,35,0.07);border-color:var(--accent4)}
+  .callout strong{display:block;margin-bottom:.3rem}
+  code{font-family:'Cascadia Code','Fira Code',Consolas,monospace;background:var(--surface2);padding:.12rem .4rem;border-radius:5px;font-size:.87em;color:var(--accent3)}
+  pre{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.2rem;overflow-x:auto;margin:1rem 0;font-size:.87rem;line-height:1.6}
+  pre code{background:none;padding:0;color:var(--text)}
+  .diagram{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:1.5rem 0;overflow-x:auto}
+  .diagram svg{display:block;margin:0 auto;max-width:100%;height:auto}
+  .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1.5rem 0}
+  .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin:1.5rem 0}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.2rem}
+  .card h4{margin-top:0}
+  .tag{display:inline-block;padding:.12rem .55rem;border-radius:99px;font-size:.72rem;font-weight:700;margin-right:.25rem}
+  .tag.blue{background:rgba(124,140,245,0.15);color:var(--accent)}
+  .tag.green{background:rgba(45,212,168,0.15);color:var(--accent3)}
+  .tag.orange{background:rgba(245,166,35,0.15);color:var(--accent4)}
+  .tag.red{background:rgba(248,113,113,0.15);color:var(--accent5)}
+  .tag.purple{background:rgba(192,132,252,0.15);color:var(--accent2)}
+  .tag.cyan{background:rgba(56,189,248,0.15);color:var(--accent6)}
+  table.cmp{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:.88rem}
+  table.cmp th,table.cmp td{padding:.65rem .9rem;text-align:left;border-bottom:1px solid var(--border)}
+  table.cmp th{background:var(--surface2);font-weight:700;color:var(--accent)}
+  table.cmp tr:hover td{background:rgba(124,140,245,0.03)}
+  .timeline{position:relative;padding-left:2rem;margin:1.5rem 0}
+  .timeline::before{content:'';position:absolute;left:7px;top:0;bottom:0;width:2px;background:var(--border)}
+  .timeline-item{position:relative;margin-bottom:1.5rem}
+  .timeline-item::before{content:'';position:absolute;left:-2rem;top:.5rem;width:12px;height:12px;border-radius:50%;border:2px solid var(--accent);background:var(--bg)}
+  .timeline-item h4{margin-top:0}
+  .flow-row{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:center;margin:1.5rem 0}
+  .flow-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.7rem 1.1rem;text-align:center;font-weight:600;font-size:.88rem;min-width:100px}
+  .flow-arrow{color:var(--accent);font-size:1.3rem;font-weight:700}
+  footer{text-align:center;padding:3rem 1rem;color:var(--text-dim);font-size:.85rem;border-top:1px solid var(--border);margin-top:3rem}
+  @media(max-width:640px){.hero{min-height:40vh;padding:2rem 1rem}h2{font-size:1.4rem}.flow-row{flex-direction:column}.flow-arrow{transform:rotate(90deg)}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>The Frontend Tooling Ecosystem</h1>
+  <p>Bundlers, transpilers, compilers, build tools, dev servers, meta-frameworks, deployment platforms — what they are, when they were created, how they relate, and when to use each one.</p>
+</div>
+
+<nav class="toc" id="toc">
+  <a href="#ch1">1 Core Concepts</a>
+  <a href="#ch2">2 The Timeline</a>
+  <a href="#ch3">3 Compilers & Transpilers</a>
+  <a href="#ch4">4 Bundlers</a>
+  <a href="#ch5">5 Build Tools</a>
+  <a href="#ch6">6 Meta-Frameworks</a>
+  <a href="#ch7">7 Starter Kits</a>
+  <a href="#ch8">8 Platforms</a>
+  <a href="#ch9">9 How They Fit Together</a>
+  <a href="#ch10">10 Decision Guide</a>
+</nav>
+
+<div class="container">
+
+<!-- ═══════════════ CHAPTER 1 ═══════════════ -->
+<section id="ch1">
+<h2><span class="num" style="background:linear-gradient(135deg,#7c8cf5,#c084fc)">01</span> Core Concepts: The Vocabulary</h2>
+
+<p>Before diving into tools, let's nail down the terms that get thrown around (and confused) constantly. Once you understand the categories, the whole ecosystem clicks.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 860 480" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+  <rect width="860" height="480" rx="12" fill="#161923"/>
+  <text x="430" y="30" text-anchor="middle" fill="#7d83a0" font-size="13" font-weight="600">FRONTEND TOOLING — THE CATEGORY MAP</text>
+
+  <!-- Transpiler / Compiler -->
+  <rect x="30" y="55" width="250" height="120" rx="10" fill="#1e2233" stroke="#c084fc" stroke-width="1.5"/>
+  <text x="155" y="78" text-anchor="middle" fill="#c084fc" font-size="12" font-weight="700">COMPILERS / TRANSPILERS</text>
+  <text x="155" y="98" text-anchor="middle" fill="#dfe2ed" font-size="11">Transform source code to another form</text>
+  <text x="50" y="122" fill="#7d83a0" font-size="10">• Babel (JS→JS, ES2024→ES5)</text>
+  <text x="50" y="138" fill="#7d83a0" font-size="10">• TypeScript compiler (TS→JS)</text>
+  <text x="50" y="154" fill="#7d83a0" font-size="10">• SWC (Rust, fast Babel alt)</text>
+  <text x="50" y="170" fill="#7d83a0" font-size="10">• esbuild (Go, fast transpiler+bundler)</text>
+
+  <!-- Bundler -->
+  <rect x="305" y="55" width="250" height="120" rx="10" fill="#1e2233" stroke="#2dd4a8" stroke-width="1.5"/>
+  <text x="430" y="78" text-anchor="middle" fill="#2dd4a8" font-size="12" font-weight="700">BUNDLERS</text>
+  <text x="430" y="98" text-anchor="middle" fill="#dfe2ed" font-size="11">Combine modules into optimized output</text>
+  <text x="325" y="122" fill="#7d83a0" font-size="10">• Webpack (2012, most mature)</text>
+  <text x="325" y="138" fill="#7d83a0" font-size="10">• Rollup (2015, ES modules, tree-shake)</text>
+  <text x="325" y="154" fill="#7d83a0" font-size="10">• esbuild (2020, Go, ultra-fast)</text>
+  <text x="325" y="170" fill="#7d83a0" font-size="10">• Rolldown (Rust Rollup replacement)</text>
+
+  <!-- Build Tool -->
+  <rect x="580" y="55" width="250" height="120" rx="10" fill="#1e2233" stroke="#7c8cf5" stroke-width="1.5"/>
+  <text x="705" y="78" text-anchor="middle" fill="#7c8cf5" font-size="12" font-weight="700">BUILD TOOLS (DEV TOOLS)</text>
+  <text x="705" y="98" text-anchor="middle" fill="#dfe2ed" font-size="11">Full dev workflow: bundler + dev server + HMR</text>
+  <text x="600" y="122" fill="#7d83a0" font-size="10">• Vite (2020, Evan You, ESM-first)</text>
+  <text x="600" y="138" fill="#7d83a0" font-size="10">• Webpack (also a build tool)</text>
+  <text x="600" y="154" fill="#7d83a0" font-size="10">• Parcel (zero-config)</text>
+  <text x="600" y="170" fill="#7d83a0" font-size="10">• Turbopack (Rust, Next.js built-in)</text>
+
+  <!-- Meta-Framework -->
+  <rect x="30" y="200" width="250" height="120" rx="10" fill="#1e2233" stroke="#f5a623" stroke-width="1.5"/>
+  <text x="155" y="223" text-anchor="middle" fill="#f5a623" font-size="12" font-weight="700">META-FRAMEWORKS</text>
+  <text x="155" y="243" text-anchor="middle" fill="#dfe2ed" font-size="11">Full-stack frameworks built on UI libs</text>
+  <text x="50" y="267" fill="#7d83a0" font-size="10">• Next.js (React, Vercel, 2016)</text>
+  <text x="50" y="283" fill="#7d83a0" font-size="10">• Nuxt (Vue, 2016)</text>
+  <text x="50" y="299" fill="#7d83a0" font-size="10">• SvelteKit (Svelte, 2021)</text>
+  <text x="50" y="315" fill="#7d83a0" font-size="10">• Remix (React, Shopify, 2021)</text>
+
+  <!-- Starter / Scaffolding -->
+  <rect x="305" y="200" width="250" height="120" rx="10" fill="#1e2233" stroke="#f87171" stroke-width="1.5"/>
+  <text x="430" y="223" text-anchor="middle" fill="#f87171" font-size="12" font-weight="700">STARTER KITS / SCAFFOLDERS</text>
+  <text x="430" y="243" text-anchor="middle" fill="#dfe2ed" font-size="11">Bootstrap a project with defaults</text>
+  <text x="325" y="267" fill="#7d83a0" font-size="10">• Create React App (2016, deprecated)</text>
+  <text x="325" y="283" fill="#7d83a0" font-size="10">• create-vite (Vite scaffolder)</text>
+  <text x="325" y="299" fill="#7d83a0" font-size="10">• create-next-app (Next.js scaffolder)</text>
+  <text x="325" y="315" fill="#7d83a0" font-size="10">• create-vue (Vue scaffolder)</text>
+
+  <!-- Deployment Platform -->
+  <rect x="580" y="200" width="250" height="120" rx="10" fill="#1e2233" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="705" y="223" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="700">DEPLOYMENT PLATFORMS</text>
+  <text x="705" y="243" text-anchor="middle" fill="#dfe2ed" font-size="11">Host, deploy, scale your app</text>
+  <text x="600" y="267" fill="#7d83a0" font-size="10">• Vercel (Next.js creators, 2015)</text>
+  <text x="600" y="283" fill="#7d83a0" font-size="10">• Netlify (Jamstack pioneer, 2014)</text>
+  <text x="600" y="299" fill="#7d83a0" font-size="10">• Cloudflare Pages</text>
+  <text x="600" y="315" fill="#7d83a0" font-size="10">• AWS Amplify, Render, Railway</text>
+
+  <!-- Compile time / Build time / Run time -->
+  <rect x="30" y="350" width="800" height="115" rx="10" fill="#1e2233" stroke="#2a2f45" stroke-width="1"/>
+  <text x="430" y="375" text-anchor="middle" fill="#7d83a0" font-size="13" font-weight="700">THE THREE "TIMES" — WHEN CODE TRANSFORMS HAPPEN</text>
+
+  <rect x="55" y="395" width="220" height="50" rx="8" fill="rgba(192,132,252,0.1)" stroke="#c084fc" stroke-width="1"/>
+  <text x="165" y="415" text-anchor="middle" fill="#c084fc" font-size="11" font-weight="700">COMPILE TIME</text>
+  <text x="165" y="433" text-anchor="middle" fill="#dfe2ed" font-size="10">TS→JS, JSX→JS, Sass→CSS</text>
+
+  <text x="290" y="425" fill="#7d83a0" font-size="14" font-weight="700">→</text>
+
+  <rect x="315" y="395" width="240" height="50" rx="8" fill="rgba(124,140,245,0.1)" stroke="#7c8cf5" stroke-width="1"/>
+  <text x="435" y="415" text-anchor="middle" fill="#7c8cf5" font-size="11" font-weight="700">BUILD TIME</text>
+  <text x="435" y="433" text-anchor="middle" fill="#dfe2ed" font-size="10">Bundle, tree-shake, minify, code-split, SSG</text>
+
+  <text x="570" y="425" fill="#7d83a0" font-size="14" font-weight="700">→</text>
+
+  <rect x="595" y="395" width="220" height="50" rx="8" fill="rgba(45,212,168,0.1)" stroke="#2dd4a8" stroke-width="1"/>
+  <text x="705" y="415" text-anchor="middle" fill="#2dd4a8" font-size="11" font-weight="700">RUN TIME</text>
+  <text x="705" y="433" text-anchor="middle" fill="#dfe2ed" font-size="10">Code executes in browser or on server (SSR)</text>
+</svg>
+</div>
+
+<h3>1.1 Compile Time vs Build Time vs Run Time</h3>
+<p>These three terms describe <em>when</em> code transformation or execution happens:</p>
+
+<ul>
+  <li><strong>Compile Time</strong> — When source code is <em>transformed</em> from one language/syntax to another. TypeScript → JavaScript, JSX → JavaScript, Sass → CSS. Tools: Babel, TypeScript, SWC, esbuild. This happens before or during the build process. You write modern code, the compiler converts it to something browsers understand.</li>
+  <li><strong>Build Time</strong> — The entire process of preparing code for production: compiling, bundling (combining hundreds of files into a few), tree-shaking (removing dead code), minifying (shrinking file sizes), code-splitting (creating chunks for lazy loading), and generating static HTML (SSG). Tools: Webpack, Vite, Rollup, Turbopack. This runs on your machine or CI/CD server when you run <code>npm run build</code>.</li>
+  <li><strong>Run Time</strong> — When code actually executes. In the browser (client-side) or on a server (SSR/API routes). This is when your React components render, event handlers fire, and API calls happen. Run-time code runs every time a user visits your page.</li>
+</ul>
+
+<div class="callout info">
+  <strong>The key insight</strong>
+  The more work you move from <em>run time</em> to <em>build time</em>, the faster your app is for users. SSG generates HTML at build time. Tree-shaking removes dead code at build time. Minification at build time produces smaller files. The user's browser does less work because the build tools already did it.
+</div>
+
+<h3>1.2 Quick Glossary</h3>
+<ul>
+  <li><strong>Transpiler:</strong> Source-to-source compiler. Converts code from one version/language to another (e.g., ES2024 → ES5, or TypeScript → JavaScript). The output is still source code, not machine code.</li>
+  <li><strong>Bundler:</strong> Takes many separate modules/files and combines them into fewer optimized bundles for the browser. Resolves <code>import</code>/<code>require</code> chains and builds a dependency graph.</li>
+  <li><strong>HMR (Hot Module Replacement):</strong> Updates the running app in the browser when you save a file, without a full page reload. Preserves component state.</li>
+  <li><strong>Tree Shaking:</strong> Eliminates code that's imported but never actually used. Only works well with ES module <code>import</code>/<code>export</code> syntax (not CommonJS <code>require</code>).</li>
+  <li><strong>Code Splitting:</strong> Breaks your bundle into smaller chunks that load on demand. When a user visits <code>/dashboard</code>, only the dashboard chunk loads — not the entire app.</li>
+  <li><strong>ESM (ES Modules):</strong> The native module system (<code>import</code>/<code>export</code>) built into JavaScript and supported by modern browsers. The foundation of Vite's architecture.</li>
+  <li><strong>CommonJS (CJS):</strong> The older module system used in Node.js (<code>require()</code> / <code>module.exports</code>). Not natively supported by browsers.</li>
+  <li><strong>Minification:</strong> Removing whitespace, comments, and shortening variable names to reduce file size.</li>
+  <li><strong>Source Maps:</strong> Files that map minified/bundled code back to original source code for debugging.</li>
+  <li><strong>Dev Server:</strong> A local HTTP server that serves your app during development with features like HMR, error overlays, and auto-refresh.</li>
+</ul>
+</section>
+
+<!-- ═══════════════ CHAPTER 2 ═══════════════ -->
+<section id="ch2">
+<h2><span class="num" style="background:linear-gradient(135deg,#7c8cf5,#c084fc)">02</span> The Historical Timeline</h2>
+
+<p>Understanding when tools appeared explains <em>why</em> they exist — each one was created to solve a specific pain point of its era.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 860 700" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+  <rect width="860" height="700" rx="12" fill="#161923"/>
+  <text x="430" y="28" text-anchor="middle" fill="#7d83a0" font-size="13" font-weight="600">FRONTEND TOOLING TIMELINE (2009–2026)</text>
+
+  <!-- Timeline line -->
+  <line x1="80" y1="60" x2="80" y2="680" stroke="#2a2f45" stroke-width="2"/>
+
+  <!-- 2009 -->
+  <circle cx="80" cy="72" r="5" fill="#f5a623"/>
+  <text x="100" y="77" fill="#f5a623" font-size="11" font-weight="700">2009</text>
+  <text x="160" y="77" fill="#dfe2ed" font-size="11"><tspan font-weight="600">Node.js</tspan> released — JavaScript runs on servers. The ecosystem explodes.</text>
+
+  <!-- 2010 -->
+  <circle cx="80" cy="102" r="5" fill="#f87171"/>
+  <text x="100" y="107" fill="#f87171" font-size="11" font-weight="700">2010</text>
+  <text x="160" y="107" fill="#dfe2ed" font-size="11"><tspan font-weight="600">npm</tspan> launches — package management for JS. Dependency trees begin.</text>
+
+  <!-- 2011 -->
+  <circle cx="80" cy="132" r="5" fill="#c084fc"/>
+  <text x="100" y="137" fill="#c084fc" font-size="11" font-weight="700">2011</text>
+  <text x="160" y="137" fill="#dfe2ed" font-size="11"><tspan font-weight="600">Browserify</tspan> — first tool to use <tspan font-style="italic">require()</tspan> in browsers. Bundles Node-style modules.</text>
+
+  <!-- 2012 -->
+  <circle cx="80" cy="162" r="5" fill="#2dd4a8"/>
+  <text x="100" y="167" fill="#2dd4a8" font-size="11" font-weight="700">2012</text>
+  <text x="160" y="167" fill="#dfe2ed" font-size="11"><tspan font-weight="600">Webpack</tspan> by Tobias Koppers. Module bundler that handles JS, CSS, images, everything.</text>
+  <text x="160" y="183" fill="#7d83a0" font-size="10">Also: <tspan font-weight="600">Grunt</tspan> (task runner, the first popular build automation)</text>
+
+  <!-- 2013 -->
+  <circle cx="80" cy="205" r="5" fill="#7c8cf5"/>
+  <text x="100" y="210" fill="#7c8cf5" font-size="11" font-weight="700">2013</text>
+  <text x="160" y="210" fill="#dfe2ed" font-size="11"><tspan font-weight="600">Gulp</tspan> (streaming task runner, replaced Grunt). <tspan font-weight="600">React</tspan> released by Facebook.</text>
+
+  <!-- 2014 -->
+  <circle cx="80" cy="240" r="5" fill="#38bdf8"/>
+  <text x="100" y="245" fill="#38bdf8" font-size="11" font-weight="700">2014</text>
+  <text x="160" y="245" fill="#dfe2ed" font-size="11"><tspan font-weight="600">Babel</tspan> (originally 6to5) — transpile ES6+ to ES5. THE compiler for years.</text>
+  <text x="160" y="261" fill="#7d83a0" font-size="10">Also: <tspan font-weight="600">Netlify</tspan> founded (coined "Jamstack"). <tspan font-weight="600">Vue.js</tspan> released.</text>
+
+  <!-- 2015 -->
+  <circle cx="80" cy="283" r="5" fill="#f5a623"/>
+  <text x="100" y="288" fill="#f5a623" font-size="11" font-weight="700">2015</text>
+  <text x="160" y="288" fill="#dfe2ed" font-size="11"><tspan font-weight="600">Rollup</tspan> by Rich Harris — ES module bundler, pioneered tree-shaking.</text>
+  <text x="160" y="304" fill="#7d83a0" font-size="10">Also: <tspan font-weight="600">Vercel</tspan> (as ZEIT) founded. ES2015/ES6 officially released with import/export.</text>
+
+  <!-- 2016 -->
+  <circle cx="80" cy="326" r="5" fill="#f87171"/>
+  <text x="100" y="331" fill="#f87171" font-size="11" font-weight="700">2016</text>
+  <text x="160" y="331" fill="#dfe2ed" font-size="11"><tspan font-weight="600">Create React App</tspan> (CRA) — zero-config React starter. Webpack under the hood.</text>
+  <text x="160" y="347" fill="#7d83a0" font-size="10">Also: <tspan font-weight="600">Next.js</tspan> v1 released by Vercel. <tspan font-weight="600">Nuxt.js</tspan> released. <tspan font-weight="600">Yarn</tspan> v1.</text>
+
+  <!-- 2017 -->
+  <circle cx="80" cy="369" r="5" fill="#c084fc"/>
+  <text x="100" y="374" fill="#c084fc" font-size="11" font-weight="700">2017</text>
+  <text x="160" y="374" fill="#dfe2ed" font-size="11"><tspan font-weight="600">Parcel</tspan> v1 — zero-config bundler, auto-detects everything.</text>
+  <text x="160" y="390" fill="#7d83a0" font-size="10">Webpack dominance peaks. Config fatigue is real.</text>
+
+  <!-- 2019 -->
+  <circle cx="80" cy="412" r="5" fill="#2dd4a8"/>
+  <text x="100" y="417" fill="#2dd4a8" font-size="11" font-weight="700">2019</text>
+  <text x="160" y="417" fill="#dfe2ed" font-size="11"><tspan font-weight="600">Snowpack</tspan> — unbundled dev server using native ES modules. Pioneered the approach.</text>
+  <text x="160" y="433" fill="#7d83a0" font-size="10">Also: <tspan font-weight="600">SWC</tspan> (Rust-based compiler, 20x faster than Babel).</text>
+
+  <!-- 2020 -->
+  <circle cx="80" cy="455" r="5" fill="#7c8cf5"/>
+  <text x="100" y="460" fill="#7c8cf5" font-size="11" font-weight="700">2020</text>
+  <text x="160" y="460" fill="#dfe2ed" font-size="11"><tspan font-weight="600">Vite</tspan> by Evan You (Vue creator) — ESM dev server + Rollup prod builds. Game changer.</text>
+  <text x="160" y="476" fill="#7d83a0" font-size="10">Also: <tspan font-weight="600">esbuild</tspan> by Evan Wallace — Go-based, 10-100x faster than Webpack.</text>
+
+  <!-- 2021 -->
+  <circle cx="80" cy="498" r="5" fill="#38bdf8"/>
+  <text x="100" y="503" fill="#38bdf8" font-size="11" font-weight="700">2021</text>
+  <text x="160" y="503" fill="#dfe2ed" font-size="11"><tspan font-weight="600">SvelteKit</tspan> (Vite-powered). <tspan font-weight="600">Remix</tspan> launches. Vite adopted by Vue, Svelte as default.</text>
+  <text x="160" y="519" fill="#7d83a0" font-size="10">Snowpack archived — team recommends Vite.</text>
+
+  <!-- 2022 -->
+  <circle cx="80" cy="541" r="5" fill="#f5a623"/>
+  <text x="100" y="546" fill="#f5a623" font-size="11" font-weight="700">2022</text>
+  <text x="160" y="546" fill="#dfe2ed" font-size="11"><tspan font-weight="600">Turbopack</tspan> announced by Vercel (Rust-based Webpack successor for Next.js).</text>
+  <text x="160" y="562" fill="#7d83a0" font-size="10">Also: <tspan font-weight="600">Bun</tspan> (JS runtime + bundler + pkg manager, all-in-one, Zig-based).</text>
+
+  <!-- 2023 -->
+  <circle cx="80" cy="584" r="5" fill="#f87171"/>
+  <text x="100" y="589" fill="#f87171" font-size="11" font-weight="700">2023</text>
+  <text x="160" y="589" fill="#dfe2ed" font-size="11"><tspan font-weight="600">Rspack</tspan> (Rust, Webpack-compatible drop-in). <tspan font-weight="600">CRA officially deprecated</tspan> by React team.</text>
+  <text x="160" y="605" fill="#7d83a0" font-size="10">React docs recommend Next.js, Remix, or Vite instead of CRA.</text>
+
+  <!-- 2024-2025 -->
+  <circle cx="80" cy="627" r="5" fill="#c084fc"/>
+  <text x="100" y="632" fill="#c084fc" font-size="11" font-weight="700">2024-25</text>
+  <text x="160" y="632" fill="#dfe2ed" font-size="11"><tspan font-weight="600">Rolldown</tspan> (Rust-based Rollup replacement, built for Vite). <tspan font-weight="600">Farm</tspan> (Rust, Vite-compatible).</text>
+  <text x="160" y="648" fill="#7d83a0" font-size="10">Vite adopts Rolldown+Oxc pipeline. Turbopack matures in Next.js 14+.</text>
+
+  <!-- 2026 -->
+  <circle cx="80" cy="670" r="5" fill="#2dd4a8"/>
+  <text x="100" y="675" fill="#2dd4a8" font-size="11" font-weight="700">2026</text>
+  <text x="160" y="675" fill="#dfe2ed" font-size="11">Vite with Rolldown is default for most non-Next.js projects. Rust-based tools dominate.</text>
+</svg>
+</div>
+</section>
+
+<!-- ═══════════════ CHAPTER 3 ═══════════════ -->
+<section id="ch3">
+<h2><span class="num" style="background:linear-gradient(135deg,#c084fc,#f87171)">03</span> Compilers & Transpilers</h2>
+
+<p>These tools transform source code from one form to another. They don't bundle or serve — they just convert syntax.</p>
+
+<div class="grid-2">
+  <div class="card">
+    <h4>Babel <span class="tag orange">2014</span> <span class="tag purple">JavaScript</span></h4>
+    <p>The original JS transpiler. Converts modern JavaScript (ES2015+) and JSX into backward-compatible ES5. Uses a plugin architecture — you add presets for React, TypeScript, etc. Was once essential; now being replaced by faster Rust/Go alternatives. Still widely used in legacy projects.</p>
+    <p><strong>Speed:</strong> Slow (JavaScript-based, single-threaded).<br>
+    <strong>Still used by:</strong> Legacy projects, some Webpack setups.</p>
+  </div>
+  <div class="card">
+    <h4>TypeScript Compiler (tsc) <span class="tag blue">2012</span> <span class="tag purple">TypeScript</span></h4>
+    <p>Microsoft's official TypeScript compiler. Does two things: type-checking and transpiling TS→JS. Modern build tools (Vite, esbuild, SWC) only <em>strip types</em> without type-checking for speed. You still run <code>tsc --noEmit</code> separately for type safety.</p>
+    <p><strong>Speed:</strong> Slow for transpilation, essential for type-checking.</p>
+  </div>
+  <div class="card">
+    <h4>SWC <span class="tag green">2019</span> <span class="tag red">Rust</span></h4>
+    <p><strong>Speedy Web Compiler.</strong> A Rust-based alternative to Babel. Roughly 20x faster on a single thread. Compiles TS, JSX, and modern JS. Used internally by Next.js, Parcel v2, and Rspack. The author now works on Turbopack at Vercel.</p>
+    <p><strong>Speed:</strong> ~20x faster than Babel.<br>
+    <strong>Used by:</strong> Next.js, Parcel, Rspack, Deno.</p>
+  </div>
+  <div class="card">
+    <h4>esbuild <span class="tag green">2020</span> <span class="tag cyan">Go</span></h4>
+    <p>Written in Go by Evan Wallace (co-founder of Figma). A transpiler <em>and</em> bundler that's 10-100x faster than Webpack. Uses parallelization and avoids expensive AST transformations. Vite uses esbuild for dependency pre-bundling in dev mode.</p>
+    <p><strong>Speed:</strong> 10-100x faster than Webpack.<br>
+    <strong>Used by:</strong> Vite (dev mode), tsup, many CI pipelines.</p>
+  </div>
+  <div class="card">
+    <h4>Oxc <span class="tag green">2023</span> <span class="tag red">Rust</span></h4>
+    <p>A Rust-based toolchain that includes a parser, linter, transformer, and minifier. Designed to be the foundation for the next generation of JavaScript tools. Used by Rolldown and Vite's new pipeline.</p>
+    <p><strong>Used by:</strong> Rolldown, Vite (via Rolldown).</p>
+  </div>
+  <div class="card">
+    <h4>PostCSS / Lightning CSS <span class="tag blue">2013/2022</span></h4>
+    <p><strong>PostCSS</strong> is a CSS transformer that uses plugins (like Autoprefixer, CSS nesting). <strong>Lightning CSS</strong> is a Rust-based CSS parser, transformer, and minifier — much faster. Used by Vite and Parcel.</p>
+  </div>
+</div>
+
+<div class="callout tip">
+  <strong>The Rust/Go revolution</strong>
+  The trend is unmistakable: JavaScript-based tools (Babel, Terser, older Webpack loaders) are being replaced by Rust or Go equivalents that are 10-100x faster. This matters because modern codebases have thousands of modules that need processing.
+</div>
+</section>
+
+<!-- ═══════════════ CHAPTER 4 ═══════════════ -->
+<section id="ch4">
+<h2><span class="num" style="background:linear-gradient(135deg,#2dd4a8,#38bdf8)">04</span> Bundlers: Combining Your Code</h2>
+
+<p>Bundlers take your many modules and files and combine them into optimized output that browsers can efficiently load.</p>
+
+<table class="cmp">
+  <tr>
+    <th>Bundler</th>
+    <th>Year</th>
+    <th>Written In</th>
+    <th>Key Innovation</th>
+    <th>Status (2026)</th>
+  </tr>
+  <tr>
+    <td><strong>Webpack</strong></td>
+    <td>2012</td>
+    <td>JavaScript</td>
+    <td>First universal bundler (JS, CSS, images). Massive plugin ecosystem. Module Federation.</td>
+    <td><span class="tag orange">Legacy/Maintained</span></td>
+  </tr>
+  <tr>
+    <td><strong>Rollup</strong></td>
+    <td>2015</td>
+    <td>JavaScript</td>
+    <td>ES module-native, pioneered tree-shaking. Produces the cleanest, smallest output. Best for libraries.</td>
+    <td><span class="tag green">Active</span> (being replaced by Rolldown)</td>
+  </tr>
+  <tr>
+    <td><strong>esbuild</strong></td>
+    <td>2020</td>
+    <td>Go</td>
+    <td>Extreme speed. Parallelized from the ground up. Transpiler + bundler combined.</td>
+    <td><span class="tag green">Active</span></td>
+  </tr>
+  <tr>
+    <td><strong>Turbopack</strong></td>
+    <td>2022</td>
+    <td>Rust</td>
+    <td>Incremental computation. Designed for Next.js. Ultra-fast HMR via SWC.</td>
+    <td><span class="tag blue">Active</span> (Next.js only)</td>
+  </tr>
+  <tr>
+    <td><strong>Rspack</strong></td>
+    <td>2023</td>
+    <td>Rust</td>
+    <td>Webpack-compatible API in Rust. Drop-in replacement for Webpack. Uses SWC internally.</td>
+    <td><span class="tag green">Growing fast</span></td>
+  </tr>
+  <tr>
+    <td><strong>Rolldown</strong></td>
+    <td>2024</td>
+    <td>Rust</td>
+    <td>Rust-based replacement for Rollup. Rollup-compatible API. Built to unify Vite's pipeline.</td>
+    <td><span class="tag blue">New, adopted by Vite</span></td>
+  </tr>
+  <tr>
+    <td><strong>Farm</strong></td>
+    <td>2023</td>
+    <td>Rust</td>
+    <td>Vite-compatible, extremely fast, incremental builds. Newer alternative.</td>
+    <td><span class="tag purple">Emerging</span></td>
+  </tr>
+</table>
+
+<h3>4.1 How Webpack Bundles (the traditional approach)</h3>
+<p>Webpack starts at your entry point (e.g., <code>src/index.js</code>), follows every <code>import</code> and <code>require()</code>, builds a complete dependency graph of your entire application, then outputs one or more bundles. It processes everything — JavaScript, CSS, images, fonts — through "loaders" that transform files, and "plugins" that modify the build process.</p>
+<pre><code>// webpack.config.js — the classic config file
+module.exports = {
+  entry: './src/index.js',
+  output: { filename: 'bundle.js', path: '/dist' },
+  module: {
+    rules: [
+      { test: /\.jsx?$/, use: 'babel-loader' },     // Compile JS/JSX
+      { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+      { test: /\.(png|jpg)$/, type: 'asset/resource' }
+    ]
+  },
+  plugins: [ new HtmlWebpackPlugin({ template: './index.html' }) ]
+};</code></pre>
+
+<h3>4.2 How Vite/Rolldown Bundles (the modern approach)</h3>
+<p>In <strong>development</strong>, Vite doesn't bundle at all. It serves source files directly to the browser as native ES modules. The browser's own <code>import</code> system requests each file individually. Vite only transforms files on-demand when the browser requests them. This is why dev server startup is nearly instant regardless of project size.</p>
+<p>In <strong>production</strong>, Vite uses Rolldown (previously Rollup) to create optimized bundles — because native ESM in production would mean hundreds of network requests.</p>
+
+<div class="callout warn">
+  <strong>Webpack: bundles everything upfront (slow start, slow HMR on large projects)</strong><br>
+  <strong>Vite: serves files on-demand via ESM (instant start, fast HMR regardless of project size)</strong><br>
+  This architectural difference is why Vite's dev server starts in under a second even for large projects, while Webpack can take 15-30 seconds.
+</div>
+</section>
+
+<!-- ═══════════════ CHAPTER 5 ═══════════════ -->
+<section id="ch5">
+<h2><span class="num" style="background:linear-gradient(135deg,#7c8cf5,#38bdf8)">05</span> Build Tools: The Full Development Experience</h2>
+
+<p>Build tools combine a bundler with a dev server, HMR, asset handling, and often a plugin system. They're what you actually interact with day-to-day as a developer.</p>
+
+<div class="grid-2">
+  <div class="card">
+    <h4>Vite <span class="tag green">2020</span></h4>
+    <p><strong>Creator:</strong> Evan You (Vue.js creator). <strong>Pronounciation:</strong> "veet" (French for "fast").</p>
+    <p><strong>Architecture:</strong> Native ESM dev server (no bundling during dev!) + Rolldown for production builds. Uses Oxc for parsing/transforming.</p>
+    <p><strong>Why it won:</strong> Near-instant dev server startup (~1 second), blazing-fast HMR (~10-20ms), minimal configuration, framework-agnostic (React, Vue, Svelte, Preact, Solid, etc.).</p>
+    <p><strong>Used as default by:</strong> Vue 3, SvelteKit, Astro, Nuxt 3, SolidStart, and most new React projects.</p>
+    <p><strong>2026 status:</strong> The dominant build tool for non-Next.js projects. Adopted the Rolldown+Oxc Rust pipeline for a unified dev/prod experience.</p>
+  </div>
+  <div class="card">
+    <h4>Webpack <span class="tag orange">2012</span></h4>
+    <p><strong>Creator:</strong> Tobias Koppers.</p>
+    <p><strong>Architecture:</strong> Bundles everything upfront. Massive plugin/loader ecosystem. Can do anything with enough configuration.</p>
+    <p><strong>Strength:</strong> Most mature, largest ecosystem (thousands of plugins), handles every edge case. Module Federation for micro-frontends. Battle-tested at massive scale.</p>
+    <p><strong>Weakness:</strong> Slow dev server, complex configuration, verbose. Performance degrades with project size.</p>
+    <p><strong>2026 status:</strong> Maintained but not chosen for new projects. Legacy codebases and complex enterprise setups.</p>
+  </div>
+  <div class="card">
+    <h4>Turbopack <span class="tag blue">2022</span></h4>
+    <p><strong>Creator:</strong> Vercel (by Tobias Koppers, Webpack's creator!).</p>
+    <p><strong>Architecture:</strong> Rust-based incremental bundler. Uses SWC for compilation. Designed specifically for Next.js.</p>
+    <p><strong>Strength:</strong> Extremely fast dev server and HMR. Deep integration with Next.js. Incremental computation (only recomputes what changed).</p>
+    <p><strong>Weakness:</strong> Not a general-purpose tool — tightly coupled to Next.js. Limited standalone use.</p>
+    <p><strong>2026 status:</strong> The default dev bundler in Next.js 14+ (<code>next dev --turbo</code>).</p>
+  </div>
+  <div class="card">
+    <h4>Parcel <span class="tag purple">2017</span></h4>
+    <p><strong>Architecture:</strong> Zero-config. Auto-detects file types, installs dependencies, configures itself. Uses SWC under the hood.</p>
+    <p><strong>Strength:</strong> Genuinely zero-config. Just point it at an HTML file and it works. Great DX for beginners.</p>
+    <p><strong>Weakness:</strong> Smaller community, less plugin ecosystem. Not adopted by major frameworks.</p>
+    <p><strong>2026 status:</strong> Active but niche. Good for quick prototyping.</p>
+  </div>
+  <div class="card">
+    <h4>Rspack / Rsbuild <span class="tag green">2023</span></h4>
+    <p><strong>Architecture:</strong> Rust-based, Webpack-compatible API. A drop-in replacement that's 5-10x faster. Rsbuild is the higher-level build tool built on Rspack.</p>
+    <p><strong>Strength:</strong> Migrate from Webpack with minimal changes. Uses SWC internally. Growing fast in enterprise adoption.</p>
+    <p><strong>2026 status:</strong> Rising. The best migration path for teams stuck on Webpack who want speed without a full rewrite.</p>
+  </div>
+  <div class="card">
+    <h4>Bun <span class="tag cyan">2022</span></h4>
+    <p><strong>Architecture:</strong> All-in-one: JS runtime (like Node.js), bundler, transpiler, package manager, and test runner. Written in Zig.</p>
+    <p><strong>Strength:</strong> Incredibly fast at everything. <code>bun install</code> is 25x faster than npm. Native TypeScript/JSX support without config.</p>
+    <p><strong>2026 status:</strong> Growing alternative to Node.js. The bundler is production-ready. The "all-in-one" approach is appealing but means tight coupling.</p>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ CHAPTER 6 ═══════════════ -->
+<section id="ch6">
+<h2><span class="num" style="background:linear-gradient(135deg,#f5a623,#f87171)">06</span> Meta-Frameworks: Full-Stack Web Frameworks</h2>
+
+<p>Meta-frameworks sit <em>on top of</em> UI libraries (React, Vue, Svelte) and add routing, SSR, SSG, data fetching, API routes, and more. They also integrate build tools under the hood.</p>
+
+<table class="cmp">
+  <tr>
+    <th>Framework</th>
+    <th>UI Library</th>
+    <th>Build Tool</th>
+    <th>Created By</th>
+    <th>Year</th>
+    <th>Key Features</th>
+  </tr>
+  <tr>
+    <td><strong>Next.js</strong></td>
+    <td>React</td>
+    <td>Turbopack (dev) / Webpack (prod)</td>
+    <td>Vercel</td>
+    <td>2016</td>
+    <td>SSR, SSG, ISR, API routes, App Router, RSC, Image Optimization</td>
+  </tr>
+  <tr>
+    <td><strong>Nuxt</strong></td>
+    <td>Vue</td>
+    <td>Vite</td>
+    <td>Nuxt Labs</td>
+    <td>2016</td>
+    <td>Auto-imports, file-based routing, Nitro server engine, modules ecosystem</td>
+  </tr>
+  <tr>
+    <td><strong>SvelteKit</strong></td>
+    <td>Svelte</td>
+    <td>Vite</td>
+    <td>Svelte team</td>
+    <td>2021</td>
+    <td>Compiled framework (no virtual DOM), file-based routing, adapters for any platform</td>
+  </tr>
+  <tr>
+    <td><strong>Remix</strong></td>
+    <td>React</td>
+    <td>Vite</td>
+    <td>Shopify</td>
+    <td>2021</td>
+    <td>Nested routing, progressive enhancement, web standards-first, loaders/actions</td>
+  </tr>
+  <tr>
+    <td><strong>Astro</strong></td>
+    <td>Any (React, Vue, Svelte...)</td>
+    <td>Vite</td>
+    <td>Astro team</td>
+    <td>2022</td>
+    <td>Content-focused, zero JS by default (Islands Architecture), multi-framework</td>
+  </tr>
+  <tr>
+    <td><strong>Gatsby</strong></td>
+    <td>React</td>
+    <td>Webpack</td>
+    <td>Gatsby Inc</td>
+    <td>2015</td>
+    <td>SSG pioneer, GraphQL data layer. Largely superseded by Next.js and Astro.</td>
+  </tr>
+</table>
+
+<div class="callout info">
+  <strong>The Relationship Chain</strong>
+  <p style="margin-bottom:0">UI Library (React) → Meta-Framework (Next.js) → Build Tool (Turbopack/Webpack) → Bundler (Turbopack) → Compiler (SWC) → Deployment Platform (Vercel)</p>
+  <p style="margin-bottom:0;margin-top:.5rem;color:var(--text-dim)">Each layer builds on the one below it. You pick a meta-framework, and it picks the build tool and bundler for you.</p>
+</div>
+</section>
+
+<!-- ═══════════════ CHAPTER 7 ═══════════════ -->
+<section id="ch7">
+<h2><span class="num" style="background:linear-gradient(135deg,#f87171,#fb923c)">07</span> Starter Kits & Scaffolders</h2>
+
+<p>These tools generate a new project with sensible defaults. They're what you run when you start a project.</p>
+
+<div class="grid-2">
+  <div class="card">
+    <h4>Create React App (CRA) <span class="tag red">DEPRECATED</span></h4>
+    <p><strong>Created:</strong> 2016 by Facebook. <strong>Build Tool:</strong> Webpack + Babel.</p>
+    <p>Was the standard way to start a React project for years. Zero config — just <code>npx create-react-app my-app</code>. Abstracted all Webpack complexity behind <code>react-scripts</code>.</p>
+    <p><strong>Why deprecated:</strong> Slow dev server, no SSR support, massive bundle sizes, couldn't configure Webpack without "ejecting" (which exposed 30+ config files). The React team officially deprecated it in 2023, recommending meta-frameworks or Vite instead.</p>
+  </div>
+  <div class="card">
+    <h4>create-vite <span class="tag green">RECOMMENDED</span></h4>
+    <p><code>npm create vite@latest</code> — the modern replacement for CRA. Prompts you for a framework (React, Vue, Svelte, etc.) and variant (TypeScript, etc.), scaffolds a minimal project with Vite.</p>
+    <p><strong>Why better:</strong> Instant dev server, fast HMR, small config, framework-agnostic. The default choice for standalone SPAs in 2026.</p>
+  </div>
+  <div class="card">
+    <h4>create-next-app</h4>
+    <p><code>npx create-next-app@latest</code> — scaffolds a Next.js project with App Router, TypeScript, Tailwind, and ESLint pre-configured. Use this when you want full-stack React with SSR/SSG.</p>
+  </div>
+  <div class="card">
+    <h4>Others</h4>
+    <p><code>nuxi init</code> (Nuxt), <code>npm create svelte@latest</code> (SvelteKit), <code>npm create astro@latest</code> (Astro). Each framework has its own scaffolder.</p>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ CHAPTER 8 ═══════════════ -->
+<section id="ch8">
+<h2><span class="num" style="background:linear-gradient(135deg,#38bdf8,#2dd4a8)">08</span> Deployment Platforms: Where Your App Lives</h2>
+
+<p>After building your app, you need to deploy it. These platforms handle hosting, CDN, serverless functions, and CI/CD.</p>
+
+<table class="cmp">
+  <tr>
+    <th>Platform</th>
+    <th>Founded</th>
+    <th>Best For</th>
+    <th>Key Features</th>
+  </tr>
+  <tr>
+    <td><strong>Vercel</strong></td>
+    <td>2015 (as ZEIT)</td>
+    <td>Next.js, React</td>
+    <td>Created Next.js. Best-in-class Next.js support: ISR, edge middleware, image optimization. Automatic preview deployments per PR.</td>
+  </tr>
+  <tr>
+    <td><strong>Netlify</strong></td>
+    <td>2014</td>
+    <td>Jamstack, any framework</td>
+    <td>Coined "Jamstack." Framework-agnostic. Built-in forms, identity, A/B testing. Free tier allows commercial use.</td>
+  </tr>
+  <tr>
+    <td><strong>Cloudflare Pages</strong></td>
+    <td>2020</td>
+    <td>Static + edge</td>
+    <td>Massive global edge network (300+ locations). Workers for server-side logic. Generous free tier.</td>
+  </tr>
+  <tr>
+    <td><strong>AWS Amplify</strong></td>
+    <td>2018</td>
+    <td>Enterprise, AWS ecosystem</td>
+    <td>Full AWS integration. Infinite scale. Steeper learning curve but maximum flexibility.</td>
+  </tr>
+  <tr>
+    <td><strong>Render</strong></td>
+    <td>2019</td>
+    <td>Full-stack apps</td>
+    <td>Simple alternative to Heroku. Supports static sites, Node servers, databases, cron jobs.</td>
+  </tr>
+  <tr>
+    <td><strong>Railway</strong></td>
+    <td>2020</td>
+    <td>Full-stack, databases</td>
+    <td>Deploy from GitHub with zero config. Built-in Postgres, Redis. Great for backends.</td>
+  </tr>
+</table>
+
+<div class="callout tip">
+  <strong>Vercel vs Netlify — the simple version</strong>
+  Building with <strong>Next.js</strong>? Use <strong>Vercel</strong> — it's built by the same team and deeply integrated. Using <strong>any other framework</strong> (Astro, SvelteKit, Vue, Nuxt, plain HTML)? <strong>Netlify</strong> is equally good and more framework-agnostic. For both, the deploy flow is: connect Git repo → push code → auto-deploys globally.
+</div>
+</section>
+
+<!-- ═══════════════ CHAPTER 9 ═══════════════ -->
+<section id="ch9">
+<h2><span class="num" style="background:linear-gradient(135deg,#f5a623,#c084fc)">09</span> How They All Fit Together</h2>
+
+<p>This is the section that connects everything. Let's trace three common setups to see how the pieces assemble:</p>
+
+<h3>9.1 Setup A: Next.js on Vercel (React full-stack)</h3>
+<div class="flow-row">
+  <div class="flow-box" style="border-color:#c084fc">You write<br><small style="color:var(--text-dim)">React + TypeScript</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#f87171">SWC<br><small style="color:var(--text-dim)">Compiles TS/JSX</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#f5a623">Turbopack (dev)<br><small style="color:var(--text-dim)">HMR, dev server</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#2dd4a8">Webpack (prod)<br><small style="color:var(--text-dim)">Bundle, optimize</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#38bdf8">Vercel<br><small style="color:var(--text-dim)">Deploy, CDN, edge</small></div>
+</div>
+<p>Next.js orchestrates all of this. You don't configure SWC or Turbopack directly — <code>create-next-app</code> sets it all up. The meta-framework is the "glue."</p>
+
+<h3>9.2 Setup B: Vite + React SPA on Netlify</h3>
+<div class="flow-row">
+  <div class="flow-box" style="border-color:#c084fc">You write<br><small style="color:var(--text-dim)">React + TypeScript</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#f87171">esbuild/Oxc<br><small style="color:var(--text-dim)">Compiles TS/JSX</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#7c8cf5">Vite (dev)<br><small style="color:var(--text-dim)">ESM, no bundling!</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#2dd4a8">Rolldown (prod)<br><small style="color:var(--text-dim)">Bundle, tree-shake</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#38bdf8">Netlify<br><small style="color:var(--text-dim)">Static CDN deploy</small></div>
+</div>
+<p>Here, Vite handles both dev serving and production bundling. No meta-framework — just a client-side SPA. Simpler but no SSR/SSG.</p>
+
+<h3>9.3 Setup C: SvelteKit + Vite on Cloudflare Pages</h3>
+<div class="flow-row">
+  <div class="flow-box" style="border-color:#c084fc">You write<br><small style="color:var(--text-dim)">Svelte + TypeScript</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#f87171">Vite + Oxc<br><small style="color:var(--text-dim)">Compile, transform</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#f5a623">SvelteKit<br><small style="color:var(--text-dim)">SSR, routing, adapters</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#2dd4a8">Rolldown<br><small style="color:var(--text-dim)">Prod bundles</small></div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-box" style="border-color:#38bdf8">Cloudflare Pages<br><small style="color:var(--text-dim)">Edge functions</small></div>
+</div>
+
+<h3>9.4 The Layered Architecture</h3>
+<div class="diagram">
+<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+  <rect width="700" height="380" rx="12" fill="#161923"/>
+  <text x="350" y="28" text-anchor="middle" fill="#7d83a0" font-size="13" font-weight="600">THE STACK: LAYERS YOU CHOOSE (TOP) vs LAYERS CHOSEN FOR YOU (BOTTOM)</text>
+
+  <!-- Layer 1: You choose -->
+  <rect x="50" y="50" width="600" height="50" rx="8" fill="rgba(56,189,248,0.1)" stroke="#38bdf8" stroke-width="1.5"/>
+  <text x="350" y="73" text-anchor="middle" fill="#38bdf8" font-size="13" font-weight="700">DEPLOYMENT PLATFORM</text>
+  <text x="350" y="90" text-anchor="middle" fill="#7d83a0" font-size="10">Vercel · Netlify · Cloudflare Pages · AWS · Self-hosted</text>
+
+  <rect x="50" y="115" width="600" height="50" rx="8" fill="rgba(245,166,35,0.1)" stroke="#f5a623" stroke-width="1.5"/>
+  <text x="350" y="138" text-anchor="middle" fill="#f5a623" font-size="13" font-weight="700">META-FRAMEWORK (optional)</text>
+  <text x="350" y="155" text-anchor="middle" fill="#7d83a0" font-size="10">Next.js · Nuxt · SvelteKit · Remix · Astro — or none (plain SPA)</text>
+
+  <rect x="50" y="180" width="600" height="50" rx="8" fill="rgba(124,140,245,0.1)" stroke="#7c8cf5" stroke-width="1.5"/>
+  <text x="350" y="203" text-anchor="middle" fill="#7c8cf5" font-size="13" font-weight="700">BUILD TOOL</text>
+  <text x="350" y="220" text-anchor="middle" fill="#7d83a0" font-size="10">Vite · Webpack · Turbopack (auto-selected by framework, or you pick for SPA)</text>
+
+  <!-- Layer 2: Chosen for you -->
+  <rect x="50" y="245" width="290" height="50" rx="8" fill="rgba(45,212,168,0.1)" stroke="#2dd4a8" stroke-width="1"/>
+  <text x="195" y="268" text-anchor="middle" fill="#2dd4a8" font-size="12" font-weight="700">BUNDLER</text>
+  <text x="195" y="285" text-anchor="middle" fill="#7d83a0" font-size="10">Rolldown · Webpack · Turbopack · esbuild</text>
+
+  <rect x="360" y="245" width="290" height="50" rx="8" fill="rgba(192,132,252,0.1)" stroke="#c084fc" stroke-width="1"/>
+  <text x="505" y="268" text-anchor="middle" fill="#c084fc" font-size="12" font-weight="700">COMPILER / TRANSPILER</text>
+  <text x="505" y="285" text-anchor="middle" fill="#7d83a0" font-size="10">SWC · Oxc · esbuild · Babel</text>
+
+  <rect x="50" y="310" width="600" height="50" rx="8" fill="rgba(248,113,113,0.08)" stroke="#f87171" stroke-width="1"/>
+  <text x="350" y="333" text-anchor="middle" fill="#f87171" font-size="12" font-weight="700">UI LIBRARY (your code)</text>
+  <text x="350" y="350" text-anchor="middle" fill="#7d83a0" font-size="10">React · Vue · Svelte · Solid · Preact · Vanilla JS/TS</text>
+
+  <!-- Annotations -->
+  <text x="680" y="80" fill="#38bdf8" font-size="9" text-anchor="end">You choose</text>
+  <text x="680" y="145" fill="#f5a623" font-size="9" text-anchor="end">You choose</text>
+  <text x="680" y="210" fill="#7c8cf5" font-size="9" text-anchor="end">Often auto-picked</text>
+  <text x="680" y="275" fill="#2dd4a8" font-size="9" text-anchor="end">Auto-picked</text>
+  <text x="680" y="340" fill="#f87171" font-size="9" text-anchor="end">You choose</text>
+</svg>
+</div>
+
+<div class="callout info">
+  <strong>The key takeaway</strong>
+  As a frontend developer, you typically choose three things: <strong>UI library</strong> (React, Vue, Svelte), <strong>meta-framework</strong> (Next.js, Nuxt, SvelteKit — or none), and <strong>deployment platform</strong> (Vercel, Netlify). Everything else — the bundler, compiler, and build tool — is chosen for you by the meta-framework. You <em>can</em> customize them, but the defaults work great.
+</div>
+</section>
+
+<!-- ═══════════════ CHAPTER 10 ═══════════════ -->
+<section id="ch10">
+<h2><span class="num" style="background:linear-gradient(135deg,#2dd4a8,#7c8cf5)">10</span> Decision Guide: What Should I Use?</h2>
+
+<h3>10.1 By Project Type</h3>
+
+<table class="cmp">
+  <tr>
+    <th>Project</th>
+    <th>Recommended Stack</th>
+    <th>Why</th>
+  </tr>
+  <tr>
+    <td>React SPA (dashboard, admin panel)</td>
+    <td><strong>Vite + React</strong></td>
+    <td>Fast DX, simple setup, no SSR needed. <code>npm create vite@latest</code></td>
+  </tr>
+  <tr>
+    <td>React full-stack (SEO, SSR, API)</td>
+    <td><strong>Next.js → Vercel</strong></td>
+    <td>SSR, ISR, API routes, image optimization, React Server Components.</td>
+  </tr>
+  <tr>
+    <td>Vue project</td>
+    <td><strong>Nuxt 3</strong> (full-stack) or <strong>Vite + Vue</strong> (SPA)</td>
+    <td>Nuxt uses Vite internally. Best Vue ecosystem integration.</td>
+  </tr>
+  <tr>
+    <td>Content/marketing site, blog</td>
+    <td><strong>Astro → Netlify/Cloudflare</strong></td>
+    <td>Zero JS by default, content-first. Use any UI framework for interactive islands.</td>
+  </tr>
+  <tr>
+    <td>NPM library / component library</td>
+    <td><strong>Rollup</strong> or <strong>tsup</strong> (uses esbuild)</td>
+    <td>Clean ESM output, tree-shakeable, smallest bundles. Purpose-built for libraries.</td>
+  </tr>
+  <tr>
+    <td>Legacy Webpack project needing speed</td>
+    <td><strong>Rspack</strong> (drop-in replacement)</td>
+    <td>Same config, same plugins, 5-10x faster. Minimal migration effort.</td>
+  </tr>
+  <tr>
+    <td>Quick prototype / experiment</td>
+    <td><strong>Vite</strong> or <strong>Parcel</strong></td>
+    <td>Both are near-zero-config. Parcel is truly zero-config, Vite is slightly more configurable.</td>
+  </tr>
+</table>
+
+<h3>10.2 The "Should I Migrate?" Flowchart</h3>
+
+<div class="diagram">
+<svg viewBox="0 0 700 350" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, system-ui, sans-serif">
+  <rect width="700" height="350" rx="12" fill="#161923"/>
+
+  <!-- Start -->
+  <rect x="250" y="20" width="200" height="40" rx="8" fill="#1e2233" stroke="#7c8cf5" stroke-width="1.5"/>
+  <text x="350" y="45" text-anchor="middle" fill="#7c8cf5" font-size="12" font-weight="700">What are you using now?</text>
+
+  <!-- CRA -->
+  <rect x="30" y="90" width="140" height="35" rx="8" fill="#1e2233" stroke="#f87171" stroke-width="1"/>
+  <text x="100" y="112" text-anchor="middle" fill="#f87171" font-size="11" font-weight="600">Create React App</text>
+  <line x1="290" y1="60" x2="100" y2="90" stroke="#2a2f45" stroke-width="1"/>
+
+  <rect x="30" y="145" width="140" height="35" rx="8" fill="rgba(45,212,168,0.15)" stroke="#2dd4a8" stroke-width="1"/>
+  <text x="100" y="167" text-anchor="middle" fill="#2dd4a8" font-size="10" font-weight="700">→ Migrate to Vite</text>
+  <line x1="100" y1="125" x2="100" y2="145" stroke="#2a2f45" stroke-width="1"/>
+
+  <!-- Webpack -->
+  <rect x="200" y="90" width="140" height="35" rx="8" fill="#1e2233" stroke="#f5a623" stroke-width="1"/>
+  <text x="270" y="112" text-anchor="middle" fill="#f5a623" font-size="11" font-weight="600">Webpack</text>
+  <line x1="330" y1="60" x2="270" y2="90" stroke="#2a2f45" stroke-width="1"/>
+
+  <rect x="185" y="145" width="85" height="55" rx="8" fill="rgba(45,212,168,0.1)" stroke="#2dd4a8" stroke-width="1"/>
+  <text x="228" y="163" text-anchor="middle" fill="#2dd4a8" font-size="9" font-weight="700">Simple project:</text>
+  <text x="228" y="178" text-anchor="middle" fill="#dfe2ed" font-size="9">→ Migrate to Vite</text>
+  <text x="228" y="193" text-anchor="middle" fill="#7d83a0" font-size="8">(some effort)</text>
+
+  <rect x="280" y="145" width="85" height="55" rx="8" fill="rgba(248,113,113,0.1)" stroke="#f87171" stroke-width="1"/>
+  <text x="323" y="163" text-anchor="middle" fill="#f87171" font-size="9" font-weight="700">Complex/legacy:</text>
+  <text x="323" y="178" text-anchor="middle" fill="#dfe2ed" font-size="9">→ Try Rspack</text>
+  <text x="323" y="193" text-anchor="middle" fill="#7d83a0" font-size="8">(drop-in, fast)</text>
+
+  <line x1="250" y1="125" x2="228" y2="145" stroke="#2a2f45" stroke-width="1"/>
+  <line x1="290" y1="125" x2="323" y2="145" stroke="#2a2f45" stroke-width="1"/>
+
+  <!-- Next.js -->
+  <rect x="390" y="90" width="140" height="35" rx="8" fill="#1e2233" stroke="#38bdf8" stroke-width="1"/>
+  <text x="460" y="112" text-anchor="middle" fill="#38bdf8" font-size="11" font-weight="600">Next.js</text>
+  <line x1="390" y1="60" x2="460" y2="90" stroke="#2a2f45" stroke-width="1"/>
+
+  <rect x="390" y="145" width="140" height="45" rx="8" fill="rgba(56,189,248,0.1)" stroke="#38bdf8" stroke-width="1"/>
+  <text x="460" y="163" text-anchor="middle" fill="#38bdf8" font-size="10" font-weight="700">Stay! Use Turbopack</text>
+  <text x="460" y="180" text-anchor="middle" fill="#7d83a0" font-size="9">next dev --turbo</text>
+  <line x1="460" y1="125" x2="460" y2="145" stroke="#2a2f45" stroke-width="1"/>
+
+  <!-- Nothing yet -->
+  <rect x="560" y="90" width="120" height="35" rx="8" fill="#1e2233" stroke="#c084fc" stroke-width="1"/>
+  <text x="620" y="112" text-anchor="middle" fill="#c084fc" font-size="11" font-weight="600">Starting fresh?</text>
+  <line x1="420" y1="60" x2="620" y2="90" stroke="#2a2f45" stroke-width="1"/>
+
+  <rect x="540" y="145" width="75" height="50" rx="8" fill="rgba(192,132,252,0.1)" stroke="#c084fc" stroke-width="1"/>
+  <text x="578" y="163" text-anchor="middle" fill="#c084fc" font-size="9" font-weight="700">Need SSR?</text>
+  <text x="578" y="180" text-anchor="middle" fill="#dfe2ed" font-size="9">→ Next.js</text>
+  <text x="578" y="192" text-anchor="middle" fill="#dfe2ed" font-size="9">→ Nuxt / SK</text>
+
+  <rect x="625" y="145" width="60" height="50" rx="8" fill="rgba(45,212,168,0.1)" stroke="#2dd4a8" stroke-width="1"/>
+  <text x="655" y="163" text-anchor="middle" fill="#2dd4a8" font-size="9" font-weight="700">SPA?</text>
+  <text x="655" y="180" text-anchor="middle" fill="#dfe2ed" font-size="9">→ Vite</text>
+
+  <line x1="600" y1="125" x2="578" y2="145" stroke="#2a2f45" stroke-width="1"/>
+  <line x1="640" y1="125" x2="655" y2="145" stroke="#2a2f45" stroke-width="1"/>
+
+  <!-- Summary box -->
+  <rect x="30" y="230" width="640" height="100" rx="10" fill="#1e2233" stroke="#2a2f45" stroke-width="1"/>
+  <text x="350" y="255" text-anchor="middle" fill="#7d83a0" font-size="12" font-weight="700">TL;DR — THE 2026 DEFAULTS</text>
+  <text x="50" y="280" fill="#2dd4a8" font-size="11" font-weight="600">New React SPA:</text>
+  <text x="190" y="280" fill="#dfe2ed" font-size="11">Vite + React → Netlify/Vercel</text>
+  <text x="50" y="300" fill="#38bdf8" font-size="11" font-weight="600">New React full-stack:</text>
+  <text x="210" y="300" fill="#dfe2ed" font-size="11">Next.js (Turbopack) → Vercel</text>
+  <text x="400" y="280" fill="#f5a623" font-size="11" font-weight="600">Vue:</text>
+  <text x="440" y="280" fill="#dfe2ed" font-size="11">Nuxt 3 (Vite) → Netlify/Vercel</text>
+  <text x="400" y="300" fill="#c084fc" font-size="11" font-weight="600">Content site:</text>
+  <text x="500" y="300" fill="#dfe2ed" font-size="11">Astro (Vite) → Cloudflare/Netlify</text>
+  <text x="50" y="320" fill="#f87171" font-size="11" font-weight="600">Legacy Webpack migration:</text>
+  <text x="240" y="320" fill="#dfe2ed" font-size="11">Rspack (drop-in) or full Vite migration</text>
+</svg>
+</div>
+
+<h3>10.3 Common Misconceptions Clarified</h3>
+<ul>
+  <li><strong>"Vercel is a bundler"</strong> — No. Vercel is a deployment platform (like hosting). The bundler is Turbopack/Webpack inside Next.js.</li>
+  <li><strong>"Vite replaces React"</strong> — No. Vite is a build tool. React is a UI library. You use them together: Vite builds your React code.</li>
+  <li><strong>"Create React App is still fine"</strong> — It's officially deprecated. Migrating to Vite takes 15-30 minutes and gives you 10x faster dev experience.</li>
+  <li><strong>"Turbopack works with Vue/Svelte"</strong> — Not really. Turbopack is tightly integrated with Next.js (React). For Vue/Svelte, use Vite.</li>
+  <li><strong>"You need to configure the bundler yourself"</strong> — In 2026, almost never. Meta-frameworks and Vite handle everything. You only touch config for advanced needs.</li>
+  <li><strong>"esbuild and Vite are the same thing"</strong> — No. esbuild is a fast compiler/bundler (the engine). Vite is a build tool that <em>uses</em> esbuild/Rolldown under the hood (the car that uses the engine).</li>
+  <li><strong>"Compile time and build time are the same"</strong> — Compilation (transforming syntax) is one <em>step</em> within the build process. Building includes compilation plus bundling, optimizing, code-splitting, and more.</li>
+</ul>
+</section>
+
+</div>
+
+<footer>
+  <p>Frontend Tooling Ecosystem: A to Z — A complete reference guide</p>
+  <p>Last updated: March 2026 · Bookmark and revisit anytime</p>
+</footer>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav.toc a');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        navLinks.forEach(l => l.classList.remove('active'));
+        const link = document.querySelector(`nav.toc a[href="#${e.target.id}"]`);
+        if(link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>

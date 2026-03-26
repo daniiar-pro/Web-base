@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern Frontend Architecture — Complete Guide</title>
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --surface: #131927;
+    --surface2: #1a2236;
+    --border: #2a3550;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --accent: #6366f1;
+    --accent2: #818cf8;
+    --green: #34d399;
+    --yellow: #fbbf24;
+    --red: #f87171;
+    --cyan: #22d3ee;
+    --pink: #f472b6;
+    --orange: #fb923c;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  /* Header */
+  header { text-align: center; padding: 4rem 1rem 3rem; border-bottom: 1px solid var(--border); }
+  header h1 { font-size: 2.6rem; background: linear-gradient(135deg, var(--accent2), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
+  header p { color: var(--text2); font-size: 1.1rem; max-width: 700px; margin: 0 auto; }
+
+  /* TOC */
+  .toc { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin: 2.5rem 0; }
+  .toc h2 { font-size: 1.3rem; color: var(--accent2); margin-bottom: 1rem; }
+  .toc ol { padding-left: 1.5rem; }
+  .toc li { margin-bottom: 0.4rem; }
+  .toc a { color: var(--cyan); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  /* Sections */
+  section { margin: 3rem 0; }
+  h2 { font-size: 1.9rem; color: var(--accent2); border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
+  h3 { font-size: 1.4rem; color: var(--green); margin: 2rem 0 1rem; }
+  h4 { font-size: 1.15rem; color: var(--yellow); margin: 1.5rem 0 0.8rem; }
+  p { margin-bottom: 1rem; color: var(--text); }
+
+  /* Diagram */
+  .diagram { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0; overflow-x: auto; }
+  .diagram pre { font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 0.85rem; color: var(--cyan); line-height: 1.5; white-space: pre; }
+  .diagram-label { font-size: 0.8rem; color: var(--text2); text-align: center; margin-top: 0.75rem; font-style: italic; }
+
+  /* Code Block */
+  .code { background: #0d1117; border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; margin: 1rem 0; overflow-x: auto; }
+  .code pre { font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 0.82rem; color: #c9d1d9; line-height: 1.6; white-space: pre; }
+  .code-label { display: inline-block; background: var(--accent); color: #fff; font-size: 0.7rem; padding: 2px 10px; border-radius: 4px 4px 0 0; margin-bottom: -1px; position: relative; top: 1px; }
+
+  /* Comparison Table */
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem 1rem; text-align: left; border: 1px solid var(--border); font-size: 0.9rem; }
+  th { background: var(--surface2); color: var(--accent2); font-weight: 600; }
+  td { background: var(--surface); }
+
+  /* Cards */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.2rem; margin: 1.5rem 0; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.4rem; }
+  .card h4 { margin-top: 0; }
+  .card p { font-size: 0.9rem; color: var(--text2); }
+
+  /* Badges */
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600; margin-right: 4px; }
+  .badge-green { background: rgba(52,211,153,0.15); color: var(--green); }
+  .badge-yellow { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .badge-red { background: rgba(248,113,113,0.15); color: var(--red); }
+  .badge-cyan { background: rgba(34,211,238,0.15); color: var(--cyan); }
+  .badge-pink { background: rgba(244,114,182,0.15); color: var(--pink); }
+
+  /* Callout */
+  .callout { border-left: 4px solid var(--accent); background: var(--surface); padding: 1rem 1.2rem; border-radius: 0 8px 8px 0; margin: 1.2rem 0; }
+  .callout strong { color: var(--accent2); }
+
+  /* Flow */
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+  .flow-box { background: var(--surface2); border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; white-space: nowrap; }
+  .flow-arrow { color: var(--accent2); font-weight: bold; }
+
+  .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  .pros, .cons { padding: 1rem; border-radius: 8px; font-size: 0.9rem; }
+  .pros { background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.25); }
+  .cons { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.25); }
+  .pros strong { color: var(--green); }
+  .cons strong { color: var(--red); }
+  .pros li, .cons li { margin: 0.3rem 0; list-style: none; }
+  .pros li::before { content: "✓ "; color: var(--green); font-weight: bold; }
+  .cons li::before { content: "✗ "; color: var(--red); font-weight: bold; }
+
+  @media (max-width: 700px) {
+    header h1 { font-size: 1.8rem; }
+    .card-grid { grid-template-columns: 1fr; }
+    .pros-cons { grid-template-columns: 1fr; }
+    .diagram pre { font-size: 0.7rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Modern Frontend Architecture</h1>
+  <p>A comprehensive deep-dive into rendering strategies, structural patterns, design principles, state management, performance optimization, and more — with diagrams, real-world examples, and code.</p>
+</header>
+
+<!-- TABLE OF CONTENTS -->
+<nav class="toc">
+  <h2>Table of Contents</h2>
+  <ol>
+    <li><a href="#rendering">Rendering Strategies</a></li>
+    <li><a href="#structural">Structural / Architectural Patterns</a></li>
+    <li><a href="#design-principles">Design Principles</a></li>
+    <li><a href="#state">State Management Patterns</a></li>
+    <li><a href="#component">Component Design Patterns</a></li>
+    <li><a href="#data">Data Fetching & Caching Patterns</a></li>
+    <li><a href="#performance">Performance Patterns</a></li>
+    <li><a href="#micro">Micro-Frontends</a></li>
+    <li><a href="#testing">Testing Strategies</a></li>
+    <li><a href="#monorepo">Monorepo Architecture</a></li>
+    <li><a href="#decision">Decision Matrix — Choosing Your Stack</a></li>
+  </ol>
+</nav>
+
+<!-- ============================================================ -->
+<!-- 1. RENDERING STRATEGIES -->
+<!-- ============================================================ -->
+<section id="rendering">
+<h2>1. Rendering Strategies</h2>
+<p>The rendering strategy determines <em>where</em> and <em>when</em> HTML is generated. This single decision has cascading effects on SEO, time-to-interactive, infrastructure cost, and developer experience.</p>
+
+<h3>1.1 Client-Side Rendering (CSR)</h3>
+<p>The server sends a minimal HTML shell and a JavaScript bundle. The browser downloads, parses, and executes JS to build the entire DOM.</p>
+<div class="diagram">
+<pre>
+  Browser                        Server / CDN
+  ───────                        ────────────
+     │  GET /app  ──────────────────►│
+     │◄──── index.html (empty shell) │
+     │                               │
+     │  GET /bundle.js ─────────────►│
+     │◄──── JavaScript bundle (~MB)  │
+     │                               │
+     │  [Parse + Execute JS]         │
+     │  [Build Virtual DOM]          │
+     │  [Mount to DOM → Paint]       │
+     │                               │
+     │  GET /api/data ──────────────►│  API Server
+     │◄──── JSON response            │
+     │                               │
+     │  [Re-render with data]        │
+     ▼  ✅ Interactive               │
+</pre>
+<div class="diagram-label">CSR Flow — Browser does all rendering work after downloading JS</div>
+</div>
+
+<div class="callout"><strong>Real-World Usage:</strong> Single-page apps behind authentication — dashboards (Grafana), admin panels, internal tools (Retool). SEO is irrelevant because pages aren't publicly indexed.</div>
+
+<div class="pros-cons">
+  <div class="pros"><strong>Advantages</strong><ul>
+    <li>Rich, app-like interactions</li>
+    <li>Cheap hosting (static CDN)</li>
+    <li>No server runtime needed</li>
+    <li>Smooth page transitions</li>
+  </ul></div>
+  <div class="cons"><strong>Disadvantages</strong><ul>
+    <li>Blank page until JS loads (poor FCP)</li>
+    <li>Large bundle = slow TTI on mobile</li>
+    <li>Bad SEO (crawlers see empty HTML)</li>
+    <li>Loading spinners everywhere</li>
+  </ul></div>
+</div>
+
+<h3>1.2 Server-Side Rendering (SSR)</h3>
+<p>The server executes the component tree on every request, producing fully-formed HTML. The browser can display content immediately, then "hydrates" it with interactivity once JS loads.</p>
+<div class="diagram">
+<pre>
+  Browser                       Server (Node.js / Edge)
+  ───────                       ───────────────────────
+     │  GET /products ──────────────►│
+     │                               │ [Fetch data from DB/API]
+     │                               │ [Render components → HTML]
+     │◄──── Full HTML + inlined data │
+     │                               │
+     │  [Paint immediately ✅ FCP]   │
+     │                               │
+     │  GET /bundle.js ─────────────►│
+     │◄──── JS bundle (smaller)      │
+     │                               │
+     │  [Hydrate: attach events]     │
+     ▼  ✅ Interactive (TTI)         │
+</pre>
+<div class="diagram-label">SSR Flow — Server renders HTML per-request; browser hydrates</div>
+</div>
+
+<div class="callout"><strong>Real-World Usage:</strong> E-commerce product pages (Shopify Hydrogen), news sites, marketing pages — anywhere SEO and fast first-paint matter.</div>
+
+<h4>Hydration Explained</h4>
+<p>Hydration is the process where client-side JS walks the server-rendered DOM, attaches event listeners, and makes it interactive — without rebuilding it from scratch.</p>
+<div class="diagram">
+<pre>
+  Server HTML (static)              Hydrated DOM (interactive)
+  ┌───────────────────┐             ┌───────────────────┐
+  │ &lt;button&gt;Buy Now&lt;/button&gt; │  ──hydrate──►  │ &lt;button onClick={…}&gt;Buy Now&lt;/button&gt; │
+  │ &lt;input value="1"&gt; │             │ &lt;input onChange={…} value="1"&gt; │
+  │ &lt;div&gt;$29.99&lt;/div&gt; │             │ &lt;div&gt;$29.99&lt;/div&gt; (reactive) │
+  └───────────────────┘             └───────────────────┘
+  
+  ⚠️ "Hydration Mismatch" = server HTML ≠ client render → React throws warning
+</pre>
+<div class="diagram-label">Hydration attaches JS behavior to existing server-rendered markup</div>
+</div>
+
+<h3>1.3 Static Site Generation (SSG)</h3>
+<p>Pages are pre-rendered at build time into static HTML files. Ideal when content doesn't change per-request.</p>
+<div class="diagram">
+<pre>
+  Build Time                          Runtime (CDN)
+  ──────────                          ──────────────
+  [Read Markdown / CMS data]          Browser
+  [Render all pages → .html]              │  GET /blog/my-post ───►│
+  [Output: /out/blog/my-post.html]        │◄──── pre-built HTML     │
+  [Deploy to CDN edge]                    │  ✅ Instant paint       │
+                                          │  [Hydrate if needed]    │
+                                          ▼                         │
+  ⏱ Build: 30s–10min (depends on pages)
+  ⚡ Runtime: ~20ms TTFB from edge
+</pre>
+<div class="diagram-label">SSG — Everything rendered ahead of time, served from CDN edge</div>
+</div>
+
+<div class="callout"><strong>Real-World Usage:</strong> Documentation sites (Docusaurus, VitePress), blogs (Astro, Hugo), marketing landing pages.</div>
+
+<h3>1.4 Incremental Static Regeneration (ISR)</h3>
+<p>A hybrid of SSG and SSR. Pages are statically generated but can be regenerated in the background after a configurable time window — giving you static speed with dynamic freshness.</p>
+<div class="diagram">
+<pre>
+  First visit (cache cold)              Subsequent visit (within revalidate window)
+  ────────────────────────              ────────────────────────────────────────────
+  Browser──►CDN: MISS                   Browser──►CDN: HIT
+            │                                      │
+            ├──►Server: render page                 ├──►Return cached HTML (fast!)
+            │   [fetch data, build HTML]            │
+            │◄──HTML                                │  (if stale, trigger background rebuild)
+            │                                       │
+            ├──►Cache HTML at edge                  │  Background:
+            │                                       │  Server re-renders → updates cache
+  Browser◄──HTML                        Browser◄──HTML
+  
+  Next.js example:
+  ┌─────────────────────────────────────┐
+  │ export async function getStaticProps() {       │
+  │   return {                                     │
+  │     props: { products: await fetchProducts() },│
+  │     revalidate: 60  // seconds                 │
+  │   }                                            │
+  │ }                                              │
+  └─────────────────────────────────────┘
+</pre>
+<div class="diagram-label">ISR — Stale-while-revalidate for entire pages</div>
+</div>
+
+<h3>1.5 Streaming SSR & React Server Components (RSC)</h3>
+<p>Instead of waiting for the entire page to render, the server streams HTML chunks progressively. React Server Components extend this by running components that never ship JS to the client.</p>
+<div class="diagram">
+<pre>
+  Traditional SSR                        Streaming SSR
+  ───────────────                        ─────────────
+  Server: fetch ALL data                 Server: stream as ready
+          ↓                                      ↓
+  Render ALL components                  Stream &lt;head&gt; + shell immediately
+          ↓                                      ↓
+  Send complete HTML                     Stream ProductList when DB responds
+  (user waits for slowest query)                 ↓
+                                         Stream Reviews when API responds
+                                         (user sees content progressively)
+
+  ┌──────────────────────────────────────────────────────┐
+  │  React Server Components (RSC) Architecture          │
+  │                                                      │
+  │  Server Components          Client Components        │
+  │  ┌─────────────────┐        ┌─────────────────┐      │
+  │  │ async function   │        │ 'use client'    │      │
+  │  │ ProductPage() {  │        │                 │      │
+  │  │   const data =   │   ──►  │ function AddTo  │      │
+  │  │   await db.query │        │ Cart() {        │      │
+  │  │   return &lt;div&gt;.. │        │   const [n, set]│      │
+  │  │ }                │        │   = useState(0) │      │
+  │  └─────────────────┘        └─────────────────┘      │
+  │  • Run on server only        • Ship JS to browser    │
+  │  • Direct DB/fs access       • useState, useEffect   │
+  │  • Zero bundle size          • Event handlers        │
+  │  • Can't use state/effects   • Interactivity         │
+  └──────────────────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">Streaming SSR + RSC — Progressive rendering with server/client split</div>
+</div>
+
+<h3>1.6 Rendering Comparison Matrix</h3>
+<table>
+  <tr><th>Strategy</th><th>FCP</th><th>TTI</th><th>SEO</th><th>Freshness</th><th>Server Cost</th><th>Best For</th></tr>
+  <tr><td><span class="badge badge-cyan">CSR</span></td><td>Slow</td><td>Slow</td><td>Poor</td><td>Real-time</td><td>None (CDN)</td><td>Dashboards, SPAs</td></tr>
+  <tr><td><span class="badge badge-green">SSR</span></td><td>Fast</td><td>Medium</td><td>Excellent</td><td>Real-time</td><td>High</td><td>E-commerce, dynamic pages</td></tr>
+  <tr><td><span class="badge badge-yellow">SSG</span></td><td>Fastest</td><td>Fast</td><td>Excellent</td><td>Build-time</td><td>None (CDN)</td><td>Docs, blogs, marketing</td></tr>
+  <tr><td><span class="badge badge-pink">ISR</span></td><td>Fast</td><td>Fast</td><td>Excellent</td><td>Near-real</td><td>Low</td><td>Product catalogs</td></tr>
+  <tr><td><span class="badge badge-cyan">Streaming</span></td><td>Fastest</td><td>Progressive</td><td>Excellent</td><td>Real-time</td><td>Medium</td><td>Complex pages, RSC apps</td></tr>
+</table>
+</section>
+
+<!-- ============================================================ -->
+<!-- 2. STRUCTURAL / ARCHITECTURAL PATTERNS -->
+<!-- ============================================================ -->
+<section id="structural">
+<h2>2. Structural / Architectural Patterns</h2>
+<p>These patterns define how you organize code at the macro level — folder structure, module boundaries, dependency direction, and how features compose together.</p>
+
+<h3>2.1 Feature-Based Architecture (Feature Slices)</h3>
+<p>Instead of grouping by technical role (components/, services/, hooks/), group by business feature. Each feature folder is a self-contained vertical slice.</p>
+<div class="diagram">
+<pre>
+  ❌ Technical Grouping                ✅ Feature-Based Grouping
+  ─────────────────────                ───────────────────────────
+  src/                                 src/
+  ├── components/                      ├── features/
+  │   ├── ProductCard.tsx              │   ├── products/
+  │   ├── CartItem.tsx                 │   │   ├── components/
+  │   ├── UserAvatar.tsx               │   │   │   ├── ProductCard.tsx
+  │   └── CheckoutForm.tsx             │   │   │   └── ProductGrid.tsx
+  ├── hooks/                           │   │   ├── hooks/
+  │   ├── useProducts.ts               │   │   │   └── useProducts.ts
+  │   ├── useCart.ts                    │   │   ├── api/
+  │   └── useAuth.ts                   │   │   │   └── productApi.ts
+  ├── services/                        │   │   ├── store/
+  │   ├── productApi.ts                │   │   │   └── productSlice.ts
+  │   ├── cartApi.ts                   │   │   ├── types.ts
+  │   └── authApi.ts                   │   │   └── index.ts  ← public API
+  └── store/                           │   ├── cart/
+      ├── productSlice.ts              │   │   ├── components/
+      ├── cartSlice.ts                 │   │   ├── hooks/
+      └── authSlice.ts                 │   │   └── ...
+                                       │   └── auth/
+  Problem: Adding a feature                  │   └── ...
+  touches 5+ folders.                  │
+  Files with no relation               ├── shared/        ← cross-feature code
+  sit next to each other.              │   ├── ui/         (Button, Modal, etc.)
+                                       │   ├── lib/        (utils, helpers)
+                                       │   └── hooks/      (useDebounce, etc.)
+                                       └── app/           ← routing, providers
+</pre>
+<div class="diagram-label">Feature-based architecture — each feature is a cohesive, self-contained module</div>
+</div>
+
+<div class="callout"><strong>Key Rule:</strong> Features can import from <code>shared/</code> but NEVER from other features directly. Cross-feature communication goes through the global store, events, or the app layer.</div>
+
+<h3>2.2 Layered Architecture</h3>
+<p>Organize code into horizontal layers with strict dependency direction: each layer can only depend on layers below it.</p>
+<div class="diagram">
+<pre>
+  ┌─────────────────────────────────────────────────┐
+  │              Presentation Layer                  │
+  │  (Pages, Components, Layouts, Styling)           │
+  │  React components, CSS modules, view logic       │
+  └────────────────────┬────────────────────────────┘
+                       │ depends on ▼
+  ┌─────────────────────────────────────────────────┐
+  │              Application Layer                   │
+  │  (Use Cases, Orchestration, State Management)    │
+  │  Custom hooks, stores, context, business flows   │
+  └────────────────────┬────────────────────────────┘
+                       │ depends on ▼
+  ┌─────────────────────────────────────────────────┐
+  │                Domain Layer                      │
+  │  (Entities, Business Rules, Validation)          │
+  │  Pure TypeScript — NO framework dependencies     │
+  └────────────────────┬────────────────────────────┘
+                       │ depends on ▼
+  ┌─────────────────────────────────────────────────┐
+  │             Infrastructure Layer                 │
+  │  (API Clients, Storage, Third-Party SDKs)        │
+  │  Axios/fetch wrappers, localStorage, analytics   │
+  └─────────────────────────────────────────────────┘
+
+  ⚠️ DEPENDENCY RULE: Arrows only point DOWN. 
+     Domain NEVER imports from Presentation.
+     Presentation NEVER imports from Infrastructure directly.
+</pre>
+<div class="diagram-label">Layered Architecture — strict top-down dependency flow</div>
+</div>
+
+<h3>2.3 Clean Architecture (Ports & Adapters / Hexagonal)</h3>
+<p>The domain sits at the center, defining interfaces ("ports"). The outer layers implement those interfaces ("adapters"). Dependencies point inward.</p>
+<div class="diagram">
+<pre>
+                    ┌───────────────────────────────────┐
+                    │         Adapters (Outer)          │
+                    │  ┌──────────┐    ┌──────────┐    │
+                    │  │ React UI │    │ REST API │    │
+                    │  │ Adapter  │    │ Adapter  │    │
+                    │  └─────┬────┘    └────┬─────┘    │
+                    │        │              │           │
+                    │   ┌────▼──────────────▼────┐     │
+                    │   │    Ports (Interfaces)   │     │
+                    │   │  ┌──────────────────┐   │     │
+                    │   │  │   DOMAIN CORE    │   │     │
+                    │   │  │                  │   │     │
+                    │   │  │  Entities        │   │     │
+                    │   │  │  Use Cases       │   │     │
+                    │   │  │  Business Rules  │   │     │
+                    │   │  │                  │   │     │
+                    │   │  └──────────────────┘   │     │
+                    │   │    Ports (Interfaces)   │     │
+                    │   └────▲──────────────▲────┘     │
+                    │        │              │           │
+                    │  ┌─────┴────┐    ┌────┴─────┐    │
+                    │  │ Storage  │    │ External │    │
+                    │  │ Adapter  │    │ Services │    │
+                    │  └──────────┘    └──────────┘    │
+                    └───────────────────────────────────┘
+  
+  Key insight: The domain defines interfaces like:
+    interface ProductRepository {
+      findById(id: string): Promise&lt;Product&gt;
+      save(product: Product): Promise&lt;void&gt;
+    }
+  
+  The infrastructure provides implementations:
+    class ApiProductRepository implements ProductRepository { ... }
+    class MockProductRepository implements ProductRepository { ... }
+</pre>
+<div class="diagram-label">Hexagonal / Clean Architecture — domain at center, adapters at edges</div>
+</div>
+
+<h3>2.4 MVC, MVP, MVVM in Frontend Context</h3>
+<div class="diagram">
+<pre>
+  MVC (Model-View-Controller)        MVVM (Model-View-ViewModel)
+  ─────────────────────────          ──────────────────────────────
+  ┌───────┐  user action  ┌──────┐  ┌───────┐  data binding  ┌───────────┐
+  │ View  │──────────────►│Ctrl  │  │ View  │◄═══════════════►│ ViewModel │
+  │       │◄──────────────│      │  │       │  two-way bind   │           │
+  └───┬───┘  update view  └──┬───┘  └───────┘                 └─────┬─────┘
+      │                      │                                      │
+      │    ┌───────┐         │                               ┌──────┴─────┐
+      └────│ Model │◄────────┘                               │   Model    │
+           └───────┘  update data                            └────────────┘
+
+  In modern React:                   In Angular / Vue:
+  • Model = state/store              • Model = services/state
+  • View = JSX components            • View = templates
+  • Controller = event handlers      • ViewModel = component class
+    / custom hooks                     with reactive properties
+</pre>
+<div class="diagram-label">Classic patterns mapped to modern frontend frameworks</div>
+</div>
+
+</section>
+
+<!-- ============================================================ -->
+<!-- 3. DESIGN PRINCIPLES -->
+<!-- ============================================================ -->
+<section id="design-principles">
+<h2>3. Design Principles</h2>
+<p>Principles are universal guidelines that transcend specific frameworks. They help you make consistent decisions as your codebase grows.</p>
+
+<h3>3.1 SOLID Principles (Applied to Frontend)</h3>
+
+<h4>S — Single Responsibility Principle</h4>
+<p>A component or module should have one reason to change. If a component fetches data, transforms it, AND renders UI, it has three reasons to change.</p>
+<div class="diagram">
+<pre>
+  ❌ BEFORE (violates SRP)               ✅ AFTER (SRP applied)
+  ─────────────────────────              ────────────────────────
+  function UserProfile() {               // Data fetching layer
+    const [user, setUser] = useState()   function useUser(id) {
+    useEffect(() => {                      return useQuery(['user', id],
+      fetch(`/api/users/${id}`)              () => fetchUser(id))
+        .then(r => r.json())             }
+        .then(setUser)
+    }, [id])                             // Formatting (pure)
+                                         function formatJoinDate(d) {
+    const joinDate = new Date(             return new Intl.DateTimeFormat(
+      user?.joinedAt                         'en', { year:'numeric',
+    ).toLocaleDateString('en',                       month:'long' }
+      { year:'numeric',month:'long' })     ).format(new Date(d))
+                                         }
+    return (
+      &lt;div className="..."&gt;              // Presentation only
+        &lt;img src={user?.avatar} /&gt;       function UserProfile({ id }) {
+        &lt;h2&gt;{user?.name}&lt;/h2&gt;             const { data: user } = useUser(id)
+        &lt;p&gt;Joined {joinDate}&lt;/p&gt;          return (
+      &lt;/div&gt;                               &lt;UserCard
+    )                                        user={user}
+  }                                          joinDate={formatJoinDate(
+                                               user?.joinedAt)} /&gt;
+  3 reasons to change:                     )
+  • API changes                          }
+  • Date formatting changes
+  • UI design changes                    Each piece changes independently.
+</pre>
+<div class="diagram-label">SRP — separate fetching, formatting, and rendering concerns</div>
+</div>
+
+<h4>O — Open/Closed Principle</h4>
+<p>Components should be open for extension but closed for modification. Use composition (children, render props, slots) instead of modifying internals.</p>
+<div class="code">
+<div class="code-label">OCP via Composition</div>
+<pre>
+// ❌ Closed: Adding a new button type requires modifying this component
+function Button({ variant }) {
+  if (variant === 'primary') return &lt;button className="bg-blue"&gt;...
+  if (variant === 'danger')  return &lt;button className="bg-red"&gt;...
+  // Need icon button? Must modify this file.
+}
+
+// ✅ Open: Extend behavior without modifying the base
+function Button({ className, leftIcon, rightIcon, children, ...props }) {
+  return (
+    &lt;button className={`btn-base ${className}`} {...props}&gt;
+      {leftIcon &amp;&amp; &lt;span className="icon-left"&gt;{leftIcon}&lt;/span&gt;}
+      {children}
+      {rightIcon &amp;&amp; &lt;span className="icon-right"&gt;{rightIcon}&lt;/span&gt;}
+    &lt;/button&gt;
+  )
+}
+
+// Usage — extend without modifying Button source:
+&lt;Button className="bg-blue"&gt;Save&lt;/Button&gt;
+&lt;Button className="bg-red" leftIcon={&lt;TrashIcon/&gt;}&gt;Delete&lt;/Button&gt;
+&lt;Button className="bg-green" rightIcon={&lt;ArrowIcon/&gt;}&gt;Next&lt;/Button&gt;
+</pre>
+</div>
+
+<h4>L — Liskov Substitution Principle</h4>
+<p>A child component should be usable anywhere its parent/base is expected. If <code>&lt;SpecialButton&gt;</code> extends <code>&lt;Button&gt;</code>, it must accept all Button props and behave consistently.</p>
+
+<h4>I — Interface Segregation Principle</h4>
+<p>Don't force components to depend on props they don't use. Prefer small, focused prop interfaces.</p>
+<div class="diagram">
+<pre>
+  ❌ Fat interface                       ✅ Segregated interfaces
+  ─────────────────                      ─────────────────────────
+  interface UserCardProps {              interface UserAvatarProps {
+    name: string                           avatarUrl: string
+    email: string                          name: string  // for alt text
+    avatarUrl: string                    }
+    bio: string
+    followers: number                    interface UserNameProps {
+    posts: number                          name: string
+    isVerified: boolean                    isVerified: boolean
+    joinDate: string                     }
+    lastActive: string
+  }                                      interface UserStatsProps {
+                                           followers: number
+  // UserAvatar only needs                 posts: number
+  // avatarUrl and name, but              }
+  // receives EVERYTHING.
+                                         // Each component takes only what it needs.
+</pre>
+<div class="diagram-label">ISP — small, focused interfaces prevent unnecessary coupling</div>
+</div>
+
+<h4>D — Dependency Inversion Principle</h4>
+<p>High-level modules shouldn't depend on low-level modules. Both should depend on abstractions. In frontend: components depend on hooks/interfaces, not on fetch/axios directly.</p>
+<div class="diagram">
+<pre>
+  ❌ Direct dependency                   ✅ Inverted dependency
+  ────────────────────                   ──────────────────────
+  ProductList                            ProductList
+      │                                      │
+      │ import axios from 'axios'            │ uses useProducts() hook
+      │ axios.get('/api/products')           │     │
+      ▼                                      │     ▼
+  [axios library]                            │  ProductRepository (interface)
+                                             │     ▲        ▲
+  If you switch to fetch()                   │     │        │
+  or GraphQL, you must                       │  ApiRepo   MockRepo
+  modify ProductList.                        │
+                                         ProductList never changes when
+                                         the data source changes.
+</pre>
+<div class="diagram-label">DIP — depend on abstractions, swap implementations freely</div>
+</div>
+
+<h3>3.2 Composition over Inheritance</h3>
+<p>React's entire model favors composition. Instead of class inheritance, compose behavior through hooks, HOCs, render props, and children.</p>
+<div class="diagram">
+<pre>
+  Composition Pattern Map
+  ──────────────────────────────────────────────────────
+  
+  ┌──────────────────┐     ┌──────────────────────┐
+  │  Custom Hooks     │     │  Children / Slots    │
+  │                   │     │                      │
+  │  useAuth()        │     │  &lt;Card&gt;              │
+  │  useDebounce()    │     │    &lt;CardHeader/&gt;     │
+  │  useIntersection()│     │    &lt;CardBody/&gt;       │
+  │                   │     │    &lt;CardFooter/&gt;     │
+  │  Share stateful   │     │                      │
+  │  logic without    │     │  Compose UI without  │
+  │  changing UI.     │     │  knowing content.    │
+  └──────────────────┘     └──────────────────────┘
+  
+  ┌──────────────────┐     ┌──────────────────────┐
+  │  HOCs (legacy)    │     │  Render Props        │
+  │                   │     │                      │
+  │  withAuth(Page)   │     │  &lt;Mouse render={     │
+  │  withTheme(Card)  │     │    ({x,y}) =&gt;        │
+  │                   │     │      &lt;Cursor x y/&gt;   │
+  │  Wrap component   │     │  } /&gt;                │
+  │  with behavior.   │     │                      │
+  │  (Prefer hooks.)  │     │  Delegate rendering. │
+  └──────────────────┘     └──────────────────────┘
+</pre>
+<div class="diagram-label">Four composition strategies in React — hooks are the modern default</div>
+</div>
+
+<h3>3.3 DRY, KISS, YAGNI</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>DRY — Don't Repeat Yourself</h4>
+    <p>Extract shared logic into hooks, utilities, or components. But beware of premature abstraction — the "Rule of Three" says wait until you've duplicated something three times before extracting.</p>
+  </div>
+  <div class="card">
+    <h4>KISS — Keep It Simple</h4>
+    <p>Choose the simplest solution that works. Don't reach for Redux when useState is enough. Don't add GraphQL when REST serves your needs. Complexity should be justified by requirements, not anticipated.</p>
+  </div>
+  <div class="card">
+    <h4>YAGNI — You Aren't Gonna Need It</h4>
+    <p>Don't build abstractions for hypothetical future requirements. If you only have one theme, you don't need a theme engine. Build for now, refactor when the need is real.</p>
+  </div>
+</div>
+
+<h3>3.4 Separation of Concerns</h3>
+<div class="diagram">
+<pre>
+  Traditional Web SoC              Modern Component SoC
+  ─────────────────────            ────────────────────────
+  Separate by technology:          Separate by concern per feature:
+  
+  index.html  ← structure          ProductCard/
+  styles.css  ← presentation         ├── ProductCard.tsx    ← view + behavior
+  app.js      ← behavior             ├── ProductCard.css    ← scoped styles
+                                      ├── ProductCard.test.ts← tests
+  All products, carts, auth            ├── useProductData.ts  ← data logic
+  mixed in each file.                 └── types.ts           ← contracts
+  
+  ↓ Scale problem: files grow          ↓ Scale benefit: add/remove
+  to 1000s of lines, no cohesion.        features as units.
+</pre>
+<div class="diagram-label">Modern SoC — co-locate by feature, not by file type</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 4. STATE MANAGEMENT -->
+<!-- ============================================================ -->
+<section id="state">
+<h2>4. State Management Patterns</h2>
+<p>State management is the most impactful architectural decision in a frontend app. The right choice depends on state scope, update frequency, and team size.</p>
+
+<h3>4.1 State Categorization</h3>
+<div class="diagram">
+<pre>
+  ┌─────────────────────────────────────────────────────────────────┐
+  │                     Types of Frontend State                     │
+  ├──────────────┬──────────────────┬───────────────────────────────┤
+  │  LOCAL UI    │  SHARED / GLOBAL │  SERVER / REMOTE              │
+  │              │                  │                               │
+  │  • Modal     │  • Auth user     │  • API responses              │
+  │    open/close│  • Theme         │  • Database entities          │
+  │  • Form      │  • Cart items    │  • Paginated lists            │
+  │    inputs    │  • Notifications │  • Real-time feeds            │
+  │  • Accordion │  • Feature flags │                               │
+  │    expanded  │                  │                               │
+  ├──────────────┼──────────────────┼───────────────────────────────┤
+  │  useState    │  Zustand / Redux │  TanStack Query / SWR         │
+  │  useReducer  │  Context (small) │  Apollo Client (GraphQL)      │
+  │              │  Jotai / Recoil  │  RTK Query                    │
+  └──────────────┴──────────────────┴───────────────────────────────┘
+  
+  🎯 Golden Rule: Use the LEAST powerful tool that solves the problem.
+     useState > useReducer > Context > Zustand > Redux
+</pre>
+<div class="diagram-label">Match state type to the right management tool</div>
+</div>
+
+<h3>4.2 Flux / Redux Architecture</h3>
+<div class="diagram">
+<pre>
+  Unidirectional Data Flow (Flux Pattern)
+  
+       ┌──────────────────────────────────────────────┐
+       │                                              │
+       ▼                                              │
+  ┌─────────┐    ┌───────────┐    ┌───────┐    ┌─────┴─────┐
+  │  Action  │───►│ Dispatcher│───►│ Store │───►│   View    │
+  │          │    │ (Reducer) │    │       │    │           │
+  │ {type,   │    │           │    │ state │    │ Component │
+  │  payload}│    │ (state,   │    │       │    │ tree      │
+  │          │    │  action)  │    │       │    │           │
+  └─────────┘    │  => new   │    └───────┘    └───────────┘
+       ▲          │  state    │                      │
+       │          └───────────┘                      │
+       │                                             │
+       └──── User interaction / Side effect ─────────┘
+  
+  Redux Toolkit (Modern Redux):
+  ┌──────────────────────────────────────────┐
+  │ const cartSlice = createSlice({          │
+  │   name: 'cart',                          │
+  │   initialState: { items: [], total: 0 }, │
+  │   reducers: {                            │
+  │     addItem(state, action) {             │
+  │       state.items.push(action.payload)   │
+  │       // Immer handles immutability      │
+  │     },                                   │
+  │     removeItem(state, action) { ... }    │
+  │   }                                      │
+  │ })                                       │
+  └──────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">Flux/Redux — predictable state via actions + reducers</div>
+</div>
+
+<h3>4.3 Atomic State (Jotai / Recoil)</h3>
+<div class="diagram">
+<pre>
+  Redux: one big tree                Atomic: independent atoms
+  ──────────────────                 ──────────────────────────
+  ┌─────────────────────┐           atom('dark')  ◄── ThemeToggle
+  │  {                  │                  ▲
+  │    auth: {...},     │           atom(0)│ ◄──────── CartBadge
+  │    cart: {...},     │                  │
+  │    theme: 'dark',   │           atom([])  ◄────── TodoList
+  │    todos: [...]     │
+  │  }                  │           • Each atom = independent state
+  └─────────────────────┘           • Components subscribe to specific atoms
+                                    • No global store, no provider wrapping
+  Changing theme re-renders         • Changing one atom doesn't affect others
+  connected components that         • Derived atoms compose from base atoms:
+  read from the same store.
+                                      const totalAtom = atom((get) =>
+                                        get(cartItemsAtom).reduce(
+                                          (sum, i) => sum + i.price, 0
+                                        )
+                                      )
+</pre>
+<div class="diagram-label">Atomic state — granular subscriptions, zero boilerplate</div>
+</div>
+
+<h3>4.4 Server State (TanStack Query / SWR)</h3>
+<div class="diagram">
+<pre>
+  Without TanStack Query              With TanStack Query
+  ─────────────────────               ─────────────────────
+  const [data, setData] = useState()  const { data, isLoading, error } =
+  const [loading, setLoading] = ...     useQuery({
+  const [error, setError] = ...           queryKey: ['products', filters],
+  useEffect(() => {                       queryFn: () => fetchProducts(filters),
+    setLoading(true)                      staleTime: 5 * 60 * 1000,
+    fetch('/api/products')                retry: 3,
+      .then(r => r.json())              })
+      .then(setData)
+      .catch(setError)                 ✅ Built-in: caching, dedup,
+      .finally(() =>                      background refetch, retry,
+        setLoading(false))                pagination, optimistic updates,
+  }, [filters])                           garbage collection, devtools
+  
+  ❌ No caching, no dedup,            Request deduplication:
+     no retry, no refetch,            ┌─────────────┐  same key
+     manual everything.               │ Component A  │──────┐
+                                      │ useProducts()│      │  → 1 request
+                                      ├─────────────┤      │     (deduped)
+                                      │ Component B  │──────┘
+                                      │ useProducts()│
+                                      └─────────────┘
+</pre>
+<div class="diagram-label">TanStack Query — server-state management with smart caching</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 5. COMPONENT DESIGN PATTERNS -->
+<!-- ============================================================ -->
+<section id="component">
+<h2>5. Component Design Patterns</h2>
+
+<h3>5.1 Container / Presentational Pattern</h3>
+<div class="diagram">
+<pre>
+  Container (Smart)                    Presentational (Dumb)
+  ─────────────────                    ──────────────────────
+  ┌───────────────────────┐            ┌───────────────────────┐
+  │ ProductListContainer  │            │ ProductList           │
+  │                       │            │                       │
+  │ • Fetches data        │   props    │ • Receives data       │
+  │ • Manages state       │──────────►│ • Pure rendering      │
+  │ • Handles events      │            │ • No side effects     │
+  │ • Knows about store   │            │ • Easily testable     │
+  │                       │            │ • Reusable            │
+  └───────────────────────┘            └───────────────────────┘
+
+  Modern equivalent with hooks:
+  ┌──────────────────────────────┐     ┌────────────────────────┐
+  │ useProductList() — hook      │     │ ProductList — component│
+  │ handles data + logic         │────►│ handles rendering only │
+  └──────────────────────────────┘     └────────────────────────┘
+</pre>
+<div class="diagram-label">Logic (hooks) separated from presentation (components)</div>
+</div>
+
+<h3>5.2 Compound Components</h3>
+<p>A pattern where a parent component shares implicit state with children, allowing flexible composition while maintaining internal cohesion. Used extensively in UI libraries.</p>
+<div class="code">
+<div class="code-label">Compound Component Pattern</div>
+<pre>
+// Usage — clean, declarative API:
+&lt;Select value={country} onChange={setCountry}&gt;
+  &lt;Select.Trigger&gt;Choose country&lt;/Select.Trigger&gt;
+  &lt;Select.Content&gt;
+    &lt;Select.Item value="us"&gt;United States&lt;/Select.Item&gt;
+    &lt;Select.Item value="pl"&gt;Poland&lt;/Select.Item&gt;
+    &lt;Select.Item value="jp"&gt;Japan&lt;/Select.Item&gt;
+  &lt;/Select.Content&gt;
+&lt;/Select&gt;
+
+// Implementation — shared context:
+const SelectCtx = createContext()
+
+function Select({ value, onChange, children }) {
+  return (
+    &lt;SelectCtx.Provider value={{ value, onChange }}&gt;
+      &lt;div className="select-root"&gt;{children}&lt;/div&gt;
+    &lt;/SelectCtx.Provider&gt;
+  )
+}
+Select.Item = function({ value, children }) {
+  const ctx = useContext(SelectCtx)
+  return (
+    &lt;div
+      className={ctx.value === value ? 'selected' : ''}
+      onClick={() => ctx.onChange(value)}&gt;
+      {children}
+    &lt;/div&gt;
+  )
+}
+</pre>
+</div>
+
+<h3>5.3 Render Props & Headless Components</h3>
+<div class="diagram">
+<pre>
+  Headless Component Architecture
+  ────────────────────────────────────────────
+  
+  ┌──────────────────────────────────┐
+  │        Headless Hook             │
+  │  useCombobox({ items, onSelect })│
+  │                                  │
+  │  Returns:                        │
+  │  • isOpen, highlightedIndex      │
+  │  • getInputProps()               │
+  │  • getMenuProps()                │  ── No UI opinion
+  │  • getItemProps(index)           │
+  │  • selectItem(item)             │
+  └──────────┬───────────────────────┘
+             │
+    ┌────────┴────────┐
+    ▼                 ▼
+  Your UI A         Your UI B
+  (Tailwind          (Material
+   dropdown)          autocomplete)
+  
+  Libraries: Radix UI, Headless UI, Downshift, TanStack Table
+  
+  Key insight: Logic is framework code. UI is your design system.
+  Decouple them completely.
+</pre>
+<div class="diagram-label">Headless components — reusable logic, bring your own UI</div>
+</div>
+
+<h3>5.4 Higher-Order Components & Hooks Composition</h3>
+<div class="diagram">
+<pre>
+  HOC Wrapping                        Hook Composition
+  ────────────                        ──────────────────
+  withAuth(                           function ProtectedPage() {
+    withTheme(                          const auth = useAuth()
+      withLogger(                       const theme = useTheme()
+        MyComponent                     useLogger('ProtectedPage')
+      )
+    )                                   if (!auth.user) return &lt;Login/&gt;
+  )
+                                        return &lt;Dashboard theme={theme}/&gt;
+  → "Wrapper hell"                    }
+  → Hard to debug
+  → Props collisions                  → Flat, readable
+  → Order matters                     → No wrapper nesting
+                                      → Explicit data flow
+</pre>
+<div class="diagram-label">Hooks replaced HOCs as the primary composition mechanism in React</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 6. DATA FETCHING & CACHING PATTERNS -->
+<!-- ============================================================ -->
+<section id="data">
+<h2>6. Data Fetching & Caching Patterns</h2>
+
+<h3>6.1 Stale-While-Revalidate</h3>
+<div class="diagram">
+<pre>
+  Timeline of SWR behavior
+  ──────────────────────────────────────────────────────
+  
+  T=0s     User visits /products
+           Cache: EMPTY → fetch from server → show data
+           Cache: FRESH ✅
+  
+  T=30s    Same user revisits /products
+           Cache: still FRESH → show instantly (no fetch)
+  
+  T=301s   User revisits (staleTime: 300s = 5min)
+           Cache: STALE → show stale data immediately ← (user sees instant result)
+                        → fetch new data in background
+                        → when ready, swap in new data seamlessly
+  
+  T=600s   No one visited → garbage collection removes cache entry
+  
+  ┌─────────────────────────────────────────────────┐
+  │  useQuery({                                     │
+  │    queryKey: ['products'],                      │
+  │    queryFn: fetchProducts,                      │
+  │    staleTime: 5 * 60 * 1000,   // 5 min fresh  │
+  │    gcTime: 10 * 60 * 1000,     // 10 min GC    │
+  │  })                                             │
+  └─────────────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">SWR — instant perceived performance with background freshness</div>
+</div>
+
+<h3>6.2 Optimistic Updates</h3>
+<div class="diagram">
+<pre>
+  Standard Update                    Optimistic Update
+  ───────────────                    ──────────────────
+  User clicks "Like"                 User clicks "Like"
+       │                                  │
+       ▼                                  ▼
+  Show spinner...                    ✅ UI updates IMMEDIATELY
+       │                             (assume success)
+       ▼                                  │
+  Wait 200-500ms                     Send request in background
+  for server response                     │
+       │                             ┌────┴─────┐
+       ▼                             ▼          ▼
+  ✅ Update UI                    Success:    Failure:
+                                  Keep it     Roll back to
+                                              previous state
+  
+  Feels: sluggish                    Feels: instant
+  
+  Implementation:
+  ┌─────────────────────────────────────────────────┐
+  │ useMutation({                                   │
+  │   mutationFn: likePost,                         │
+  │   onMutate: async (postId) => {                 │
+  │     await queryClient.cancelQueries(['posts'])  │
+  │     const prev = queryClient.getQueryData(...)  │
+  │     queryClient.setQueryData(['posts'], old =>  │
+  │       old.map(p => p.id === postId              │
+  │         ? {...p, likes: p.likes + 1} : p))      │
+  │     return { prev }  // rollback context        │
+  │   },                                            │
+  │   onError: (err, vars, ctx) => {                │
+  │     queryClient.setQueryData(                   │
+  │       ['posts'], ctx.prev)  // rollback!        │
+  │   }                                             │
+  │ })                                              │
+  └─────────────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">Optimistic updates — update UI first, reconcile with server after</div>
+</div>
+
+<h3>6.3 Data Fetching Patterns Overview</h3>
+<div class="diagram">
+<pre>
+  ┌─────────────┐     ┌──────────────┐     ┌───────────────┐
+  │  Fetch on   │     │  Fetch on    │     │  Prefetch     │
+  │  Render     │     │  Event       │     │               │
+  │             │     │              │     │  Hover over   │
+  │  useEffect  │     │  onClick →   │     │  link →       │
+  │  fires after│     │  load data   │     │  queryClient  │
+  │  mount      │     │  (lazy)      │     │  .prefetchQuery│
+  │             │     │              │     │               │
+  │  Waterfall  │     │  On-demand   │     │  Predictive   │
+  │  problem ⚠️ │     │  loading     │     │  loading      │
+  └─────────────┘     └──────────────┘     └───────────────┘
+  
+  ┌─────────────┐     ┌──────────────┐     ┌───────────────┐
+  │  Render-as- │     │  Parallel    │     │  Infinite     │
+  │  You-Fetch  │     │  Queries     │     │  Scroll       │
+  │             │     │              │     │               │
+  │  Suspense + │     │  Promise.all │     │  useInfinite  │
+  │  RSC start  │     │  or multiple │     │  Query →      │
+  │  fetch      │     │  useQuery    │     │  cursor-based │
+  │  BEFORE     │     │  in parallel │     │  pagination   │
+  │  rendering  │     │              │     │               │
+  └─────────────┘     └──────────────┘     └───────────────┘
+</pre>
+<div class="diagram-label">Different data-fetching strategies for different scenarios</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 7. PERFORMANCE PATTERNS -->
+<!-- ============================================================ -->
+<section id="performance">
+<h2>7. Performance Patterns</h2>
+
+<h3>7.1 Code Splitting & Lazy Loading</h3>
+<div class="diagram">
+<pre>
+  Without Code Splitting              With Code Splitting
+  ────────────────────                ──────────────────────
+  
+  bundle.js (2.4 MB)                  main.js      (180 KB) ← loads first
+  ┌───────────────────┐               vendor.js    (220 KB)
+  │ React runtime     │               ┌─────────────────────────────────┐
+  │ All pages         │               │ Route-based chunks (lazy):      │
+  │ All components    │               │   dashboard.chunk.js   (95 KB)  │
+  │ All libraries     │               │   settings.chunk.js    (45 KB)  │
+  │ Chart.js          │               │   analytics.chunk.js   (310 KB) │
+  │ Date-fns          │               │   (loaded only when visited)    │
+  │ Markdown parser   │               └─────────────────────────────────┘
+  └───────────────────┘
+                                      const Dashboard = lazy(() => import('./Dashboard'))
+  User downloads                      const Settings = lazy(() => import('./Settings'))
+  EVERYTHING upfront.
+  Even pages they                     &lt;Suspense fallback={&lt;Skeleton/&gt;}&gt;
+  never visit.                          &lt;Routes&gt;
+                                          &lt;Route path="/dash" element={&lt;Dashboard/&gt;}/&gt;
+                                          &lt;Route path="/settings" element={&lt;Settings/&gt;}/&gt;
+                                        &lt;/Routes&gt;
+                                      &lt;/Suspense&gt;
+</pre>
+<div class="diagram-label">Code splitting — load only what you need, when you need it</div>
+</div>
+
+<h3>7.2 Virtualization</h3>
+<div class="diagram">
+<pre>
+  Without Virtualization              With Virtualization (react-window)
+  ──────────────────────              ────────────────────────────────────
+  
+  10,000 DOM nodes                    Viewport: ~15 visible items
+  ┌──────────────────┐                ┌──────────────────┐
+  │ Item 1           │                │ ░░ spacer top ░░ │ ← empty div (height calculated)
+  │ Item 2           │                ├──────────────────┤
+  │ Item 3           │                │ Item 47          │ ← only rendered
+  │ ...              │                │ Item 48          │    items in DOM
+  │ Item 9,998       │                │ Item 49          │
+  │ Item 9,999       │                │ ...              │
+  │ Item 10,000      │                │ Item 61          │
+  └──────────────────┘                ├──────────────────┤
+                                      │ ░░ spacer bot ░░ │ ← empty div
+  • 10,000 DOM nodes                  └──────────────────┘
+  • Slow initial render
+  • High memory usage                 • ~20 DOM nodes at any time
+  • Janky scrolling                   • Instant render
+                                      • Low memory
+                                      • Smooth 60fps scrolling
+</pre>
+<div class="diagram-label">Virtualization — render only visible items, fake the rest with spacers</div>
+</div>
+
+<h3>7.3 Memoization & Re-render Prevention</h3>
+<div class="diagram">
+<pre>
+  React Re-render Cascade
+  ─────────────────────────────────────────
+  
+  Parent re-renders → ALL children re-render (by default)
+  
+  ┌──────────┐ state change
+  │  App     │─────────────┐
+  └────┬─────┘             │
+       ├──────────┐        │  All re-render
+       ▼          ▼        ▼  even if props
+  ┌────────┐ ┌────────┐   didn't change!
+  │Header  │ │Content │
+  └────────┘ └───┬────┘
+                 ├─────────┐
+                 ▼         ▼
+            ┌────────┐ ┌────────┐
+            │List    │ │Sidebar │
+            └────────┘ └────────┘
+  
+  Solutions:
+  ┌─────────────────────────────────────────────────────┐
+  │ 1. React.memo()  — skip re-render if props same    │
+  │    const Header = memo(({ title }) => ...)          │
+  │                                                     │
+  │ 2. useMemo()    — cache expensive computations     │
+  │    const sorted = useMemo(                          │
+  │      () => items.sort(compareFn), [items])          │
+  │                                                     │
+  │ 3. useCallback() — stable function references      │
+  │    const handleClick = useCallback(                 │
+  │      () => setCount(c => c+1), [])                  │
+  │                                                     │
+  │ 4. State colocation — move state DOWN to where      │
+  │    it's used, so re-renders are scoped smaller.     │
+  │                                                     │
+  │ 5. Composition — pass children as props to avoid    │
+  │    unnecessary re-renders of stable subtrees.       │
+  └─────────────────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">Understanding and preventing unnecessary re-renders</div>
+</div>
+
+<h3>7.4 Core Web Vitals</h3>
+<div class="diagram">
+<pre>
+  ┌──────────────────────────────────────────────────────────────┐
+  │                    Core Web Vitals                           │
+  ├────────────┬─────────────────┬──────────┬───────────────────┤
+  │  Metric    │  Measures       │  Good    │  How to improve   │
+  ├────────────┼─────────────────┼──────────┼───────────────────┤
+  │  LCP       │  Largest paint  │  ≤2.5s   │  SSR, preload     │
+  │            │  (perceived     │          │  hero image,      │
+  │            │   load speed)   │          │  optimize fonts   │
+  ├────────────┼─────────────────┼──────────┼───────────────────┤
+  │  INP       │  Interaction    │  ≤200ms  │  Reduce JS on     │
+  │            │  to next paint  │          │  main thread,     │
+  │            │  (responsiveness│          │  code-split,      │
+  │            │                 │          │  web workers      │
+  ├────────────┼─────────────────┼──────────┼───────────────────┤
+  │  CLS       │  Layout shift   │  ≤0.1   │  Set img sizes,   │
+  │            │  (visual        │          │  avoid dynamic    │
+  │            │   stability)    │          │  content injection│
+  └────────────┴─────────────────┴──────────┴───────────────────┘
+</pre>
+<div class="diagram-label">Core Web Vitals — Google's key metrics for page experience</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 8. MICRO-FRONTENDS -->
+<!-- ============================================================ -->
+<section id="micro">
+<h2>8. Micro-Frontends</h2>
+<p>Micro-frontends extend microservices principles to the frontend: independent teams own, build, and deploy independent UI modules that compose into a unified application.</p>
+
+<div class="diagram">
+<pre>
+  Monolithic Frontend                  Micro-Frontend Architecture
+  ────────────────────                 ──────────────────────────────
+  ┌────────────────────────┐           ┌──────────────────────────────────┐
+  │    Single SPA Codebase │           │         App Shell / Host         │
+  │                        │           │  (routing, shared header/footer) │
+  │  Team A ──┐            │           └──┬──────────┬──────────┬────────┘
+  │  Team B ──┤ same repo  │              │          │          │
+  │  Team C ──┘ same build │              ▼          ▼          ▼
+  │           same deploy  │           ┌──────┐  ┌──────┐  ┌──────┐
+  │                        │           │Search│  │Catalog│  │ Cart │
+  └────────────────────────┘           │      │  │      │  │      │
+                                       │React │  │ Vue  │  │React │
+  • Merge conflicts                    │Team A│  │Team B│  │Team C│
+  • Slow CI/CD                         └──────┘  └──────┘  └──────┘
+  • Coupled releases                      │          │          │
+                                       Own repo   Own repo   Own repo
+                                       Own CI/CD  Own CI/CD  Own CI/CD
+                                       Own deploy Own deploy Own deploy
+
+  Integration Strategies:
+  ┌──────────────────────────────────────────────────────┐
+  │  1. Module Federation (Webpack 5 / Vite)             │
+  │     - Runtime sharing of components                  │
+  │     - Shared dependencies (React loaded once)        │
+  │                                                      │
+  │  2. iframe-based (legacy, isolated)                  │
+  │     - Full isolation but poor UX                     │
+  │                                                      │
+  │  3. Web Components                                   │
+  │     - Framework-agnostic custom elements             │
+  │                                                      │
+  │  4. Route-based composition                          │
+  │     - Different apps at different URL paths          │
+  │     - /search → Team A app                           │
+  │     - /catalog → Team B app                          │
+  └──────────────────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">Micro-frontends — independent deployment per team/feature</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 9. TESTING STRATEGIES -->
+<!-- ============================================================ -->
+<section id="testing">
+<h2>9. Testing Strategies</h2>
+
+<h3>9.1 The Testing Trophy</h3>
+<div class="diagram">
+<pre>
+  Testing Pyramid (traditional)         Testing Trophy (modern frontend)
+  
+          /\                                    ┌──────────┐
+         /E2E\                                  │   E2E    │ ← few, critical paths
+        /______\                                │(Cypress/ │   (signup, checkout)
+       /  Integ  \                              │Playwright│
+      /__________\                              └────┬─────┘
+     /    Unit     \                            ┌────┴─────────────┐
+    /______________\                            │   INTEGRATION     │ ← most tests here
+                                                │  (Testing Library │   render component
+  Backend bias:                                 │   + MSW mocking)  │   with hooks, context,
+  Many unit tests                               └────┬─────────────┘   mock API responses
+                                                ┌────┴─────┐
+                                                │   Unit   │ ← pure logic only
+                                                │ (Vitest) │   formatDate(), validate()
+                                                └────┬─────┘
+                                                ┌────┴─────┐
+                                                │  Static  │ ← TypeScript, ESLint
+                                                │ Analysis │   catches bugs at write-time
+                                                └──────────┘
+
+  Why integration tests win in frontend:
+  • Components are inherently integrations (state + events + DOM)
+  • Unit testing a component in isolation often tests implementation details
+  • Integration tests verify behavior from the user's perspective
+</pre>
+<div class="diagram-label">The Testing Trophy — integration tests give the best confidence/cost ratio</div>
+</div>
+
+<h3>9.2 Testing Patterns</h3>
+<div class="code">
+<div class="code-label">Integration Test Example (React Testing Library + MSW)</div>
+<pre>
+// Mock the API at the network level with MSW
+const server = setupServer(
+  rest.get('/api/products', (req, res, ctx) =>
+    res(ctx.json([
+      { id: 1, name: 'Widget', price: 29.99 },
+      { id: 2, name: 'Gadget', price: 49.99 },
+    ]))
+  )
+)
+
+test('displays products and allows adding to cart', async () => {
+  render(&lt;ProductPage /&gt;)  // Full component with hooks, context, etc.
+
+  // Wait for data to load (tests from user's perspective)
+  expect(await screen.findByText('Widget')).toBeInTheDocument()
+  expect(screen.getByText('$29.99')).toBeInTheDocument()
+
+  // Simulate user interaction
+  await userEvent.click(screen.getByRole('button', { name: /add widget/i }))
+
+  // Verify outcome
+  expect(screen.getByText('Cart (1)')).toBeInTheDocument()
+})
+</pre>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 10. MONOREPO -->
+<!-- ============================================================ -->
+<section id="monorepo">
+<h2>10. Monorepo Architecture</h2>
+<p>A monorepo houses multiple packages (apps, libraries, shared code) in a single repository with shared tooling and dependency management.</p>
+<div class="diagram">
+<pre>
+  Polyrepo                              Monorepo (Turborepo / Nx)
+  ────────                              ──────────────────────────
+  repo: web-app                         repo: my-org
+  repo: mobile-app                      ├── apps/
+  repo: design-system                   │   ├── web/           ← Next.js app
+  repo: shared-utils                    │   ├── mobile/        ← React Native
+  repo: api-client                      │   └── admin/         ← Vite app
+                                        ├── packages/
+  • 5 repos to clone                    │   ├── ui/            ← Design system
+  • 5 CI pipelines                      │   │   ├── Button.tsx
+  • Version mismatches                  │   │   ├── Modal.tsx
+  • "Works in my repo"                  │   │   └── package.json
+  • Cross-repo PRs painful             │   ├── utils/          ← Shared helpers
+                                        │   ├── api-client/    ← Generated API types
+                                        │   └── tsconfig/      ← Shared TS configs
+                                        ├── turbo.json         ← Task orchestration
+                                        └── package.json
+
+  ┌─────────────────────────────────────────────────────────┐
+  │  Turborepo task graph:                                  │
+  │                                                         │
+  │  turbo run build                                        │
+  │                                                         │
+  │  packages/utils ─build──► packages/ui ─build──►apps/web │
+  │                                        ─build──►apps/admin│
+  │                                                         │
+  │  ✅ Parallel execution                                  │
+  │  ✅ Remote caching (skip if unchanged)                  │
+  │  ✅ Affected-only CI (only build/test what changed)     │
+  └─────────────────────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">Monorepo — shared code, unified tooling, intelligent caching</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 11. DECISION MATRIX -->
+<!-- ============================================================ -->
+<section id="decision">
+<h2>11. Decision Matrix — Choosing Your Stack</h2>
+
+<h3>By App Type</h3>
+<table>
+  <tr><th>App Type</th><th>Rendering</th><th>State</th><th>Structure</th><th>Real-World Example</th></tr>
+  <tr><td>Marketing Site</td><td>SSG (Astro)</td><td>Minimal</td><td>Pages + Components</td><td>Stripe.com, Linear.app</td></tr>
+  <tr><td>Blog / Docs</td><td>SSG (Next / Astro)</td><td>None</td><td>Content + Layout</td><td>React docs, MDN</td></tr>
+  <tr><td>E-commerce</td><td>SSR + ISR</td><td>TanStack Query + Zustand</td><td>Feature-based</td><td>Shopify, Vercel Commerce</td></tr>
+  <tr><td>SaaS Dashboard</td><td>CSR (Vite)</td><td>Zustand / Redux</td><td>Feature slices</td><td>Linear, Notion, Figma</td></tr>
+  <tr><td>Social Platform</td><td>Streaming SSR</td><td>TanStack + Optimistic</td><td>Feature + Micro-FE</td><td>Twitter/X, Instagram</td></tr>
+  <tr><td>Enterprise Portal</td><td>SSR + CSR mix</td><td>Redux Toolkit</td><td>Monorepo + Micro-FE</td><td>Salesforce, Azure Portal</td></tr>
+  <tr><td>Real-time App</td><td>CSR</td><td>WebSocket + Local state</td><td>Event-driven</td><td>Figma, Google Docs</td></tr>
+</table>
+
+<h3>Decision Flowchart</h3>
+<div class="diagram">
+<pre>
+  START: What are you building?
+  │
+  ├─ Need SEO? ─── No ──► CSR (Vite + React)
+  │                          └─ Complex state? ── Yes ──► + Redux/Zustand
+  │                                              No  ──► + useState/Context
+  │
+  ├─ Yes ── Content changes? ─── Rarely ──► SSG (Astro/Next)
+  │         │
+  │         ├─ Per request ──► SSR (Next.js / Remix)
+  │         │                    └─ Slow data sources? ──► + Streaming
+  │         │
+  │         └─ Every few minutes ──► ISR (Next.js)
+  │
+  ├─ Multiple teams? ─── Yes ──► Micro-frontends + Monorepo
+  │
+  └─ Shared component library? ─── Yes ──► Monorepo (Turborepo)
+                                            + Headless UI pattern
+                                            + Storybook
+</pre>
+<div class="diagram-label">Quick decision guide — start with the simplest approach that fits</div>
+</div>
+
+<div class="callout">
+  <strong>Final Principle:</strong> Architecture is about trade-offs, not best practices. The "best" architecture is the simplest one that handles your current requirements while leaving room to evolve. Start simple (useState, feature folders, CSR), and introduce complexity (Redux, micro-frontends, SSR) only when you have evidence you need it. Premature architecture is just as dangerous as premature optimization.
+</div>
+
+</section>
+
+<footer style="text-align:center; padding: 3rem 0 2rem; color: var(--text2); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 3rem;">
+  Modern Frontend Architecture — Complete Reference Guide<br>
+  Generated with Claude · Covers React/Next.js ecosystem patterns · 2025
+</footer>
+
+</div>
+</body>
+</html>

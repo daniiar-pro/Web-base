@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Startup & Business Literacy Guide for Software Engineers</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #334155;
+    --accent: #3b82f6;
+    --accent2: #8b5cf6;
+    --accent3: #10b981;
+    --accent4: #f59e0b;
+    --accent5: #ef4444;
+    --text: #f1f5f9;
+    --text2: #94a3b8;
+    --border: #475569;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  
+  .hero {
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1a1040 100%);
+    padding: 60px 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero h1 { font-size: 2.4em; margin-bottom: 10px; background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { color: var(--text2); font-size: 1.1em; max-width: 700px; margin: 0 auto; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+  /* Navigation */
+  .nav { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 20px; position: sticky; top: 0; background: var(--bg); z-index: 100; border-bottom: 1px solid var(--border); }
+  .nav a { padding: 8px 18px; background: var(--surface); color: var(--text2); text-decoration: none; border-radius: 20px; font-size: 0.9em; border: 1px solid var(--border); transition: all 0.2s; }
+  .nav a:hover, .nav a.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+  /* Sections */
+  .section { margin: 50px 0; scroll-margin-top: 80px; }
+  .section-title { font-size: 1.8em; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
+  .section-title .icon { font-size: 1.2em; }
+  .section-subtitle { color: var(--text2); margin-bottom: 30px; font-size: 1em; }
+
+  /* Cards */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+  .card h3 { color: var(--accent); margin-bottom: 6px; font-size: 1.2em; }
+  .card h4 { color: var(--accent3); margin-bottom: 4px; }
+  .card p, .card li { color: var(--text2); }
+  .card ul { padding-left: 20px; }
+  .card ul li { margin: 4px 0; }
+
+  /* Diagram containers */
+  .diagram { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 30px; margin: 20px 0; overflow-x: auto; }
+  .diagram h3 { text-align: center; margin-bottom: 20px; color: var(--text); }
+
+  /* Pipeline / Flow */
+  .pipeline { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0; margin: 20px 0; }
+  .pipe-stage { background: var(--surface2); border-radius: 10px; padding: 14px 20px; text-align: center; min-width: 130px; position: relative; }
+  .pipe-stage .label { font-weight: 700; font-size: 0.95em; }
+  .pipe-stage .sub { font-size: 0.75em; color: var(--text2); margin-top: 4px; }
+  .pipe-arrow { font-size: 1.5em; color: var(--accent); margin: 0 4px; }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; margin: 20px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+  th { background: var(--surface2); padding: 12px; text-align: left; color: var(--accent); border-bottom: 2px solid var(--accent); }
+  td { padding: 12px; border-bottom: 1px solid var(--border); color: var(--text2); }
+  tr:hover td { background: rgba(59,130,246,0.05); }
+
+  /* Bar chart */
+  .bar-chart { margin: 20px 0; }
+  .bar-row { display: flex; align-items: center; margin: 8px 0; }
+  .bar-label { width: 140px; font-size: 0.85em; color: var(--text2); text-align: right; padding-right: 12px; flex-shrink: 0; }
+  .bar-track { flex: 1; background: var(--surface2); border-radius: 6px; height: 28px; position: relative; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-left: 10px; font-size: 0.8em; font-weight: 600; color: white; transition: width 0.5s; }
+
+  /* Grid */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media (max-width: 768px) {
+    .grid2, .grid3 { grid-template-columns: 1fr; }
+    .pipeline { flex-direction: column; }
+    .pipe-arrow { transform: rotate(90deg); }
+  }
+
+  /* Tag */
+  .tag { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.75em; font-weight: 600; margin: 2px; }
+  .tag-blue { background: rgba(59,130,246,0.2); color: #60a5fa; }
+  .tag-green { background: rgba(16,185,129,0.2); color: #34d399; }
+  .tag-purple { background: rgba(139,92,246,0.2); color: #a78bfa; }
+  .tag-yellow { background: rgba(245,158,11,0.2); color: #fbbf24; }
+  .tag-red { background: rgba(239,68,68,0.2); color: #f87171; }
+
+  /* Callout */
+  .callout { border-left: 4px solid var(--accent); background: rgba(59,130,246,0.08); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+  .callout.warn { border-color: var(--accent4); background: rgba(245,158,11,0.08); }
+  .callout.success { border-color: var(--accent3); background: rgba(16,185,129,0.08); }
+  .callout strong { color: var(--text); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 30px; margin: 20px 0; }
+  .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 3px; background: var(--accent); border-radius: 2px; }
+  .tl-item { position: relative; margin-bottom: 24px; }
+  .tl-item::before { content: ''; position: absolute; left: -26px; top: 6px; width: 14px; height: 14px; border-radius: 50%; border: 3px solid var(--accent); background: var(--bg); }
+  .tl-item h4 { color: var(--accent); margin-bottom: 4px; }
+  .tl-item p { color: var(--text2); font-size: 0.9em; }
+
+  .highlight { color: var(--accent); font-weight: 600; }
+  .example-box { background: var(--bg); border: 1px dashed var(--border); border-radius: 8px; padding: 14px; margin: 10px 0; font-size: 0.9em; }
+  .example-box .ex-title { color: var(--accent4); font-weight: 700; font-size: 0.85em; margin-bottom: 6px; }
+
+  /* Org chart */
+  .org-chart { text-align: center; }
+  .org-row { display: flex; justify-content: center; gap: 16px; margin: 10px 0; flex-wrap: wrap; }
+  .org-box { background: var(--surface2); border-radius: 8px; padding: 10px 18px; font-size: 0.85em; border: 1px solid var(--border); min-width: 120px; }
+  .org-box.top { background: var(--accent); color: white; font-weight: 700; border-color: var(--accent); }
+  .org-box.exec { background: rgba(139,92,246,0.2); border-color: var(--accent2); }
+  .org-line { width: 2px; height: 20px; background: var(--border); margin: 0 auto; }
+  .org-hline { height: 2px; background: var(--border); margin: 0 20px; }
+
+  footer { text-align: center; padding: 40px; color: var(--text2); font-size: 0.85em; border-top: 1px solid var(--border); margin-top: 60px; }
+
+  .priority-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.7em; font-weight: 700; vertical-align: middle; margin-left: 8px; }
+  .p-critical { background: var(--accent5); color: white; }
+  .p-high { background: var(--accent4); color: #000; }
+  .p-medium { background: var(--accent); color: white; }
+  .p-low { background: var(--surface2); color: var(--text2); }
+
+  .svg-diagram { width: 100%; max-width: 800px; margin: 0 auto; display: block; }
+
+  details { margin: 8px 0; }
+  details summary { cursor: pointer; color: var(--accent); font-weight: 600; padding: 8px 0; }
+  details summary:hover { color: #60a5fa; }
+  details > div { padding: 10px 0 10px 16px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Startup & Business Literacy Guide</h1>
+  <p>Everything a software engineer needs to know to understand the business world, startup ecosystem, and career paths — with real examples, diagrams, and charts.</p>
+</div>
+
+<nav class="nav">
+  <a href="#funding">Funding & Finance</a>
+  <a href="#stages">Startup Stages</a>
+  <a href="#equity">Equity & Cap Tables</a>
+  <a href="#roles">Company Roles</a>
+  <a href="#eng-ladder">Engineering Ladder</a>
+  <a href="#metrics">Key Metrics</a>
+  <a href="#fundraising">Fundraising Process</a>
+  <a href="#legal">Legal Basics</a>
+  <a href="#priority">Your Priority Roadmap</a>
+</nav>
+
+<div class="container">
+
+<!-- ==================== SECTION 1: FUNDING ==================== -->
+<div class="section" id="funding">
+  <h2 class="section-title"><span class="icon">💰</span> Funding & Finance</h2>
+  <p class="section-subtitle">How money flows into startups and what each investment type means.</p>
+
+  <div class="card">
+    <h3>What is a Hedge Fund?</h3>
+    <p>A hedge fund is a private investment fund that pools money from wealthy individuals and institutions, then uses aggressive strategies (short selling, leverage, derivatives) to generate returns <em>regardless of whether the market goes up or down</em>. The name "hedge" comes from hedging — protecting against risk.</p>
+    <div class="example-box">
+      <div class="ex-title">🔍 Real-World Example</div>
+      <p>Bridgewater Associates (founded by Ray Dalio) manages ~$120B. If they believe Tesla stock will drop, they can <strong>short sell</strong> it — borrowing shares, selling them at $200, then buying back at $150, pocketing $50/share. Regular mutual funds can't do this.</p>
+    </div>
+    <div class="callout">
+      <strong>Why should you care?</strong> Hedge funds sometimes invest in late-stage startups (Series C+). If a hedge fund invests in your startup, it means they see a near-term path to IPO or acquisition.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Types of Investors — Who Gives Money and When</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Investor Type</th><th>Stage</th><th>Typical Check Size</th><th>What They Want</th><th>Real Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>You (Bootstrapping)</strong></td><td>Idea</td><td>$0–$50K</td><td>Build something that works</td><td>Mailchimp was bootstrapped to $12B</td></tr>
+          <tr><td><strong>Friends & Family</strong></td><td>Pre-seed</td><td>$10K–$150K</td><td>They believe in YOU</td><td>Jeff Bezos got $250K from his parents for Amazon</td></tr>
+          <tr><td><strong>Angel Investors</strong></td><td>Pre-seed / Seed</td><td>$25K–$500K</td><td>10x–100x return</td><td>Peter Thiel put $500K in Facebook</td></tr>
+          <tr><td><strong>Venture Capital (VC)</strong></td><td>Seed → Series C</td><td>$500K–$100M+</td><td>10x+ return, board seat</td><td>Sequoia invested early in Google, Airbnb</td></tr>
+          <tr><td><strong>Hedge Funds</strong></td><td>Late stage</td><td>$50M–$500M+</td><td>Moderate return, liquidity event</td><td>Tiger Global invested in Stripe Series G</td></tr>
+          <tr><td><strong>PE (Private Equity)</strong></td><td>Mature</td><td>$100M+</td><td>Buy, optimize, sell</td><td>Thoma Bravo acquired SolarWinds</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Stocks & Securities — What Engineers Should Know</h3>
+    <p><strong>Stock</strong> = a share of ownership in a company. When you own stock, you own a tiny piece of that company.</p>
+    <div class="grid2">
+      <div>
+        <h4>Public Stock (e.g., AAPL, GOOG)</h4>
+        <ul>
+          <li>Traded on stock exchanges (NYSE, NASDAQ)</li>
+          <li>Anyone can buy/sell</li>
+          <li>Price set by supply & demand</li>
+          <li>Highly liquid — sell anytime</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Private Stock (Startup Equity)</h4>
+        <ul>
+          <li>NOT traded on exchanges</li>
+          <li>Given to employees as compensation</li>
+          <li>Price set by company valuation</li>
+          <li>Illiquid — can't easily sell</li>
+        </ul>
+      </div>
+    </div>
+    <div class="example-box">
+      <div class="ex-title">🔍 Real-World Example</div>
+      <p>Early Uber engineers received stock options at a ~$5M valuation. By IPO, Uber was valued at $82B. An engineer with 0.1% ownership saw their shares worth ~$82M (before dilution). But they couldn't sell any of it until the IPO — that's the "illiquid" part.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Key Financial Instruments</h3>
+    <div class="grid2">
+      <div class="card" style="background:var(--bg)">
+        <h4>SAFE (Simple Agreement for Future Equity)</h4>
+        <p>An investor gives you money NOW, gets shares LATER (at the next funding round). No interest, no maturity date. Created by Y Combinator.</p>
+        <p><span class="tag tag-green">Founder-friendly</span> <span class="tag tag-blue">Most common for pre-seed</span></p>
+      </div>
+      <div class="card" style="background:var(--bg)">
+        <h4>Convertible Note</h4>
+        <p>A loan that converts to equity later. Has interest rate (typically 2–8%) and a maturity date. If the startup fails, the investor can demand repayment.</p>
+        <p><span class="tag tag-yellow">More investor-friendly</span> <span class="tag tag-purple">Common in EU/Asia</span></p>
+      </div>
+      <div class="card" style="background:var(--bg)">
+        <h4>Priced Round (Series A, B, C...)</h4>
+        <p>Company is formally valued. Investors buy shares at a specific price. Involves lawyers, term sheets, board seats.</p>
+        <p><span class="tag tag-red">Complex</span> <span class="tag tag-blue">$2M+ rounds</span></p>
+      </div>
+      <div class="card" style="background:var(--bg)">
+        <h4>Valuation Cap vs. Discount</h4>
+        <p><strong>Cap:</strong> Max valuation at which the SAFE converts. <strong>Discount:</strong> Investor gets shares at e.g. 20% less than the next round's price. Investors get whichever is better for them.</p>
+        <p><span class="tag tag-green">Critical to understand</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 2: STARTUP STAGES ==================== -->
+<div class="section" id="stages">
+  <h2 class="section-title"><span class="icon">🚀</span> Startup Stages</h2>
+  <p class="section-subtitle">Every startup goes through these phases. Knowing where you are determines everything.</p>
+
+  <div class="diagram">
+    <h3>The Startup Journey</h3>
+    <div class="pipeline">
+      <div class="pipe-stage" style="border:2px solid var(--accent5)">
+        <div class="label">💡 Idea</div>
+        <div class="sub">$0</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage" style="border:2px solid var(--accent4)">
+        <div class="label">🌱 Pre-Seed</div>
+        <div class="sub">$50K–$500K</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage" style="border:2px solid var(--accent3)">
+        <div class="label">🌿 Seed</div>
+        <div class="sub">$500K–$5M</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage" style="border:2px solid var(--accent)">
+        <div class="label">📈 Series A</div>
+        <div class="sub">$5M–$20M</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage" style="border:2px solid var(--accent2)">
+        <div class="label">🏗️ Series B</div>
+        <div class="sub">$20M–$60M</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage" style="border:2px solid #ec4899">
+        <div class="label">🏢 Series C+</div>
+        <div class="sub">$50M–$500M+</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage" style="border:2px solid gold">
+        <div class="label">🔔 IPO / Exit</div>
+        <div class="sub">$$$</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <h4>Idea Stage — "Can this work?"</h4>
+      <p><strong>What you do:</strong> Validate the problem exists. Talk to 50+ potential customers. Build nothing yet (or just a landing page).<br>
+      <strong>Team:</strong> 1–2 founders<br>
+      <strong>Example:</strong> Airbnb started when the founders rented air mattresses in their apartment to conference attendees to test if strangers would pay to sleep in someone's home.</p>
+    </div>
+    <div class="tl-item">
+      <h4>Pre-Seed — "Let's build a prototype"</h4>
+      <p><strong>What you do:</strong> Build an MVP (Minimum Viable Product). Get first 10–100 users. Prove people want this.<br>
+      <strong>Funding:</strong> $50K–$500K from angels, accelerators (YC, Techstars), or your savings<br>
+      <strong>Key metric:</strong> User engagement, waitlist signups<br>
+      <strong>Example:</strong> Dropbox made a 3-minute demo video. 75,000 people signed up for the waitlist overnight — that proved demand before writing serious code.</p>
+    </div>
+    <div class="tl-item">
+      <h4>Seed — "We have traction"</h4>
+      <p><strong>What you do:</strong> Product-market fit (PMF). Users love it, retention is strong, word-of-mouth is growing.<br>
+      <strong>Funding:</strong> $500K–$5M from seed VCs (First Round, Precursor, SV Angel)<br>
+      <strong>Team:</strong> 5–15 people<br>
+      <strong>Key metric:</strong> MRR (Monthly Recurring Revenue), retention rate, NPS<br>
+      <strong>Example:</strong> Notion raised a $2M seed round. They had strong user love but were still figuring out go-to-market.</p>
+    </div>
+    <div class="tl-item">
+      <h4>Series A — "Let's scale what works"</h4>
+      <p><strong>What you do:</strong> Repeatable growth engine. Hire a real team. Build out sales/marketing.<br>
+      <strong>Funding:</strong> $5M–$20M from institutional VCs (a16z, Sequoia, Accel)<br>
+      <strong>Team:</strong> 20–50 people<br>
+      <strong>Key metric:</strong> Revenue growth rate, unit economics, LTV/CAC ratio<br>
+      <strong>Example:</strong> Slack's Series A was $42.8M from Andreessen Horowitz. They had explosive organic growth among dev teams.</p>
+    </div>
+    <div class="tl-item">
+      <h4>Series B — "Dominate the market"</h4>
+      <p><strong>What you do:</strong> Scale aggressively. Expand to new markets/geographies. Hire VPs and directors.<br>
+      <strong>Funding:</strong> $20M–$60M<br>
+      <strong>Team:</strong> 50–200<br>
+      <strong>Example:</strong> Figma raised $25M Series B to take on Adobe. They focused on building collaborative features that designers loved.</p>
+    </div>
+    <div class="tl-item">
+      <h4>Series C+ / Late Stage — "Prepare for exit"</h4>
+      <p><strong>What you do:</strong> Achieve profitability or clear path to it. Prepare for IPO or acquisition.<br>
+      <strong>Funding:</strong> $50M–$500M+ (VCs, hedge funds, PE firms)<br>
+      <strong>Example:</strong> Stripe's Series I valued them at $50B. At this stage, it's about global expansion and regulatory compliance.</p>
+    </div>
+    <div class="tl-item">
+      <h4>IPO / Exit — "The liquidity event"</h4>
+      <p><strong>Options:</strong> IPO (go public), SPAC, Direct Listing, or Acquisition.<br>
+      <strong>Example:</strong> Coinbase did a direct listing on NASDAQ in 2021 at ~$86B valuation. Employees could finally sell their shares.</p>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <strong>⚠️ The Valley of Death:</strong> ~90% of startups fail. The most dangerous gap is between Seed and Series A. You have some money, some users, but haven't proven you can scale. This is where most startups die.
+  </div>
+</div>
+
+<!-- ==================== SECTION 3: EQUITY ==================== -->
+<div class="section" id="equity">
+  <h2 class="section-title"><span class="icon">📊</span> Equity & Cap Tables</h2>
+  <p class="section-subtitle">How ownership gets divided — and diluted — as a startup grows.</p>
+
+  <div class="card">
+    <h3>What is Equity?</h3>
+    <p>Equity = ownership in the company. If you own 10% equity in a company valued at $10M, your stake is worth $1M (on paper). But equity is not cash — you can't spend it until a "liquidity event" (IPO, acquisition, or secondary sale).</p>
+  </div>
+
+  <div class="diagram">
+    <h3>How Dilution Works — A Founder's Ownership Over Time</h3>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">Day 1 (founding)</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--accent3)">100% — You own everything</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Co-founder joins</div>
+        <div class="bar-track"><div class="bar-fill" style="width:50%;background:var(--accent3)">50%</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Employee pool (15%)</div>
+        <div class="bar-track"><div class="bar-fill" style="width:42.5%;background:var(--accent)">42.5%</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Seed round (20%)</div>
+        <div class="bar-track"><div class="bar-fill" style="width:34%;background:var(--accent2)">34%</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Series A (20%)</div>
+        <div class="bar-track"><div class="bar-fill" style="width:27.2%;background:var(--accent4)">27.2%</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Series B (15%)</div>
+        <div class="bar-track"><div class="bar-fill" style="width:23.1%;background:#ec4899">23.1%</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">IPO</div>
+        <div class="bar-track"><div class="bar-fill" style="width:18%;background:var(--accent5)">~18%</div></div>
+      </div>
+    </div>
+    <div class="callout">
+      <strong>Key insight:</strong> Your percentage goes DOWN with each round, but the VALUE of your shares should go UP. Owning 18% of a $1B company ($180M) is much better than 100% of a $0 company.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Cap Table Example</h3>
+    <p>A cap table (capitalization table) tracks who owns what. Here's a simplified example after a Series A:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Shareholder</th><th>Shares</th><th>% Ownership</th><th>Value ($10M valuation)</th></tr></thead>
+        <tbody>
+          <tr><td>Founder 1 (CEO)</td><td>3,000,000</td><td>30%</td><td>$3,000,000</td></tr>
+          <tr><td>Founder 2 (CTO)</td><td>2,500,000</td><td>25%</td><td>$2,500,000</td></tr>
+          <tr><td>Seed Investors</td><td>1,500,000</td><td>15%</td><td>$1,500,000</td></tr>
+          <tr><td>Series A Investor</td><td>2,000,000</td><td>20%</td><td>$2,000,000</td></tr>
+          <tr><td>Employee Option Pool</td><td>1,000,000</td><td>10%</td><td>$1,000,000</td></tr>
+          <tr><td><strong>Total</strong></td><td><strong>10,000,000</strong></td><td><strong>100%</strong></td><td><strong>$10,000,000</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Stock Options (What You'll Get as an Employee)</h3>
+    <div class="grid2">
+      <div>
+        <h4>ISOs (Incentive Stock Options)</h4>
+        <ul>
+          <li>Tax-advantaged (in the US)</li>
+          <li>Must be exercised within 90 days of leaving</li>
+          <li>Subject to AMT (Alternative Minimum Tax)</li>
+          <li>Only for employees</li>
+        </ul>
+      </div>
+      <div>
+        <h4>NSOs (Non-Qualified Stock Options)</h4>
+        <ul>
+          <li>Taxed as ordinary income on exercise</li>
+          <li>Can be given to contractors, advisors</li>
+          <li>More flexible but less tax-efficient</li>
+        </ul>
+      </div>
+    </div>
+    <div class="example-box">
+      <div class="ex-title">🔍 Real-World Example: Vesting</div>
+      <p>You join a startup and get 40,000 options with a 4-year vesting schedule and 1-year cliff. This means: after year 1, you get 10,000 shares (25%). Then ~833 shares vest each month for the remaining 3 years. If you leave after 6 months, you get NOTHING (that's the cliff).</p>
+    </div>
+    <div class="callout warn">
+      <strong>⚠️ Exercise cost matters!</strong> If your strike price is $1 and the current value is $10, exercising 10,000 options costs you $10,000 cash but gives you shares worth $100,000. But if the company fails, you lose that $10,000.
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 4: COMPANY ROLES ==================== -->
+<div class="section" id="roles">
+  <h2 class="section-title"><span class="icon">👥</span> Company Roles & Org Structure</h2>
+  <p class="section-subtitle">Who does what at a startup and how the hierarchy works.</p>
+
+  <div class="diagram">
+    <h3>Typical Startup Org Chart</h3>
+    <div class="org-chart">
+      <div class="org-row"><div class="org-box top">Board of Directors</div></div>
+      <div class="org-line"></div>
+      <div class="org-row"><div class="org-box top">CEO (Chief Executive Officer)</div></div>
+      <div class="org-line"></div>
+      <div class="org-row">
+        <div class="org-box exec">CTO</div>
+        <div class="org-box exec">CFO</div>
+        <div class="org-box exec">COO</div>
+        <div class="org-box exec">CMO</div>
+        <div class="org-box exec">CPO</div>
+      </div>
+      <div class="org-line"></div>
+      <div class="org-row">
+        <div class="org-box">VP Eng</div>
+        <div class="org-box">VP Finance</div>
+        <div class="org-box">VP Ops</div>
+        <div class="org-box">VP Marketing</div>
+        <div class="org-box">VP Product</div>
+      </div>
+      <div class="org-line"></div>
+      <div class="org-row">
+        <div class="org-box">Directors</div>
+        <div class="org-box">Eng Managers</div>
+        <div class="org-box">Staff/Principal Engineers</div>
+      </div>
+      <div class="org-line"></div>
+      <div class="org-row">
+        <div class="org-box">Senior Engineers</div>
+        <div class="org-box">Engineers</div>
+        <div class="org-box">Junior Engineers</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>C-Suite Roles Explained</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Role</th><th>What They Actually Do</th><th>Startup vs. Big Company</th><th>Famous Example</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>CEO</strong><br>Chief Executive Officer</td>
+            <td>Sets vision & strategy, raises money, hires leaders, is the face of the company, makes final decisions</td>
+            <td>At a startup: does everything — sales calls, investor pitches, taking out trash. At big co: mostly strategy & governance.</td>
+            <td>Jensen Huang (NVIDIA), Sam Altman (OpenAI)</td>
+          </tr>
+          <tr>
+            <td><strong>CTO</strong><br>Chief Technology Officer</td>
+            <td>Sets technical vision, chooses tech stack, leads architecture decisions, ensures engineering quality</td>
+            <td>At a startup: writes code, deploys servers, fixes bugs at 2am. At big co: mostly strategy, doesn't code.</td>
+            <td>Werner Vogels (AWS/Amazon)</td>
+          </tr>
+          <tr>
+            <td><strong>CFO</strong><br>Chief Financial Officer</td>
+            <td>Manages finances, fundraising, budgets, financial planning, investor relations</td>
+            <td>Startups often don't have one until Series B+. Before that, the CEO handles finance.</td>
+            <td>Ruth Porat (Alphabet)</td>
+          </tr>
+          <tr>
+            <td><strong>COO</strong><br>Chief Operating Officer</td>
+            <td>Runs day-to-day operations, processes, HR, legal coordination. The "make it all work" person.</td>
+            <td>Not every company needs one. Usually hired when the CEO is a visionary who needs a partner to execute.</td>
+            <td>Sheryl Sandberg (Meta, formerly)</td>
+          </tr>
+          <tr>
+            <td><strong>CPO</strong><br>Chief Product Officer</td>
+            <td>Product strategy, roadmap, user research, feature prioritization. Bridge between engineering and business.</td>
+            <td>At a startup: often the CEO or CTO does this. Dedicated CPO usually comes at Series B+.</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>CMO</strong><br>Chief Marketing Officer</td>
+            <td>Brand, growth, content, advertising, PR. Getting the word out.</td>
+            <td>Many startups skip this entirely and do "growth hacking" instead.</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Board of Directors — Who Really Controls the Company</h3>
+    <p>The board makes major decisions: hiring/firing the CEO, approving fundraising, approving acquisitions. A typical early-stage board has 3–5 seats.</p>
+    <div class="example-box">
+      <div class="ex-title">🔍 Real-World Example: Board Composition After Series A</div>
+      <p>• <strong>Seat 1:</strong> Founder/CEO (you)<br>
+      • <strong>Seat 2:</strong> Co-founder/CTO<br>
+      • <strong>Seat 3:</strong> Lead Series A investor (they demanded a board seat)<br>
+      • <strong>Seat 4:</strong> Independent director (experienced exec both sides agree on)<br>
+      • <strong>Seat 5:</strong> Seed investor representative</p>
+      <p style="margin-top:8px;color:var(--accent5)">⚠️ If investors have 3 of 5 seats, they can fire you from your own company. This happened to Steve Jobs at Apple in 1985.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Other Important Roles You'll Encounter</h3>
+    <div class="grid2">
+      <div>
+        <h4>VP of Engineering</h4>
+        <p>Manages the engineering org — people, process, delivery. Focuses on HOW things get built. Reports to CTO or CEO.</p>
+      </div>
+      <div>
+        <h4>Product Manager (PM)</h4>
+        <p>Decides WHAT gets built and WHY. Gathers requirements, writes specs, prioritizes the roadmap. Works closely with engineering.</p>
+      </div>
+      <div>
+        <h4>Engineering Manager (EM)</h4>
+        <p>Manages a team of 5–10 engineers. Does 1:1s, performance reviews, removes blockers. Some EMs still code, many don't.</p>
+      </div>
+      <div>
+        <h4>Technical Program Manager (TPM)</h4>
+        <p>Coordinates large cross-team projects. Tracks dependencies, timelines, risks. Essential at 100+ engineer orgs.</p>
+      </div>
+      <div>
+        <h4>DevRel / Developer Advocate</h4>
+        <p>If your product is for developers (API, SDK), DevRel builds community, writes docs, gives talks, and gathers feedback.</p>
+      </div>
+      <div>
+        <h4>Solutions Engineer / Sales Engineer</h4>
+        <p>Technical person who supports the sales team. Demos the product, answers technical questions from prospects, builds proof-of-concepts.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 5: ENGINEERING LADDER ==================== -->
+<div class="section" id="eng-ladder">
+  <h2 class="section-title"><span class="icon">🪜</span> Engineering Career Ladder</h2>
+  <p class="section-subtitle">The path from junior to Staff Engineer and beyond — what's expected at each level.</p>
+
+  <div class="diagram">
+    <h3>The Two Tracks: IC (Individual Contributor) vs. Management</h3>
+    <svg viewBox="0 0 800 420" class="svg-diagram" xmlns="http://www.w3.org/2000/svg">
+      <!-- Background -->
+      <!-- IC Track -->
+      <rect x="40" y="350" width="140" height="45" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+      <text x="110" y="377" text-anchor="middle" fill="#f1f5f9" font-size="13" font-weight="600">Junior Engineer</text>
+
+      <rect x="40" y="280" width="140" height="45" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+      <text x="110" y="307" text-anchor="middle" fill="#f1f5f9" font-size="13" font-weight="600">Mid-level Engineer</text>
+
+      <rect x="40" y="210" width="140" height="45" rx="8" fill="#1e293b" stroke="#3b82f6" stroke-width="2"/>
+      <text x="110" y="237" text-anchor="middle" fill="#f1f5f9" font-size="13" font-weight="600">Senior Engineer</text>
+
+      <!-- Fork point -->
+      <line x1="110" y1="350" x2="110" y2="260" stroke="#475569" stroke-width="2"/>
+      <line x1="110" y1="210" x2="110" y2="180" stroke="#475569" stroke-width="2"/>
+
+      <!-- IC continues left -->
+      <line x1="110" y1="180" x2="200" y2="155" stroke="#3b82f6" stroke-width="2"/>
+      <text x="155" y="155" text-anchor="middle" fill="#3b82f6" font-size="10">IC Track</text>
+
+      <rect x="200" y="135" width="160" height="45" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
+      <text x="280" y="162" text-anchor="middle" fill="#f1f5f9" font-size="13" font-weight="600">Staff Engineer</text>
+
+      <rect x="200" y="65" width="160" height="45" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
+      <text x="280" y="92" text-anchor="middle" fill="#f1f5f9" font-size="13" font-weight="600">Principal Engineer</text>
+
+      <rect x="200" y="5" width="160" height="45" rx="8" fill="#1e293b" stroke="#8b5cf6" stroke-width="2"/>
+      <text x="280" y="32" text-anchor="middle" fill="#f1f5f9" font-size="13" font-weight="600">Distinguished / Fellow</text>
+
+      <line x1="280" y1="135" x2="280" y2="115" stroke="#475569" stroke-width="2"/>
+      <line x1="280" y1="65" x2="280" y2="55" stroke="#475569" stroke-width="2"/>
+
+      <!-- Management track right -->
+      <line x1="110" y1="180" x2="520" y2="155" stroke="#10b981" stroke-width="2"/>
+      <text x="400" y="155" text-anchor="middle" fill="#10b981" font-size="10">Mgmt Track</text>
+
+      <rect x="440" y="135" width="170" height="45" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+      <text x="525" y="162" text-anchor="middle" fill="#f1f5f9" font-size="13" font-weight="600">Eng Manager</text>
+
+      <rect x="440" y="65" width="170" height="45" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+      <text x="525" y="92" text-anchor="middle" fill="#f1f5f9" font-size="13" font-weight="600">Director of Eng</text>
+
+      <rect x="440" y="5" width="170" height="45" rx="8" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+      <text x="525" y="32" text-anchor="middle" fill="#f1f5f9" font-size="13" font-weight="600">VP of Engineering</text>
+
+      <line x1="525" y1="135" x2="525" y2="115" stroke="#475569" stroke-width="2"/>
+      <line x1="525" y1="65" x2="525" y2="55" stroke="#475569" stroke-width="2"/>
+
+      <!-- Fork label -->
+      <text x="110" y="175" text-anchor="middle" fill="#f59e0b" font-size="11" font-weight="700">⇧ FORK POINT ⇧</text>
+
+      <!-- Salary ranges on right -->
+      <text x="680" y="377" fill="#94a3b8" font-size="11">$70–120K</text>
+      <text x="680" y="307" fill="#94a3b8" font-size="11">$120–180K</text>
+      <text x="680" y="237" fill="#94a3b8" font-size="11">$150–250K</text>
+      <text x="680" y="162" fill="#94a3b8" font-size="11">$200–400K+</text>
+      <text x="680" y="92" fill="#94a3b8" font-size="11">$300–500K+</text>
+      <text x="680" y="32" fill="#94a3b8" font-size="11">$400–700K+</text>
+      <text x="680" y="15" fill="#475569" font-size="9">(US total comp)</text>
+    </svg>
+  </div>
+
+  <div class="card">
+    <h3>What Does a Staff Engineer Actually Do?</h3>
+    <p>Staff Engineer is where many engineers aspire to reach. It's the first level where your impact is expected to extend <strong>beyond your immediate team</strong>.</p>
+    <div class="grid2">
+      <div>
+        <h4>Scope of Impact by Level</h4>
+        <ul>
+          <li><strong>Junior:</strong> Individual tasks</li>
+          <li><strong>Mid:</strong> Features / small projects</li>
+          <li><strong>Senior:</strong> Entire team's technical direction</li>
+          <li><strong>Staff:</strong> Multiple teams or org-wide systems</li>
+          <li><strong>Principal:</strong> Company-wide technical strategy</li>
+          <li><strong>Distinguished:</strong> Industry-wide influence</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Staff Engineer Archetypes</h4>
+        <ul>
+          <li><strong>Tech Lead:</strong> Guides a team's technical decisions</li>
+          <li><strong>Architect:</strong> Designs systems that span teams</li>
+          <li><strong>Solver:</strong> Parachutes into the hardest problems</li>
+          <li><strong>Right Hand:</strong> CTO's trusted partner for strategy execution</li>
+        </ul>
+      </div>
+    </div>
+    <div class="example-box">
+      <div class="ex-title">🔍 Real-World Example</div>
+      <p>A Staff Engineer at Stripe might redesign the entire payment processing pipeline to handle 10x more transactions. This requires coordinating with 5 teams, writing design docs, getting buy-in from leadership, mentoring engineers on the new architecture, and writing the most critical code herself. A Senior Engineer works within a team; a Staff Engineer works across teams.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 6: KEY METRICS ==================== -->
+<div class="section" id="metrics">
+  <h2 class="section-title"><span class="icon">📈</span> Key Business Metrics</h2>
+  <p class="section-subtitle">The numbers every startup founder and engineer must understand.</p>
+
+  <div class="card">
+    <h3>The Metrics That Matter</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Metric</th><th>What It Is</th><th>Formula</th><th>Good Benchmark</th><th>Why You Care</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>MRR</strong></td>
+            <td>Monthly Recurring Revenue</td>
+            <td>Sum of all monthly subscription revenue</td>
+            <td>Growing 15%+ month-over-month (early stage)</td>
+            <td>The #1 number investors look at for SaaS</td>
+          </tr>
+          <tr>
+            <td><strong>ARR</strong></td>
+            <td>Annual Recurring Revenue</td>
+            <td>MRR × 12</td>
+            <td>$1M ARR = milestone for Series A</td>
+            <td>How VCs size your company</td>
+          </tr>
+          <tr>
+            <td><strong>CAC</strong></td>
+            <td>Customer Acquisition Cost</td>
+            <td>Total sales & marketing spend ÷ new customers</td>
+            <td>Depends on industry; lower is better</td>
+            <td>How much it costs to get one customer</td>
+          </tr>
+          <tr>
+            <td><strong>LTV</strong></td>
+            <td>Lifetime Value</td>
+            <td>Avg revenue per customer × avg customer lifespan</td>
+            <td>LTV:CAC ratio of 3:1 or better</td>
+            <td>How much a customer is worth over time</td>
+          </tr>
+          <tr>
+            <td><strong>Churn</strong></td>
+            <td>Rate customers leave</td>
+            <td>Customers lost ÷ total customers × 100</td>
+            <td>&lt;5% monthly for B2C, &lt;2% for B2B</td>
+            <td>A leaky bucket kills growth</td>
+          </tr>
+          <tr>
+            <td><strong>Burn Rate</strong></td>
+            <td>How fast you spend money</td>
+            <td>Monthly operating expenses − monthly revenue</td>
+            <td>—</td>
+            <td>Determines your "runway"</td>
+          </tr>
+          <tr>
+            <td><strong>Runway</strong></td>
+            <td>How long until you're out of money</td>
+            <td>Cash in bank ÷ monthly burn rate</td>
+            <td>12–18 months is healthy</td>
+            <td>When to start fundraising again</td>
+          </tr>
+          <tr>
+            <td><strong>NPS</strong></td>
+            <td>Net Promoter Score</td>
+            <td>% promoters (9–10) − % detractors (0–6)</td>
+            <td>50+ is excellent</td>
+            <td>Do users actually love your product?</td>
+          </tr>
+          <tr>
+            <td><strong>DAU/MAU</strong></td>
+            <td>Daily/Monthly Active Users</td>
+            <td>Unique users per day/month</td>
+            <td>DAU/MAU > 0.25 is good engagement</td>
+            <td>User engagement and stickiness</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="example-box">
+    <div class="ex-title">🔍 Real-World Example: Unit Economics</div>
+    <p>Your SaaS charges $50/month. Average customer stays 24 months. So <strong>LTV = $1,200</strong>.<br>
+    You spend $5,000 on Google Ads and get 20 customers. So <strong>CAC = $250</strong>.<br>
+    <strong>LTV:CAC ratio = 4.8:1</strong> — this is great! VCs would love this.<br><br>
+    But if your churn is 10%/month, customers only stay ~10 months on average, making LTV = $500 and LTV:CAC = 2:1 — now you have a problem to solve before scaling.</p>
+  </div>
+</div>
+
+<!-- ==================== SECTION 7: FUNDRAISING ==================== -->
+<div class="section" id="fundraising">
+  <h2 class="section-title"><span class="icon">🤝</span> The Fundraising Process</h2>
+  <p class="section-subtitle">Step-by-step: how raising money actually works.</p>
+
+  <div class="diagram">
+    <h3>Fundraising Pipeline</h3>
+    <div class="pipeline">
+      <div class="pipe-stage" style="border:2px solid var(--accent)">
+        <div class="label">Build Deck</div>
+        <div class="sub">10–15 slides</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage" style="border:2px solid var(--accent)">
+        <div class="label">Target VCs</div>
+        <div class="sub">50–100 firms</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage" style="border:2px solid var(--accent)">
+        <div class="label">Warm Intros</div>
+        <div class="sub">Via network</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage" style="border:2px solid var(--accent3)">
+        <div class="label">First Meeting</div>
+        <div class="sub">30 min pitch</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage" style="border:2px solid var(--accent3)">
+        <div class="label">Partner Meeting</div>
+        <div class="sub">Deep dive</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage" style="border:2px solid var(--accent4)">
+        <div class="label">Term Sheet</div>
+        <div class="sub">The offer</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage" style="border:2px solid var(--accent3)">
+        <div class="label">Due Diligence</div>
+        <div class="sub">2–4 weeks</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-stage" style="border:2px solid gold">
+        <div class="label">💰 Close</div>
+        <div class="sub">Money wired</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>What's in a Pitch Deck?</h3>
+    <p>The standard 10–15 slide structure that investors expect:</p>
+    <div class="grid3">
+      <div class="card" style="background:var(--bg);padding:12px">
+        <h4 style="font-size:0.9em">1. Title Slide</h4>
+        <p style="font-size:0.8em">Company name, one-line tagline, your name</p>
+      </div>
+      <div class="card" style="background:var(--bg);padding:12px">
+        <h4 style="font-size:0.9em">2. Problem</h4>
+        <p style="font-size:0.8em">What painful problem exists? Make it relatable.</p>
+      </div>
+      <div class="card" style="background:var(--bg);padding:12px">
+        <h4 style="font-size:0.9em">3. Solution</h4>
+        <p style="font-size:0.8em">How do you solve it? Demo or screenshots.</p>
+      </div>
+      <div class="card" style="background:var(--bg);padding:12px">
+        <h4 style="font-size:0.9em">4. Market Size</h4>
+        <p style="font-size:0.8em">TAM, SAM, SOM — how big is the opportunity?</p>
+      </div>
+      <div class="card" style="background:var(--bg);padding:12px">
+        <h4 style="font-size:0.9em">5. Business Model</h4>
+        <p style="font-size:0.8em">How do you make money? Pricing tiers?</p>
+      </div>
+      <div class="card" style="background:var(--bg);padding:12px">
+        <h4 style="font-size:0.9em">6. Traction</h4>
+        <p style="font-size:0.8em">Revenue, users, growth rate — the proof.</p>
+      </div>
+      <div class="card" style="background:var(--bg);padding:12px">
+        <h4 style="font-size:0.9em">7. Competition</h4>
+        <p style="font-size:0.8em">Who else is doing this? Why are you different?</p>
+      </div>
+      <div class="card" style="background:var(--bg);padding:12px">
+        <h4 style="font-size:0.9em">8. Team</h4>
+        <p style="font-size:0.8em">Why are YOU the ones to build this?</p>
+      </div>
+      <div class="card" style="background:var(--bg);padding:12px">
+        <h4 style="font-size:0.9em">9. The Ask</h4>
+        <p style="font-size:0.8em">How much $$, what will you do with it?</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Term Sheet — Key Terms to Know</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Term</th><th>What It Means</th><th>Watch Out For</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Pre-money Valuation</strong></td><td>What your company is worth BEFORE the investment</td><td>Higher = less dilution for you</td></tr>
+          <tr><td><strong>Post-money Valuation</strong></td><td>Pre-money + investment amount</td><td>This is what your % is based on</td></tr>
+          <tr><td><strong>Liquidation Preference</strong></td><td>Investors get their money back first in an exit</td><td>1x is standard. 2x+ is investor-greedy</td></tr>
+          <tr><td><strong>Anti-dilution</strong></td><td>Protects investors if the next round is at a lower valuation ("down round")</td><td>Broad-based weighted average is fairest</td></tr>
+          <tr><td><strong>Pro-rata Rights</strong></td><td>Investor can invest in future rounds to maintain their %</td><td>Standard and usually fine</td></tr>
+          <tr><td><strong>Board Seats</strong></td><td>How many board seats investors get</td><td>Never give up majority board control early</td></tr>
+          <tr><td><strong>Drag-along Rights</strong></td><td>If majority wants to sell, they can force minority shareholders to sell too</td><td>Standard but know it exists</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SECTION 8: LEGAL ==================== -->
+<div class="section" id="legal">
+  <h2 class="section-title"><span class="icon">⚖️</span> Legal Basics</h2>
+  <p class="section-subtitle">Essential legal concepts every founder-engineer should know.</p>
+
+  <div class="card">
+    <h3>Company Structure</h3>
+    <div class="grid2">
+      <div>
+        <h4>Delaware C-Corp</h4>
+        <p>The standard for VC-backed startups. Almost all US tech startups are Delaware C-Corps because VCs require it, Delaware has well-established corporate law, and it supports preferred stock classes needed for fundraising.</p>
+        <span class="tag tag-green">Most common</span>
+      </div>
+      <div>
+        <h4>LLC</h4>
+        <p>Simpler structure, pass-through taxation. Great for bootstrapped businesses, consulting firms, or lifestyle businesses. Most VCs won't invest in an LLC — you'll need to convert to a C-Corp.</p>
+        <span class="tag tag-blue">Good for bootstrapping</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Intellectual Property (IP)</h3>
+    <div class="grid2">
+      <div>
+        <h4>Key IP Concepts</h4>
+        <ul>
+          <li><strong>Patents:</strong> Protect inventions (algorithms, processes). Expensive ($10K–$30K), takes years.</li>
+          <li><strong>Trademarks:</strong> Protect brand names, logos. File early — $225–$400.</li>
+          <li><strong>Copyright:</strong> Automatic for code you write. But if you wrote it as an employee, your employer owns it.</li>
+          <li><strong>Trade Secrets:</strong> Keep it secret (recipes, algorithms). No registration, but must take steps to protect.</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Watch Out For</h4>
+        <ul>
+          <li><strong>IP Assignment:</strong> Ensure all founders and employees sign IP assignment agreements — the company must own the code, not individuals.</li>
+          <li><strong>Prior employer IP:</strong> If you built something at your previous job, they might claim they own it.</li>
+          <li><strong>Open source licenses:</strong> Using GPL code? Your entire codebase might need to be open-sourced. Use MIT/Apache for safety.</li>
+          <li><strong>Non-compete clauses:</strong> Check your current employment contract before starting a side project.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Founder Agreements You Need</h3>
+    <ul>
+      <li><strong>Founders' Agreement:</strong> Who owns what, roles, vesting schedules, what happens if someone leaves. GET THIS IN WRITING before writing a line of code.</li>
+      <li><strong>Vesting for founders:</strong> Standard is 4-year vesting with 1-year cliff. Yes, even founders should vest — it protects everyone if a co-founder leaves early.</li>
+      <li><strong>83(b) Election:</strong> (US-specific) File this tax form within 30 days of receiving restricted stock. Missing this deadline can cost you hundreds of thousands in taxes.</li>
+      <li><strong>NDAs:</strong> Non-Disclosure Agreements. Most VCs won't sign them. Don't ask.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== SECTION 9: PRIORITY ==================== -->
+<div class="section" id="priority">
+  <h2 class="section-title"><span class="icon">🎯</span> Your Priority Roadmap</h2>
+  <p class="section-subtitle">As a software engineer planning a future startup, here's what to learn and when.</p>
+
+  <div class="diagram">
+    <h3>Priority Learning Roadmap</h3>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label" style="color:var(--accent5);font-weight:700">CRITICAL NOW</div>
+        <div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,#ef4444,#f87171)">Engineering excellence, system design, product thinking</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label" style="color:var(--accent4);font-weight:700">HIGH</div>
+        <div class="bar-track"><div class="bar-fill" style="width:85%;background:linear-gradient(90deg,#f59e0b,#fbbf24)">Equity, fundraising, key metrics (MRR, CAC, LTV)</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label" style="color:var(--accent);font-weight:700">MEDIUM</div>
+        <div class="bar-track"><div class="bar-fill" style="width:65%;background:linear-gradient(90deg,#3b82f6,#60a5fa)">Legal basics, company structure, IP, term sheets</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label" style="color:var(--text2);font-weight:700">LEARN LATER</div>
+        <div class="bar-track"><div class="bar-fill" style="width:45%;background:linear-gradient(90deg,#475569,#64748b)">Hedge funds, PE, public markets, advanced finance</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Phase 1: While You're Still an Engineer <span class="priority-badge p-critical">DO NOW</span></h3>
+    <ul>
+      <li><strong>Become a great engineer first.</strong> Master system design, distributed systems, databases, and shipping production code. This is your superpower as a technical founder.</li>
+      <li><strong>Get to Senior/Staff level.</strong> The skills you build (cross-team communication, technical strategy, influencing without authority) are exactly what a CTO needs.</li>
+      <li><strong>Build side projects.</strong> Ship something real. Get users. Learn the pain of building a product, not just features.</li>
+      <li><strong>Understand product thinking.</strong> Read user research, sit in on PM meetings, think about WHY features exist, not just HOW to build them.</li>
+      <li><strong>Network.</strong> Go to meetups, tweet, contribute to open source. Your future co-founder and first investors are in your network.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Phase 2: Preparing to Start <span class="priority-badge p-high">6-12 MONTHS BEFORE</span></h3>
+    <ul>
+      <li><strong>Learn fundraising mechanics:</strong> SAFEs, term sheets, valuations, dilution</li>
+      <li><strong>Understand unit economics:</strong> CAC, LTV, churn, MRR — know these cold</li>
+      <li><strong>Find your co-founder:</strong> Ideally someone with complementary skills (you = technical, them = business/sales)</li>
+      <li><strong>Save money:</strong> You need 6–12 months of personal runway minimum</li>
+      <li><strong>Validate your idea:</strong> Talk to 100+ potential customers. Can you find 10 who would pay for it TODAY?</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Phase 3: Actually Launching <span class="priority-badge p-medium">WHEN YOU START</span></h3>
+    <ul>
+      <li><strong>Incorporate properly:</strong> Delaware C-Corp, set up equity with vesting, file 83(b)</li>
+      <li><strong>Build the MVP:</strong> Not the full vision — the smallest thing that solves the core problem</li>
+      <li><strong>Get to $1M ARR:</strong> This is the Series A benchmark. Everything before this is about finding product-market fit</li>
+      <li><strong>Learn to sell:</strong> As a technical founder, you MUST learn to sell your product. Nobody else will do it in the early days.</li>
+    </ul>
+  </div>
+
+  <div class="callout success">
+    <strong>💡 The #1 Advantage of a Technical Founder:</strong> You can build the product yourself. While non-technical founders are looking for a CTO and spending their seed round on developers, you're already shipping. This is an enormous advantage — don't underestimate it. Every great dev tool company (GitHub, GitLab, Vercel, Supabase) was started by engineers.
+  </div>
+
+  <div class="card">
+    <h3>Recommended Resources</h3>
+    <div class="grid2">
+      <div>
+        <h4>Books</h4>
+        <ul>
+          <li><strong>The Lean Startup</strong> — Eric Ries (MVP, validated learning)</li>
+          <li><strong>Zero to One</strong> — Peter Thiel (contrarian startup thinking)</li>
+          <li><strong>The Hard Thing About Hard Things</strong> — Ben Horowitz (real CEO challenges)</li>
+          <li><strong>An Elegant Puzzle</strong> — Will Larson (engineering management)</li>
+          <li><strong>The Staff Engineer's Path</strong> — Tanya Reilly</li>
+          <li><strong>Venture Deals</strong> — Brad Feld (fundraising mechanics)</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Free Resources</h4>
+        <ul>
+          <li><strong>Y Combinator Startup School</strong> — free course, incredibly practical</li>
+          <li><strong>Paul Graham's Essays</strong> — paulgraham.com (essential reading)</li>
+          <li><strong>Stratechery</strong> — Ben Thompson (business strategy)</li>
+          <li><strong>levels.fyi</strong> — comp data for engineering levels</li>
+          <li><strong>Holloway Guide to Equity Compensation</strong> — free, comprehensive</li>
+          <li><strong>a16z blog</strong> — VC perspective on everything</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<footer>
+  <p>Startup & Business Literacy Guide for Software Engineers</p>
+  <p style="margin-top:8px;">Created as a learning reference. Not financial or legal advice. Consult professionals for specific decisions.</p>
+</footer>
+
+</body>
+</html>
