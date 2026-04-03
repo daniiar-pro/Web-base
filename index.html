@@ -1,3 +1,95 @@
+
+Okay. Is there any way that we can visualize let's say, web development a to zed? What I mean by that, for example, let's say user makes a request or from the developer perspective and and from the user's perspective as well, what happens under the hood. For example, developer who writes the code, and it compiles, transpiles, and bundles and what the code in each step gonna look like and the build tools and what's gonna look like under the build tools, and then, what kind of components do we have in browser, and how those, browser components are related to each step. And how it looks like and then it's shown to the user and, how it's rebuilt from the user's perspective and from the and how it sent from the server's perspective So is there any tool that, gives a to zed understanding from developer and from the user perspective. Like visual diagrams, mental models, you know, charts as long as it makes sense when you explain.
+
+Apr 2
+What a great question — you're essentially asking for a comprehensive mental model of the entire web development lifecycle. Let me build this out as a series of connected visual explanations.
+
+Let me start with the big picture, then drill into each phase.
+
+Now let me build this step by step. I'll create a series of connected diagrams that tell the complete story.
+
+Phase 1: The developer's world — writing and building code
+
+
+
+This is where everything starts. You write in high-level languages (TypeScript, JSX, SCSS) that browsers don't understand natively. The build pipeline transforms your source through three stages — transpilation converts syntax, bundling merges files and resolves imports, and optimization strips out dead code and minifies everything. The result is a dist/ folder with plain HTML, CSS, and JS ready for deployment.
+
+Now let's see what happens when that code reaches a server and a user requests it.
+
+Phase 2: Server receives request → sends response
+
+V
+
+Connecting to visualize...
+Before the browser can render anything, there's a whole chain of network events. The browser resolves the domain name to an IP address via DNS, establishes a secure connection (TCP + TLS handshake), then sends an HTTP request. The server — whether it's Nginx, a Node.js app, or a CDN edge — matches the URL to the right files, compresses them, sets cache headers, and sends them back.
+
+Now here's the most interesting part — what happens inside the browser once those files arrive.
+
+Phase 3: Inside the browser — parsing, rendering, painting
+
+V
+
+Connecting to visualize...
+This is the heart of it. The browser has five major stages once it receives those files: it parses HTML into a DOM tree, parses CSS into a CSSOM, merges them into a render tree (dropping invisible elements), calculates exact positions during layout, then paints actual pixels and composites them via the GPU. Each step shows you what the data looks like at that stage.
+
+Now let's zoom out and see how JavaScript ties back into this — because after the initial render, JS takes over for interactivity and re-rendering.
+
+Phase 4: JavaScript execution and the event loop
+
+V
+
+Connecting to visualize...
+Click through that stepper to see exactly how the event loop works — it's one of the most important mental models in web dev. Synchronous code runs first on the call stack, async operations get delegated to Web APIs (which the browser provides outside the JS engine), then callbacks come back through the microtask queue (promises, first priority) and macrotask queue (setTimeout, events, second priority).
+
+Finally, let's see the complete picture — developer to user — in one connected overview.
+
+Phase 5: The complete A-to-Z overview
+
+V
+
+Connecting to visualize...
+There's the full picture. Every node in that final diagram is clickable — tap any of them to dive deeper into that specific area.
+
+Here's a summary of the complete journey:
+
+Developer side — you write high-level code (TypeScript, JSX, SCSS), the build tools transpile it to standard JS/CSS, bundle everything together, optimize with minification and tree-shaking, then deploy the output to a server or CDN.
+
+Network — when a user types your URL, the browser resolves the domain via DNS, establishes a secure TCP+TLS connection, then fires off an HTTP request. The server routes it, optionally does server-side rendering, compresses the response, and sends back HTML/JS/CSS.
+
+Browser — this is where the magic happens. The rendering engine parses HTML into a DOM, parses CSS into a CSSOM, merges them into a render tree, calculates layout positions, then paints pixels to the screen via the GPU. Meanwhile, JavaScript runs on the event loop — synchronous code on the call stack, async work through Web APIs and callback queues.
+
+User side — the page becomes visible (First Contentful Paint), then fully loaded (Largest Contentful Paint), then interactive (Time to Interactive). After that, every user action triggers the re-render cycle: event → JS handler → state change → virtual DOM diff → minimal DOM update → repaint.
+
+Each of the diagrams above is interactive — click any box to ask me to go deeper on that specific topic. Want me to drill into any particular phase?
+
+Okay. Let's start. So developer site is all those build tools, bundling, trans transpiling, and, like, slash or dot dist folder with ready to serve web page. And once, then the next layer is gonna be, of course, the networking, TCP, TCP connection and those sort of things. And which connects actually us to the browser. Browser. And once the browser which is declined, receives that request, we receive a response to their request via network, which is developer written code logic, no resource. And browser is where it uses JavaScript event loop and its rendering engine. And its strategies, its components, puzzles in order to interact with the user. and it goes back and forth again, again give me everything detailed again in .html file, use charts, diagrams, images, if it helps, REALLY DETAILED STEPS E.G: "DEV WRITES CODE  (CODE SAMPLE)--> IT GETS THROUGH BUILD TOOL (TRANSPILING, BUNDLING, MINIFICATION) --> CLOUD (AZURE,  GC, AWS) WHICH IS JUST A POWERFUL COMPUTER, WHICH MAKES IT AVAILABLE TO DELIVER YOUR CODE (PAGE, RESOURCE ETC..) TO A LOT OF USERS --> U JUST UPLOAD /DIST FOLDER (EASY, FASTER TO ACCESS ET...) --> FOR EVERY USER THAT FILES GETS RETURNED OVER AND OVER BY OTHER LAYERS LIKE NETWORKING ---> BROWSER ETC...."
+
+Show more
+Apr 2
+Let me build this as a comprehensive, deeply detailed interactive guide.
+
+Web Development A-to-Z: The Complete Journey
+Interactive artifact 
+There it is — the complete A-to-Z guide with 8 sections, each expandable with detailed code samples, ASCII diagrams, and explanations. Here's what it covers:
+
+01 — Developer writes code shows actual TSX, SCSS, and package.json source files with explanations of why browsers can't read them directly.
+
+02 — Build tools transform it walks through transpilation (TSX→JS, SCSS→CSS with before/after code), bundling (how imports get resolved and merged), and optimization (minification with a 76% size reduction example, tree-shaking, and compression going from 2.4MB down to 95KB).
+
+03 — Deploy to the cloud demystifies "the cloud" as just powerful computers in data centers, covers S3/CDN/EC2/Vercel options, CI/CD pipelines, and how CDNs cache copies worldwide to cut latency from 200ms to 15ms.
+
+04 — User makes a request details every network step with exact timelines: DNS resolution, TCP 3-way handshake, TLS negotiation, and the HTTP request with all its headers explained.
+
+05 — Server responds shows the HTTP response headers, explains the cascade of requests (HTML triggers CSS/JS/image downloads), and how caching headers work for repeat visits.
+
+06 — Browser rendering engine breaks down the 5-step pipeline: HTML→DOM, CSS→CSSOM, merge into render tree, layout/reflow with exact pixel calculations, and paint→composite→GPU.
+
+07 — JS event loop maps out the call stack, heap, Web APIs, microtask/macrotask queues, and walks through a real code example showing exactly why Promise callbacks run before setTimeout(0).
+
+08 — User interaction covers Core Web Vitals, the re-render cycle (click→event→handler→state→reconciliation→DOM update→paint), and optimistic updates for data round-trips.
+
+Every section is collapsible — click any step header to expand it. Want me to go even deeper into any specific section?
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,9 +98,26 @@
 <title>Dev Knowledge Base</title>
 <style>
   :root {
-    --bg:#0a0e1a;--s1:#111827;--s2:#1e293b;--s3:#293548;
-    --b:#334155;--t:#e2e8f0;--t2:#94a3b8;--t3:#64748b;
-    --a:#6366f1;--a2:#818cf8;--g:#34d399;--y:#fbbf24;--r:#f87171;--c:#22d3ee;--p:#f472b6;--o:#fb923c;--bl:#3b82f6;
+    --bg:
+#0a0e1a;--s1:
+#111827;--s2:
+#1e293b;--s3:
+#293548;
+    --b:
+#334155;--t:
+#e2e8f0;--t2:
+#94a3b8;--t3:
+#64748b;
+    --a:
+#6366f1;--a2:
+#818cf8;--g:
+#34d399;--y:
+#fbbf24;--r:
+#f87171;--c:
+#22d3ee;--p:
+#f472b6;--o:
+#fb923c;--bl:
+#3b82f6;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--t);line-height:1.7;min-height:100vh}
@@ -44,17 +153,32 @@
   .gc .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
   .gc .tag{font-size:.68rem;padding:2px 8px;border-radius:8px;font-weight:600}
   .gc .cta{font-size:.82rem;color:var(--c);font-weight:600;margin-top:12px;display:flex;align-items:center;gap:4px}
-  .gc.webdevaz {
-  --accent: #7F77DD;
-}
 
   /* COLOR VARIANTS */
-  .gc.browsers::before{background:linear-gradient(90deg,#6c8cff,#a78bfa)}.gc.browsers .dot{background:#6c8cff}
-  .gc.networking::before{background:linear-gradient(90deg,#3b82f6,#8b5cf6)}.gc.networking .dot{background:#3b82f6}
-  .gc.tooling::before{background:linear-gradient(90deg,#2dd4a8,#38bdf8)}.gc.tooling .dot{background:#2dd4a8}
-  .gc.architecture::before{background:linear-gradient(90deg,#818cf8,#22d3ee)}.gc.architecture .dot{background:#818cf8}
-  .gc.startup::before{background:linear-gradient(90deg,#f59e0b,#ef4444)}.gc.startup .dot{background:#f59e0b}
-  .gc.stack::before{background:linear-gradient(90deg,#61dafb,#6366f1)}.gc.stack .dot{background:#61dafb}
+  .gc.browsers::before{background:linear-gradient(90deg,
+#6c8cff,
+#a78bfa)}.gc.browsers .dot{background:
+#6c8cff}
+  .gc.networking::before{background:linear-gradient(90deg,
+#3b82f6,
+#8b5cf6)}.gc.networking .dot{background:
+#3b82f6}
+  .gc.tooling::before{background:linear-gradient(90deg,
+#2dd4a8,
+#38bdf8)}.gc.tooling .dot{background:
+#2dd4a8}
+  .gc.architecture::before{background:linear-gradient(90deg,
+#818cf8,
+#22d3ee)}.gc.architecture .dot{background:
+#818cf8}
+  .gc.startup::before{background:linear-gradient(90deg,
+#f59e0b,
+#ef4444)}.gc.startup .dot{background:
+#f59e0b}
+  .gc.stack::before{background:linear-gradient(90deg,
+#61dafb,
+#6366f1)}.gc.stack .dot{background:
+#61dafb}
 
   /* IMAGES */
   .img-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:1rem 0}
@@ -111,17 +235,7 @@
 
   <!-- ═══════ GUIDES ═══════ -->
   <div class="sec-title">Guides</div>
-  
   <div class="guides">
-    <a href="web-a-z.html" class="gc webdevaz">
-  <div class="top"><span class="dot"></span><span class="badge">Full Stack</span></div>
-  <h3>Web Development A → Z</h3>
-  <p>The complete journey of code — from developer's keyboard to pixels on screen. Build tools, cloud deploy, networking, browser rendering engine, JS event loop, and the re-render cycle.</p>
-  <div class="tags">
-    <span class="tag tag-purple">Build Pipeline</span><span class="tag tag-blue">Networking</span><span class="tag tag-pink">Rendering</span><span class="tag tag-green">Event Loop</span><span class="tag tag-orange">CDN</span>
-  </div>
-  <span class="cta">Read guide →</span>
-</a>
 
     <a href="browsers.html" class="gc browsers">
       <div class="top"><span class="dot"></span><span class="badge">Core CS</span></div>
@@ -201,7 +315,6 @@
     <b>Computer Systems: A Programmer's Perspective</b> — How computers actually work, from bits to programs.
   </div>
 
- 
   <div class="card">
     <h4>Be a T-shaped engineer</h4>
     <p style="color:var(--t2)">The answer for most: <b style="color:var(--t)">broad understanding across the stack, deep expertise in 1-2 areas</b>. This knowledge base is the "broad understanding" part — the horizontal bar of the T. Go deep where it matters for your career.</p>
@@ -209,7 +322,6 @@
 
   <!-- ═══════ DDIA 2nd Edition ═══════ -->
   <div class="sec-title">Notes &amp; Updates</div>
-
 
   <!-- ═══════ TO LEARN NEXT ═══════ -->
   <div class="note-area">
@@ -237,6 +349,336 @@
 
 <footer>
   Dev Knowledge Base Last updated March 2026<br>
+  <span style="color:var(--t3)">Keep learning, keep building.</span>
+</footer>
+
+</body>
+</html>
+
+include above web a-z page to index.html pages
+
+Show more
+9:24 PM
+Looking at your index.html, I see it's a Dev Knowledge Base hub with guide cards linking to separate pages like browsers.html, networking.html, etc. You want me to integrate the Web Dev A-to-Z content as one of those linked pages — specifically as the browsers.html guide since it covers exactly that pipeline (DNS → TCP → HTTP → Parse → Render → Paint → JS Engine → Event Loop).
+
+Let me update your index.html to include a dedicated card for the A-to-Z guide, and then create the full browsers.html page styled to match your dark theme.
+
+First, here's the updated index.html:
+
+Dev Knowledge Base — index.html (updated)
+Code 
+Now here's the full web-a-to-z.html guide page, styled to match your dark theme:
+
+web-a-to-z.html — Full guide page
+Code 
+
+
+
+Claude is AI and can make mistakes. Please double-check responses.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dev Knowledge Base</title>
+<style>
+  :root {
+    --bg:#0a0e1a;--s1:#111827;--s2:#1e293b;--s3:#293548;
+    --b:#334155;--t:#e2e8f0;--t2:#94a3b8;--t3:#64748b;
+    --a:#6366f1;--a2:#818cf8;--g:#34d399;--y:#fbbf24;--r:#f87171;--c:#22d3ee;--p:#f472b6;--o:#fb923c;--bl:#3b82f6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--t);line-height:1.7;min-height:100vh}
+  ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
+  a{color:var(--c);text-decoration:none}a:hover{text-decoration:underline}
+
+  /* HERO */
+  .hero{text-align:center;padding:clamp(3rem,8vw,6rem) 1.5rem 2rem;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 40%,rgba(99,102,241,.1),transparent 60%),radial-gradient(ellipse at 70% 60%,rgba(34,211,238,.07),transparent 55%);pointer-events:none}
+  .hero h1{font-size:clamp(2.2rem,5.5vw,4rem);font-weight:900;line-height:1.1;margin-bottom:.75rem;position:relative}
+  .hero h1 .gr{background:linear-gradient(135deg,var(--a2),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .hero p{font-size:clamp(.95rem,1.8vw,1.15rem);color:var(--t2);max-width:640px;margin:0 auto .5rem;position:relative}
+  .hero-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:1.2rem;position:relative}
+  .pill{font-size:.75rem;background:var(--s2);border:1px solid var(--b);border-radius:20px;padding:4px 14px;color:var(--t2)}
+  .pill b{color:var(--a2)}
+
+  .wrap{max-width:1060px;margin:0 auto;padding:0 1.5rem 4rem}
+
+  /* SECTION TITLES */
+  .sec-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--t3);margin:2.5rem 0 1rem;display:flex;align-items:center;gap:10px}
+  .sec-title::after{content:'';flex:1;height:1px;background:var(--b)}
+
+  /* GUIDE CARDS */
+  .guides{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+  .gc{background:var(--s1);border:1px solid var(--b);border-radius:14px;padding:1.5rem;display:flex;flex-direction:column;transition:.25s;text-decoration:none!important;position:relative;overflow:hidden}
+  .gc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0}
+  .gc:hover{border-color:var(--a);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+  .gc .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+  .gc .top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .gc .badge{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3)}
+  .gc h3{font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:6px}
+  .gc p{font-size:.85rem;color:var(--t2);flex:1}
+  .gc .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+  .gc .tag{font-size:.68rem;padding:2px 8px;border-radius:8px;font-weight:600}
+  .gc .cta{font-size:.82rem;color:var(--c);font-weight:600;margin-top:12px;display:flex;align-items:center;gap:4px}
+
+  /* FEATURED CARD — larger, spans full width */
+  .gc.featured{grid-column:1 / -1;display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;padding:2rem}
+  .gc.featured .feat-left{display:flex;flex-direction:column}
+  .gc.featured .feat-right{display:flex;flex-direction:column;gap:8px}
+  .gc.featured h3{font-size:1.4rem}
+  .gc.featured .feat-chain{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto}
+  .gc.featured .chain-item{font-size:.7rem;padding:4px 10px;border-radius:8px;font-weight:700;white-space:nowrap}
+  .gc.featured .chain-arrow{color:var(--t3);font-size:.8rem;display:flex;align-items:center}
+  @media(max-width:700px){.gc.featured{grid-template-columns:1fr}}
+
+  /* COLOR VARIANTS */
+  .gc.webatoz::before{background:linear-gradient(90deg,#6366f1,#22d3ee,#34d399)}.gc.webatoz .dot{background:#6366f1}
+  .gc.browsers::before{background:linear-gradient(90deg,#6c8cff,#a78bfa)}.gc.browsers .dot{background:#6c8cff}
+  .gc.networking::before{background:linear-gradient(90deg,#3b82f6,#8b5cf6)}.gc.networking .dot{background:#3b82f6}
+  .gc.tooling::before{background:linear-gradient(90deg,#2dd4a8,#38bdf8)}.gc.tooling .dot{background:#2dd4a8}
+  .gc.architecture::before{background:linear-gradient(90deg,#818cf8,#22d3ee)}.gc.architecture .dot{background:#818cf8}
+  .gc.startup::before{background:linear-gradient(90deg,#f59e0b,#ef4444)}.gc.startup .dot{background:#f59e0b}
+  .gc.stack::before{background:linear-gradient(90deg,#61dafb,#6366f1)}.gc.stack .dot{background:#61dafb}
+
+  /* IMAGES */
+  .img-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:1rem 0}
+  .img-grid img{width:100%;border-radius:12px;border:1px solid var(--b);transition:.2s;cursor:pointer}
+  .img-grid img:hover{border-color:var(--a);transform:scale(1.02)}
+
+  /* CARDS */
+  .card{background:var(--s1);border:1px solid var(--b);border-radius:12px;padding:1.25rem;margin-bottom:14px}
+  .card h4{color:var(--a2);margin-bottom:6px;font-size:1rem}
+
+  /* CALLOUT */
+  .callout{border-left:4px solid var(--a);background:var(--s1);padding:1rem 1.2rem;border-radius:0 10px 10px 0;margin:1rem 0}
+  .callout.tip{border-color:var(--g);background:rgba(52,211,153,.04)}
+  .callout.warn{border-color:var(--y);background:rgba(251,191,36,.04)}
+  .callout strong{display:block;margin-bottom:.25rem;color:var(--a2)}
+  .callout.tip strong{color:var(--g)}
+
+  /* NOTES */
+  .note-area{background:var(--s1);border:1px solid var(--b);border-radius:12px;padding:1.5rem;margin:1rem 0}
+  .note-area h4{color:var(--p);margin-bottom:8px}
+  .note-area ul{padding-left:1.3rem;color:var(--t2)}
+  .note-area li{margin-bottom:4px}
+
+  /* FOOTER */
+  footer{text-align:center;padding:2rem;color:var(--t3);font-size:.8rem;border-top:1px solid var(--b);margin-top:2rem}
+
+  /* TAG COLORS */
+  .tag-blue{background:rgba(99,102,241,.15);color:var(--a2)}
+  .tag-green{background:rgba(52,211,153,.15);color:var(--g)}
+  .tag-yellow{background:rgba(251,191,36,.15);color:var(--y)}
+  .tag-cyan{background:rgba(34,211,238,.15);color:var(--c)}
+  .tag-pink{background:rgba(244,114,182,.15);color:var(--p)}
+  .tag-red{background:rgba(248,113,113,.15);color:var(--r)}
+  .tag-orange{background:rgba(251,146,60,.15);color:var(--o)}
+
+  @media(max-width:640px){.guides{grid-template-columns:1fr}.img-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1><span class="gr">Dev Knowledge Base</span></h1>
+  <p>Everything I'm learning — browsers, networking, frontend tooling, architecture, fullstack patterns, startup literacy. Click any guide to dive deep.</p>
+  <div class="hero-pills">
+    <span class="pill"><b>8</b> guides</span>
+    <span class="pill"><b>80+</b> topics</span>
+    <span class="pill">Updated <b>Apr 2026</b></span>
+    <span class="pill">Hosted on <b>GitHub Pages</b></span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ═══════ FEATURED GUIDE ═══════ -->
+  <div class="sec-title">Featured</div>
+
+  <div class="guides" style="margin-bottom:14px">
+    <a href="web-a-to-z.html" class="gc webatoz featured">
+      <div class="feat-left">
+        <div class="top"><span class="dot"></span><span class="badge">Complete Walkthrough</span></div>
+        <h3>Web Development A → Z</h3>
+        <p>The complete journey of code — from the developer's keyboard to pixels on the user's screen. Every layer, every transformation, every component. Covers the build pipeline, cloud deployment, networking, server response, browser rendering engine, JS event loop, and the interaction re-render cycle. With real code samples at every step.</p>
+        <div class="tags" style="margin-top:auto;padding-top:10px">
+          <span class="tag tag-blue">Build Tools</span>
+          <span class="tag tag-green">Transpile</span>
+          <span class="tag tag-yellow">Bundle</span>
+          <span class="tag tag-cyan">Cloud / CDN</span>
+          <span class="tag tag-pink">DNS / TCP / TLS</span>
+          <span class="tag tag-red">HTTP</span>
+          <span class="tag tag-orange">Rendering</span>
+          <span class="tag tag-blue">Event Loop</span>
+        </div>
+        <span class="cta" style="margin-top:12px">Read the full guide →</span>
+      </div>
+      <div class="feat-right">
+        <div style="font-size:.75rem;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">The pipeline</div>
+        <div class="feat-chain">
+          <span class="chain-item" style="background:rgba(99,102,241,.2);color:var(--a2)">Write TSX</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-item" style="background:rgba(52,211,153,.2);color:var(--g)">Transpile</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-item" style="background:rgba(52,211,153,.2);color:var(--g)">Bundle</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-item" style="background:rgba(52,211,153,.2);color:var(--g)">Minify</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-item" style="background:rgba(59,130,246,.2);color:var(--bl)">Deploy dist/</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-item" style="background:rgba(59,130,246,.2);color:var(--bl)">CDN</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-item" style="background:rgba(248,113,113,.2);color:var(--r)">DNS</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-item" style="background:rgba(248,113,113,.2);color:var(--r)">TCP+TLS</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-item" style="background:rgba(248,113,113,.2);color:var(--r)">HTTP</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-item" style="background:rgba(251,191,36,.2);color:var(--y)">Server</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-item" style="background:rgba(244,114,182,.2);color:var(--p)">Parse HTML</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-item" style="background:rgba(244,114,182,.2);color:var(--p)">Render</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-item" style="background:rgba(34,211,238,.2);color:var(--c)">Event Loop</span>
+          <span class="chain-arrow">→</span>
+          <span class="chain-item" style="background:rgba(52,211,153,.2);color:var(--g)">Pixels!</span>
+        </div>
+        <div style="margin-top:auto;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div style="background:var(--s2);border-radius:10px;padding:10px 12px;text-align:center">
+            <div style="font-size:1.3rem;font-weight:800;color:var(--a2)">8</div>
+            <div style="font-size:.7rem;color:var(--t3)">Sections</div>
+          </div>
+          <div style="background:var(--s2);border-radius:10px;padding:10px 12px;text-align:center">
+            <div style="font-size:1.3rem;font-weight:800;color:var(--g)">25+</div>
+            <div style="font-size:.7rem;color:var(--t3)">Code samples</div>
+          </div>
+          <div style="background:var(--s2);border-radius:10px;padding:10px 12px;text-align:center">
+            <div style="font-size:1.3rem;font-weight:800;color:var(--c)">15+</div>
+            <div style="font-size:.7rem;color:var(--t3)">Diagrams</div>
+          </div>
+          <div style="background:var(--s2);border-radius:10px;padding:10px 12px;text-align:center">
+            <div style="font-size:1.3rem;font-weight:800;color:var(--y)">∞</div>
+            <div style="font-size:.7rem;color:var(--t3)">Re-render cycle</div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <!-- ═══════ ALL GUIDES ═══════ -->
+  <div class="sec-title">All Guides</div>
+  <div class="guides">
+
+    <a href="browsers.html" class="gc browsers">
+      <div class="top"><span class="dot"></span><span class="badge">Core CS</span></div>
+      <h3>How Browsers Work</h3>
+      <p>DNS → TCP → HTTP → Parse → Render → Paint → JS Engine → Event Loop. The complete pipeline from URL to pixels.</p>
+      <div class="tags">
+        <span class="tag tag-blue">DNS</span><span class="tag tag-blue">TCP/TLS</span><span class="tag tag-green">DOM</span><span class="tag tag-yellow">Render Pipeline</span><span class="tag tag-cyan">Event Loop</span><span class="tag tag-red">V8</span>
+      </div>
+      <span class="cta">Read guide →</span>
+    </a>
+
+    <a href="networking.html" class="gc networking">
+      <div class="top"><span class="dot"></span><span class="badge">Core CS</span></div>
+      <h3>Networking A to Z</h3>
+      <p>OSI model, TCP/UDP, IP routing, DNS, encapsulation, security. Interactive quizzes included.</p>
+      <div class="tags">
+        <span class="tag tag-blue">OSI</span><span class="tag tag-green">TCP/UDP</span><span class="tag tag-yellow">IP</span><span class="tag tag-cyan">DNS</span><span class="tag tag-pink">Security</span>
+      </div>
+      <span class="cta">Read guide →</span>
+    </a>
+
+    <a href="tooling.html" class="gc tooling">
+      <div class="top"><span class="dot"></span><span class="badge">Frontend</span></div>
+      <h3>Frontend Tooling Ecosystem</h3>
+      <p>Bundlers, compilers, build tools, meta-frameworks, deployment platforms. Webpack vs Vite, the Rust revolution, and 2026 defaults.</p>
+      <div class="tags">
+        <span class="tag tag-green">Vite</span><span class="tag tag-orange">Webpack</span><span class="tag tag-blue">Next.js</span><span class="tag tag-cyan">Turbopack</span><span class="tag tag-red">SWC</span>
+      </div>
+      <span class="cta">Read guide →</span>
+    </a>
+
+    <a href="architecture.html" class="gc architecture">
+      <div class="top"><span class="dot"></span><span class="badge">Frontend</span></div>
+      <h3>Frontend Architecture</h3>
+      <p>Rendering strategies, SOLID principles, state management, component patterns, performance, testing, monorepos.</p>
+      <div class="tags">
+        <span class="tag tag-blue">SOLID</span><span class="tag tag-green">State</span><span class="tag tag-yellow">Patterns</span><span class="tag tag-pink">Testing</span><span class="tag tag-cyan">Micro-FE</span>
+      </div>
+      <span class="cta">Read guide →</span>
+    </a>
+
+    <a href="stack.html" class="gc stack">
+      <div class="top"><span class="dot"></span><span class="badge">Fullstack</span></div>
+      <h3>Fullstack Map</h3>
+      <p>React, Next.js, TanStack Query, Tailwind, Storybook, NestJS, Prisma — each demystified down to JS primitives.</p>
+      <div class="tags">
+        <span class="tag tag-cyan">React</span><span class="tag tag-blue">Next.js</span><span class="tag tag-red">TanStack</span><span class="tag tag-green">Tailwind</span><span class="tag tag-pink">NestJS</span><span class="tag tag-blue">Prisma</span>
+      </div>
+      <span class="cta">Read guide →</span>
+    </a>
+
+    <a href="startup.html" class="gc startup">
+      <div class="top"><span class="dot"></span><span class="badge">Career &amp; Business</span></div>
+      <h3>Startup &amp; Business Literacy</h3>
+      <p>Funding, equity, cap tables, engineering ladder, key metrics, fundraising process, legal basics.</p>
+      <div class="tags">
+        <span class="tag tag-yellow">Equity</span><span class="tag tag-green">Metrics</span><span class="tag tag-orange">Fundraising</span><span class="tag tag-red">Legal</span><span class="tag tag-blue">Eng Ladder</span>
+      </div>
+      <span class="cta">Read guide →</span>
+    </a>
+
+  </div>
+
+  <!-- ═══════ READING LIST ═══════ -->
+  <div class="sec-title">Reading List &amp; Inspiration</div>
+
+  <div class="img-grid">
+    <img src="book-must-read.png" alt="Books to read" title="Books to read">
+  </div>
+
+  <div class="callout tip">
+    <strong>Key Books</strong>
+    <b>Designing Data-Intensive Applications</b> — Martin Kleppmann. The bible of distributed systems. 2nd edition expected 2026.<br>
+    <b>Structure and Interpretation of Computer Programs</b> — Foundational CS thinking. Teaches you to think in abstractions.<br>
+    <b>Computer Systems: A Programmer's Perspective</b> — How computers actually work, from bits to programs.
+  </div>
+
+  <div class="card">
+    <h4>Be a T-shaped engineer</h4>
+    <p style="color:var(--t2)">The answer for most: <b style="color:var(--t)">broad understanding across the stack, deep expertise in 1-2 areas</b>. This knowledge base is the "broad understanding" part — the horizontal bar of the T. Go deep where it matters for your career.</p>
+  </div>
+
+  <!-- ═══════ NOTES ═══════ -->
+  <div class="sec-title">Notes &amp; Updates</div>
+
+  <div class="note-area">
+    <h4>To Learn Next</h4>
+    <ul>
+      <li>System Design patterns (load balancing, caching, message queues)</li>
+      <li>Database internals (B-trees, WAL, MVCC)</li>
+      <li>Kubernetes &amp; containerization basics</li>
+      <li>WebSockets &amp; real-time architectures</li>
+      <li>GraphQL vs REST trade-offs</li>
+      <li>CI/CD pipelines &amp; GitHub Actions</li>
+      <li>AWS / Cloud fundamentals</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <strong>How to Add New Guides</strong>
+    1. Create a new <code style="background:var(--s2);padding:2px 6px;border-radius:4px;color:var(--g)">.html</code> file in the root (copy the structure from any existing guide)<br>
+    2. Add a new card in this <code style="background:var(--s2);padding:2px 6px;border-radius:4px;color:var(--g)">index.html</code> inside the <code style="background:var(--s2);padding:2px 6px;border-radius:4px;color:var(--g)">.guides</code> grid<br>
+    3. <code style="background:var(--s2);padding:2px 6px;border-radius:4px;color:var(--g)">git push</code> — GitHub Pages auto-deploys
+  </div>
+
+</div>
+
+<footer>
+  Dev Knowledge Base · Last updated April 2026<br>
   <span style="color:var(--t3)">Keep learning, keep building.</span>
 </footer>
 
