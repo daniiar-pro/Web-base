@@ -14,157 +14,157 @@
   body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--t);line-height:1.7;min-height:100vh}
   ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--s3);border-radius:3px}
   a{color:var(--c);text-decoration:none}a:hover{text-decoration:underline}
-  code{font-family:'SF Mono','Cascadia Code','Fira Code',monospace;font-size:.88em;background:var(--s2);padding:2px 7px;border-radius:5px;color:var(--g)}
+  code{background:var(--s2);padding:2px 7px;border-radius:5px;font-size:.88em;color:var(--g);font-family:'SF Mono','Cascadia Code','Fira Code',monospace}
+  em{color:var(--a2);font-style:normal}
 
   /* NAV */
-  .topbar{position:sticky;top:0;z-index:100;background:rgba(10,14,26,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--b);padding:10px 1.5rem;display:flex;align-items:center;gap:12px}
-  .topbar a{color:var(--t2);font-size:.85rem;font-weight:600}
-  .topbar a:hover{color:var(--c);text-decoration:none}
-  .topbar .sep{color:var(--t3)}
-  .topbar .curr{color:var(--t)}
+  .top-nav{position:sticky;top:0;z-index:100;background:rgba(10,14,26,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--b);padding:10px 1.5rem;display:flex;align-items:center;gap:12px}
+  .top-nav a{font-size:.85rem;color:var(--t2);display:flex;align-items:center;gap:6px;text-decoration:none;transition:.2s}
+  .top-nav a:hover{color:var(--c)}
+  .top-nav .sep{color:var(--t3)}
+  .top-nav .current{color:var(--t);font-weight:600}
 
   /* HERO */
   .hero{text-align:center;padding:clamp(2.5rem,6vw,4.5rem) 1.5rem 2rem;position:relative;overflow:hidden}
-  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(99,102,241,.12),transparent 55%),radial-gradient(ellipse at 80% 50%,rgba(34,211,238,.08),transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(52,211,153,.06),transparent 40%);pointer-events:none}
-  .hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1.15;margin-bottom:.6rem;position:relative}
-  .hero h1 .gr{background:linear-gradient(135deg,var(--a2),var(--c),var(--g));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .hero p{font-size:clamp(.9rem,1.6vw,1.05rem);color:var(--t2);max-width:680px;margin:0 auto;position:relative}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(244,114,182,.08),transparent 55%),radial-gradient(ellipse at 70% 50%,rgba(251,146,60,.07),transparent 55%);pointer-events:none}
+  .hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1.1;margin-bottom:.6rem;position:relative}
+  .hero h1 .gr{background:linear-gradient(135deg,var(--p),var(--o));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .hero .sub{font-size:clamp(.9rem,1.6vw,1.05rem);color:var(--t2);max-width:600px;margin:0 auto;position:relative}
 
-  .wrap{max-width:880px;margin:0 auto;padding:0 1.5rem 5rem}
+  .wrap{max-width:900px;margin:0 auto;padding:0 1.5rem 4rem}
 
   /* TOC */
-  .toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin:2rem 0 3rem}
-  .toc a{display:block;padding:10px 14px;border-radius:10px;background:var(--s1);border:1px solid var(--b);transition:.2s;text-decoration:none!important}
+  .toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin:2rem 0 2.5rem}
+  .toc a{display:block;padding:10px 14px;background:var(--s1);border:1px solid var(--b);border-radius:10px;transition:.2s;text-decoration:none!important}
   .toc a:hover{border-color:var(--a);transform:translateY(-2px)}
-  .toc .num{font-size:.7rem;font-weight:800;padding:2px 8px;border-radius:6px;display:inline-block;margin-bottom:4px}
-  .toc .lbl{font-size:.82rem;font-weight:700;color:#fff;display:block}
-  .toc .sub{font-size:.7rem;color:var(--t3)}
-
-  /* PHASE CONNECTOR */
-  .phase-arrow{text-align:center;padding:28px 0;font-size:1.6rem;color:var(--t3);position:relative}
-  .phase-arrow::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(var(--b),var(--t3),var(--b));z-index:-1}
+  .toc .num{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:2px}
+  .toc .label{font-size:.82rem;font-weight:600;color:#fff;display:block}
 
   /* SECTION */
-  .section{margin-bottom:0}
-  .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:6px}
-  .sec-num{font-size:.78rem;font-weight:800;padding:5px 14px;border-radius:10px;white-space:nowrap}
-  .sec-title{font-size:clamp(1.4rem,3vw,1.9rem);font-weight:800;color:#fff}
-  .sec-sub{font-size:.92rem;color:var(--t2);margin-bottom:1.5rem;line-height:1.6}
+  .section{margin-bottom:3rem}
+  .section-head{display:flex;align-items:center;gap:12px;margin-bottom:6px;scroll-margin-top:60px}
+  .section-num{font-size:.7rem;font-weight:700;padding:4px 12px;border-radius:8px;white-space:nowrap}
+  .section-title{font-size:clamp(1.4rem,3.5vw,1.9rem);font-weight:800}
+  .section-sub{font-size:.92rem;color:var(--t2);margin-bottom:1.5rem;line-height:1.7}
 
-  /* STEP ACCORDION */
-  .step{margin-bottom:12px;border-radius:12px;border:1px solid var(--b);overflow:hidden;transition:border-color .2s}
+  /* STEP (collapsible) */
+  .step{margin-bottom:12px;border:1px solid var(--b);border-radius:12px;overflow:hidden;background:var(--s1);transition:.2s}
   .step:hover{border-color:var(--s3)}
-  .step-h{padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;background:var(--s1);transition:background .15s}
-  .step-h:hover{background:var(--s2)}
-  .step-badge{font-size:.68rem;font-weight:800;padding:3px 10px;border-radius:7px;white-space:nowrap;flex-shrink:0}
-  .step-title{font-size:.95rem;font-weight:700;color:#fff;flex:1}
-  .step-arrow{font-size:1rem;color:var(--t3);transition:transform .25s;flex-shrink:0}
-  .step.open .step-arrow{transform:rotate(180deg)}
-  .step-body{display:none;padding:0 18px 18px;background:var(--s1);border-top:1px solid var(--b)}
-  .step.open .step-body{display:block}
-
-  /* TEXT INSIDE STEPS */
-  .desc{font-size:.88rem;color:var(--t2);margin:12px 0;line-height:1.7}
-  .desc b,.desc strong{color:var(--t)}
+  .step-head{padding:14px 18px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;transition:.15s}
+  .step-head:hover{background:var(--s2)}
+  .step-badge{font-size:.65rem;font-weight:700;padding:3px 9px;border-radius:6px;white-space:nowrap}
+  .step-title{font-size:.95rem;font-weight:600;flex:1;color:#fff}
+  .step-arrow{color:var(--t3);font-size:1rem;transition:transform .2s}
+  .step-arrow.open{transform:rotate(180deg)}
+  .step-body{display:none;padding:0 18px 18px;border-top:1px solid var(--b)}
+  .step-body.open{display:block}
+  .step-desc{font-size:.88rem;color:var(--t2);margin:12px 0;line-height:1.75}
 
   /* CODE */
-  pre{background:var(--s2);border:1px solid var(--b);border-radius:10px;padding:16px 18px;overflow-x:auto;font-family:'SF Mono','Cascadia Code','Fira Code',monospace;font-size:.8rem;line-height:1.65;margin:10px 0;color:var(--t);tab-size:2}
-  .code-label{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:3px 10px;border-radius:7px;display:inline-block;margin:8px 0 4px}
+  pre{background:var(--s2);border:1px solid var(--b);border-radius:10px;padding:16px;overflow-x:auto;font-family:'SF Mono','Cascadia Code','Fira Code',monospace;font-size:.78rem;line-height:1.7;margin:10px 0;color:var(--t)}
+  .code-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 10px;border-radius:6px;display:inline-block;margin:0 0 6px}
 
-  /* BEFORE/AFTER COMPARISON */
-  .compare{display:grid;grid-template-columns:1fr 36px 1fr;gap:0;margin:10px 0;align-items:start}
-  .compare pre{margin:0}
-  .compare .vs{display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:var(--t3);align-self:center;font-weight:700}
-  @media(max-width:640px){.compare{grid-template-columns:1fr;gap:6px}.compare .vs{padding:4px 0;font-size:1rem}}
+  /* COMPARISON */
+  .comparison{display:grid;grid-template-columns:1fr auto 1fr;gap:0;margin:12px 0;align-items:start}
+  .comparison pre{margin:0}
+  .comparison .vs{display:flex;align-items:center;justify-content:center;padding:0 10px;font-size:1.3rem;color:var(--t3);align-self:center}
 
-  /* CALLOUT */
-  .callout{border-left:4px solid var(--a);background:rgba(99,102,241,.05);padding:14px 16px;border-radius:0 10px 10px 0;margin:12px 0}
-  .callout.green{border-color:var(--g);background:rgba(52,211,153,.05)}
-  .callout.yellow{border-color:var(--y);background:rgba(251,191,36,.05)}
-  .callout.red{border-color:var(--r);background:rgba(248,113,113,.05)}
-  .callout.cyan{border-color:var(--c);background:rgba(34,211,238,.05)}
-  .callout .ct{font-weight:800;margin-bottom:4px;font-size:.9rem}
-  .callout p{font-size:.84rem;color:var(--t2);line-height:1.6}
-  .callout p b{color:var(--t)}
+  /* HIGHLIGHT BOX */
+  .hbox{border-radius:10px;padding:14px 18px;margin:12px 0;border-left:4px solid}
+  .hbox .htitle{font-weight:700;margin-bottom:4px;font-size:.9rem}
+  .hbox p{font-size:.84rem;line-height:1.7}
 
   /* FLOW CHAIN */
-  .chain{display:flex;flex-wrap:wrap;gap:5px;margin:14px 0;align-items:center}
-  .chain .item{font-size:.72rem;padding:5px 12px;border-radius:8px;font-weight:700;white-space:nowrap}
-  .chain .arr{color:var(--t3);font-size:.9rem}
+  .flow{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:14px 0}
+  .flow .item{font-size:.75rem;padding:5px 12px;border-radius:8px;font-weight:600;white-space:nowrap}
+  .flow .arr{color:var(--t3);font-size:1rem}
 
   /* METRICS */
   .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:14px 0}
-  .metric{text-align:center;padding:14px 8px;border-radius:10px;background:var(--s2);border:1px solid var(--b)}
-  .metric .v{font-size:1.3rem;font-weight:800;display:block}
-  .metric .l{font-size:.68rem;color:var(--t3);margin-top:2px}
+  .metric{text-align:center;padding:12px 8px;border-radius:10px;background:var(--s2);border:1px solid var(--b)}
+  .metric .val{font-size:1.3rem;font-weight:700;display:block}
+  .metric .lbl{font-size:.68rem;color:var(--t3);margin-top:2px;display:block}
+
+  /* LAYER VIS */
+  .layers{display:flex;flex-direction:column;gap:4px;margin:14px 0}
+  .layer{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;font-size:.84rem}
+  .layer .name{font-weight:600;min-width:110px}
+  .layer .desc{color:var(--t2);font-size:.78rem}
 
   /* TIMELINE */
   .timeline{position:relative;padding-left:22px;margin:14px 0}
-  .timeline::before{content:'';position:absolute;left:7px;top:6px;bottom:6px;width:2px;border-radius:1px}
-  .tl-item{position:relative;padding:0 0 14px}
-  .tl-item::before{content:'';position:absolute;left:-19px;top:6px;width:10px;height:10px;border-radius:50%;border:2px solid;background:var(--bg)}
-  .tl-item .time{font-weight:700;font-size:.85rem;display:block}
-  .tl-item .detail{font-size:.82rem;color:var(--t2)}
+  .timeline::before{content:'';position:absolute;left:7px;top:4px;bottom:4px;width:2px;border-radius:1px}
+  .tl-item{position:relative;padding:0 0 14px;font-size:.84rem}
+  .tl-item::before{content:'';position:absolute;left:-19px;top:5px;width:9px;height:9px;border-radius:50%;border:2px solid var(--a);background:var(--bg)}
+  .tl-item .time{font-weight:700;display:block}
+  .tl-item .detail{color:var(--t2)}
 
-  /* LAYER VIS */
-  .layers{display:flex;flex-direction:column;gap:5px;margin:12px 0}
-  .layer{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;font-size:.84rem}
-  .layer .ln{font-weight:700;min-width:110px}
-  .layer .ld{color:var(--t2);font-size:.8rem}
+  /* CONNECTOR */
+  .connector{text-align:center;padding:18px 0;font-size:1.5rem;color:var(--t3)}
+
+  /* ARROW BOX */
+  .arrow-box{text-align:center;padding:10px 0;color:var(--t3);font-size:1.2rem}
 
   /* FOOTER */
   footer{text-align:center;padding:2rem;color:var(--t3);font-size:.8rem;border-top:1px solid var(--b);margin-top:2rem}
+
+  @media(max-width:640px){
+    .comparison{grid-template-columns:1fr;gap:8px}
+    .comparison .vs{padding:6px 0}
+    .toc{grid-template-columns:repeat(2,1fr)}
+  }
 </style>
 </head>
 <body>
 
-<!-- STICKY NAV -->
-<div class="topbar">
+<!-- NAV -->
+<div class="top-nav">
   <a href="index.html">← Knowledge Base</a>
   <span class="sep">/</span>
-  <span class="curr">Web Dev A → Z</span>
+  <span class="current">Web Dev A → Z</span>
 </div>
 
 <!-- HERO -->
 <div class="hero">
-  <h1><span class="gr">Web Development A → Z</span></h1>
-  <p>The complete journey of code — from the developer's keyboard to pixels on the user's screen. Every layer, every transformation, every component explained with real code samples.</p>
+  <h1><span class="gr">Web Dev A → Z</span></h1>
+  <p class="sub">The complete journey of code — from the developer's keyboard to pixels on the user's screen. Every layer, every transformation, every component explained with real code.</p>
 </div>
 
 <div class="wrap">
 
 <!-- TABLE OF CONTENTS -->
 <div class="toc">
-  <a href="#s1"><span class="num" style="background:rgba(99,102,241,.2);color:var(--a2)">01</span><span class="lbl">Dev writes code</span><span class="sub">TSX, SCSS, config</span></a>
-  <a href="#s2"><span class="num" style="background:rgba(52,211,153,.2);color:var(--g)">02</span><span class="lbl">Build tools</span><span class="sub">Transpile, bundle, minify</span></a>
-  <a href="#s3"><span class="num" style="background:rgba(59,130,246,.2);color:var(--bl)">03</span><span class="lbl">Deploy to cloud</span><span class="sub">AWS, CDN, CI/CD</span></a>
-  <a href="#s4"><span class="num" style="background:rgba(248,113,113,.2);color:var(--r)">04</span><span class="lbl">User requests</span><span class="sub">DNS, TCP, TLS, HTTP</span></a>
-  <a href="#s5"><span class="num" style="background:rgba(251,191,36,.2);color:var(--y)">05</span><span class="lbl">Server responds</span><span class="sub">Routing, compression</span></a>
-  <a href="#s6"><span class="num" style="background:rgba(244,114,182,.2);color:var(--p)">06</span><span class="lbl">Browser renders</span><span class="sub">DOM, CSSOM, paint</span></a>
-  <a href="#s7"><span class="num" style="background:rgba(34,211,238,.2);color:var(--c)">07</span><span class="lbl">JS event loop</span><span class="sub">Stack, queues, APIs</span></a>
-  <a href="#s8"><span class="num" style="background:rgba(251,146,60,.2);color:var(--o)">08</span><span class="lbl">User interacts</span><span class="sub">Re-render, Web Vitals</span></a>
+  <a href="#s1"><span class="num" style="color:var(--a2)">01</span><span class="label">Developer writes code</span></a>
+  <a href="#s2"><span class="num" style="color:var(--g)">02</span><span class="label">Build tools transform</span></a>
+  <a href="#s3"><span class="num" style="color:var(--bl)">03</span><span class="label">Deploy to cloud</span></a>
+  <a href="#s4"><span class="num" style="color:var(--o)">04</span><span class="label">User makes request</span></a>
+  <a href="#s5"><span class="num" style="color:var(--y)">05</span><span class="label">Server responds</span></a>
+  <a href="#s6"><span class="num" style="color:var(--p)">06</span><span class="label">Browser renders</span></a>
+  <a href="#s7"><span class="num" style="color:var(--g)">07</span><span class="label">JS event loop</span></a>
+  <a href="#s8"><span class="num" style="color:var(--r)">08</span><span class="label">User sees &amp; interacts</span></a>
 </div>
 
 
-<!-- ============================================================ -->
-<!-- SECTION 1: DEV WRITES CODE                                   -->
-<!-- ============================================================ -->
+<!-- ============================================ -->
+<!-- SECTION 1 -->
+<!-- ============================================ -->
 <div class="section" id="s1">
-<div class="sec-head">
-  <span class="sec-num" style="background:rgba(99,102,241,.15);color:var(--a2)">01</span>
-  <h2 class="sec-title">Developer writes code</h2>
+<div class="section-head">
+<span class="section-num" style="background:rgba(99,102,241,.15);color:var(--a2)">01</span>
+<h2 class="section-title">Developer writes code</h2>
 </div>
-<p class="sec-sub">You open your editor and write in languages the browser <em>cannot</em> understand natively. TypeScript, JSX, SCSS — these are higher-level abstractions that make development faster and safer, but they all need transformation before the browser can use them.</p>
+<p class="section-sub">You open your editor and write in languages the browser <em>cannot</em> understand natively — TypeScript, JSX, SCSS. These are higher-level abstractions that make development faster and safer.</p>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(99,102,241,.2);color:var(--a2)">1.1</span>
-    <span class="step-title">The source files you write</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-    <p class="desc">A modern web project has these source files. <strong>None of them run directly in a browser</strong> — they all need transformation.</p>
-    <span class="code-label" style="background:rgba(99,102,241,.15);color:var(--a2)">App.tsx — React component in TypeScript + JSX</span>
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(99,102,241,.15);color:var(--a2)">1.1</span>
+<span class="step-title">The source files you write</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc">A modern web project has these source files. None can run directly in a browser.</p>
+
+<span class="code-label" style="background:rgba(99,102,241,.15);color:var(--a2)">App.tsx — React component in TypeScript + JSX</span>
 <pre>// TypeScript + JSX — browsers don't understand this!
 import React, { useState, useEffect } from 'react';
 import { fetchUsers } from './api/users';
@@ -205,12 +205,15 @@ const App: React.FC = () =&gt; {
       )}
     &lt;/div&gt;
   );
-};</pre>
+};
 
-    <span class="code-label" style="background:rgba(52,211,153,.15);color:var(--g)">App.module.scss — SCSS with nesting, variables, mixins</span>
-<pre>// SCSS — browsers don't understand $ variables, nesting, or @mixin
+export default App;</pre>
+
+<span class="code-label" style="background:rgba(52,211,153,.15);color:var(--g)">App.module.scss — SCSS with nesting, variables, mixins</span>
+<pre>// SCSS — browsers don't understand $variables, nesting, or @mixin!
 $primary: #378ADD;
 $radius: 12px;
+$shadow: 0 2px 8px rgba(0,0,0,0.1);
 
 @mixin flex-center {
   display: flex;
@@ -226,26 +229,42 @@ $radius: 12px;
   .title {
     font-size: 2rem;
     color: $primary;
+    margin-bottom: 24px;
+  }
+
+  .userList {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
   }
 
   .userCard {
     background: white;
     border-radius: $radius;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 20px;
+    box-shadow: $shadow;
+    transition: transform 0.2s;
 
     &amp;:hover { transform: translateY(-2px); }
+    h3 { margin: 0 0 8px; }
+    p  { color: #666; font-size: 14px; }
   }
 
-  .spinner { @include flex-center; height: 200px; }
+  .spinner {
+    @include flex-center;
+    height: 200px;
+    color: #999;
+  }
 }</pre>
 
-    <span class="code-label" style="background:rgba(251,191,36,.15);color:var(--y)">package.json — Dependencies &amp; build config</span>
+<span class="code-label" style="background:rgba(251,191,36,.15);color:var(--y)">package.json — Dependency &amp; build configuration</span>
 <pre>{
   "name": "user-dashboard",
   "scripts": {
-    "dev": "vite",                // Local dev server with HMR
-    "build": "tsc &amp;&amp; vite build", // Type-check then bundle
-    "preview": "vite preview"     // Preview production build
+    "dev": "vite",              // Local dev server with HMR
+    "build": "tsc &amp;&amp; vite build", // Type-check, then bundle
+    "preview": "vite preview"   // Preview production build
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -259,117 +278,120 @@ $radius: 12px;
   }
 }</pre>
 
-    <div class="callout">
-      <div class="ct" style="color:var(--a2)">Why can't browsers just run this directly?</div>
-      <p>Browsers only understand 3 languages: <b>HTML</b>, <b>CSS</b>, and <b>JavaScript</b>. TypeScript adds types JS doesn't have. JSX mixes HTML-like syntax into JS. SCSS adds variables, nesting, mixins. Module imports like <code>import React from 'react'</code> don't resolve to real file paths. All of this must be transformed.</p>
-    </div>
-  </div>
+<div class="hbox" style="background:rgba(99,102,241,.06);border-color:var(--a)">
+<p class="htitle" style="color:var(--a2)">Why can't browsers just run this directly?</p>
+<p style="color:var(--t2)">Browsers only understand 3 languages: <strong style="color:var(--t)">HTML</strong>, <strong style="color:var(--t)">CSS</strong>, and <strong style="color:var(--t)">JavaScript</strong>. TypeScript adds types JS doesn't have. JSX mixes HTML into JS. SCSS adds variables and nesting. Module imports like <code>import React from 'react'</code> don't resolve to real file paths. All must be transformed.</p>
+</div>
+</div>
 </div>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(99,102,241,.2);color:var(--a2)">1.2</span>
-    <span class="step-title">Project structure on disk</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(99,102,241,.15);color:var(--a2)">1.2</span>
+<span class="step-title">Project structure on disk</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
 <pre>user-dashboard/
-├── node_modules/           # 500+ dependency packages (NOT shipped)
+├── node_modules/          # 📦 Hundreds of dependency folders (NOT shipped)
 │   ├── react/
 │   ├── react-dom/
-│   └── ...
-├── src/                    # YOUR source code
-│   ├── App.tsx
-│   ├── App.module.scss
-│   ├── main.tsx            # Entry point
+│   └── ... (500+ packages)
+├── src/                   # 👨‍💻 YOUR source code
+│   ├── App.tsx            # Main component
+│   ├── App.module.scss    # Styles
+│   ├── main.tsx           # Entry point
 │   ├── api/
-│   │   └── users.ts
+│   │   └── users.ts       # API functions
 │   ├── components/
 │   │   ├── Header.tsx
 │   │   └── UserCard.tsx
 │   └── assets/
 │       └── logo.svg
-├── public/                 # Static files copied as-is
+├── public/                # Static files copied as-is
 │   └── favicon.ico
-├── index.html              # HTML shell (Vite entry)
-├── package.json
-├── tsconfig.json
-└── vite.config.ts</pre>
-    <p class="desc"><code>node_modules</code> can contain <strong>hundreds of megabytes</strong>. The browser never sees any of it. The build tool extracts only what's needed.</p>
-  </div>
+├── index.html             # HTML shell (Vite entry)
+├── package.json           # Dependencies + scripts
+├── tsconfig.json          # TypeScript config
+└── vite.config.ts         # Build tool config</pre>
+<p class="step-desc">The <code>node_modules</code> folder alone can contain <strong>hundreds of megabytes</strong>. The browser never sees any of it. The build tool extracts only what's needed.</p>
+</div>
 </div>
 </div>
 
-<div class="phase-arrow">⬇</div>
+<div class="connector">⬇</div>
 
-<!-- ============================================================ -->
-<!-- SECTION 2: BUILD TOOLS                                       -->
-<!-- ============================================================ -->
+<!-- ============================================ -->
+<!-- SECTION 2 -->
+<!-- ============================================ -->
 <div class="section" id="s2">
-<div class="sec-head">
-  <span class="sec-num" style="background:rgba(52,211,153,.15);color:var(--g)">02</span>
-  <h2 class="sec-title">Build tools transform it</h2>
+<div class="section-head">
+<span class="section-num" style="background:rgba(52,211,153,.15);color:var(--g)">02</span>
+<h2 class="section-title">Build tools transform it</h2>
 </div>
-<p class="sec-sub">When you run <code>npm run build</code>, a pipeline of transformations kicks off. Each step takes the code closer to something the browser can understand — like a factory assembly line.</p>
+<p class="section-sub">When you run <code>npm run build</code>, a pipeline of transformations kicks off. Each step takes the code closer to something the browser can understand — like a factory assembly line.</p>
 
-<div class="chain">
-  <span class="item" style="background:rgba(99,102,241,.2);color:var(--a2)">Source (TSX)</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(52,211,153,.2);color:var(--g)">Transpile</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(59,130,246,.2);color:var(--bl)">Bundle</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(251,191,36,.2);color:var(--y)">Optimize</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(248,113,113,.2);color:var(--r)">dist/ output</span>
+<div class="flow">
+<span class="item" style="background:rgba(99,102,241,.15);color:var(--a2)">Source (TSX)</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(52,211,153,.15);color:var(--g)">Transpile</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(59,130,246,.15);color:var(--bl)">Bundle</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(251,191,36,.15);color:var(--y)">Optimize</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(251,146,60,.15);color:var(--o)">dist/ output</span>
 </div>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(52,211,153,.15);color:var(--g)">2.1</span>
-    <span class="step-title">Transpile — convert syntax the browser doesn't know</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-    <p class="desc"><b>Transpilation</b> converts one language into another at the same abstraction level. TypeScript → JavaScript. JSX → function calls. SCSS → CSS. Tools: <b>Babel</b>, <b>SWC</b> (Rust-based, faster), <b>tsc</b>, <b>Sass</b>.</p>
-    <div class="compare">
-      <div>
-        <span class="code-label" style="background:rgba(248,113,113,.15);color:var(--r)">Before — TSX</span>
+<!-- 2.1 TRANSPILE -->
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(52,211,153,.15);color:var(--g)">2.1</span>
+<span class="step-title">Step 1: Transpile — convert syntax the browser doesn't know</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc"><strong>Transpilation</strong> converts one language into another at roughly the same level. TypeScript → JavaScript. JSX → function calls. SCSS → CSS. Tools: <em>Babel</em>, <em>SWC</em> (Rust, faster), <em>tsc</em>, <em>Sass</em>.</p>
+
+<div class="comparison">
+<div>
+<span class="code-label" style="background:rgba(248,113,113,.15);color:var(--r)">Before — TSX</span>
 <pre>// TypeScript + JSX
 interface User {
   id: number;
   name: string;
 }
 
-const UserCard: React.FC&lt;
-  {user: User}
-&gt; = ({ user }) =&gt; (
+const UserCard: React.FC&lt;{user: User}&gt; =
+  ({ user }) =&gt; (
   &lt;div className="card"&gt;
     &lt;h3&gt;{user.name}&lt;/h3&gt;
     &lt;p&gt;ID: {user.id}&lt;/p&gt;
   &lt;/div&gt;
 );</pre>
-      </div>
-      <div class="vs">→</div>
-      <div>
-        <span class="code-label" style="background:rgba(52,211,153,.15);color:var(--g)">After — Plain JS</span>
-<pre>// Types erased, JSX → calls
+</div>
+<div class="vs">→</div>
+<div>
+<span class="code-label" style="background:rgba(52,211,153,.15);color:var(--g)">After — Plain JS</span>
+<pre>// Types stripped, JSX converted
+// to function calls
 const UserCard = ({ user }) =&gt; (
-  React.createElement(
-    "div",
+  React.createElement("div",
     { className: "card" },
-    React.createElement(
-      "h3", null,
-      user.name
-    ),
-    React.createElement(
-      "p", null,
-      "ID: ", user.id
-    )
+    React.createElement("h3", null,
+      user.name),
+    React.createElement("p", null,
+      "ID: ", user.id)
   )
 );</pre>
-      </div>
-    </div>
+</div>
+</div>
 
-    <div class="compare" style="margin-top:16px">
-      <div>
-        <span class="code-label" style="background:rgba(248,113,113,.15);color:var(--r)">Before — SCSS</span>
+<div class="arrow-box">↓ SCSS also gets transpiled ↓</div>
+
+<div class="comparison">
+<div>
+<span class="code-label" style="background:rgba(248,113,113,.15);color:var(--r)">Before — SCSS</span>
 <pre>$primary: #378ADD;
 
 .container {
@@ -384,10 +406,10 @@ const UserCard = ({ user }) =&gt; (
     }
   }
 }</pre>
-      </div>
-      <div class="vs">→</div>
-      <div>
-        <span class="code-label" style="background:rgba(52,211,153,.15);color:var(--g)">After — Plain CSS</span>
+</div>
+<div class="vs">→</div>
+<div>
+<span class="code-label" style="background:rgba(52,211,153,.15);color:var(--g)">After — Plain CSS</span>
 <pre>/* Variables resolved,
    nesting flattened */
 .container {
@@ -400,74 +422,88 @@ const UserCard = ({ user }) =&gt; (
 .container .title:hover {
   opacity: 0.8;
 }</pre>
-      </div>
-    </div>
-
-    <div class="callout green">
-      <div class="ct" style="color:var(--g)">What happens to types?</div>
-      <p>TypeScript types (<code>interface</code>, <code>type</code>, generics) are <b>completely erased</b>. They exist only at dev time for error checking. Zero bytes of type info reach the browser.</p>
-    </div>
-  </div>
+</div>
 </div>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">2.2</span>
-    <span class="step-title">Bundle — merge hundreds of files into a few</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-    <p class="desc">The bundler (<b>Webpack</b>, <b>Vite/Rollup</b>, <b>esbuild</b>) traces every <code>import</code> from your entry point and merges everything into a small number of output files.</p>
+<div class="hbox" style="background:rgba(52,211,153,.06);border-color:var(--g)">
+<p class="htitle" style="color:var(--g)">What happens to types?</p>
+<p style="color:var(--t2)">TypeScript types (<code>interface</code>, <code>type</code>, generics like <code>User[]</code>) are <strong style="color:var(--t)">completely erased</strong>. They exist only at dev time for error checking. Zero bytes of type info reach the browser. That's why TS is a "compile-time" type system.</p>
+</div>
+</div>
+</div>
+
+<!-- 2.2 BUNDLE -->
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">2.2</span>
+<span class="step-title">Step 2: Bundle — merge hundreds of files into a few</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc">Your project has 50 source files and 500 node_modules packages. The bundler (Webpack, Vite/Rollup, esbuild) traces every <code>import</code> from your entry point and merges everything into a small number of output files.</p>
+
+<span class="code-label" style="background:rgba(59,130,246,.15);color:var(--bl)">What the bundler does — import resolution</span>
 <pre>// Your code says:
 import React from 'react';
 import { fetchUsers } from './api/users';
 
-// Bundler resolves these to actual file paths:
-// 'react'        → node_modules/react/cjs/react.production.min.js
-// './api/users'  → src/api/users.ts (transpiles it first)
+// Bundler resolves to actual file paths:
+// 'react' → node_modules/react/index.js
+//         → node_modules/react/cjs/react.production.min.js
+// './api/users' → src/api/users.ts (then transpiles it)
 
 // Then INLINES everything into one file:
-// ┌────────────────────────────────────┐
-// │  React runtime code (~6KB)         │
-// │  Your API module                   │
-// │  Your App component                │
-// │  Your UserCard component           │
-// │  Entry point: ReactDOM.render()    │
-// └────────────────────────────────────┘</pre>
+// ┌──────────────────────────────────┐
+// │  // React runtime code (~6KB)    │
+// │  var React = { createElement... } │
+// │                                    │
+// │  // Your API module               │
+// │  function fetchUsers() { ... }    │
+// │                                    │
+// │  // Your components               │
+// │  function App() { ... }           │
+// │  function UserCard() { ... }      │
+// │                                    │
+// │  // Entry point                   │
+// │  ReactDOM.render(App, root);      │
+// └──────────────────────────────────┘</pre>
 
 <span class="code-label" style="background:rgba(251,191,36,.15);color:var(--y)">Code splitting — smart chunking</span>
-<pre>dist/
+<pre>// Instead of ONE giant file, smart bundlers create chunks:
+
+dist/
 ├── index.html
 ├── assets/
-│   ├── index-Da3x8kQ1.js        ← Main app (~45KB)
-│   ├── vendor-Bk9mWe7R.js       ← React + libs (~140KB)
-│   ├── UserDashboard-x8Km2.js   ← Lazy-loaded route (~12KB)
-│   ├── index-pQ8sW2e1.css       ← All styles merged (~8KB)
-│   └── logo-kM2xW9.svg          ← Hashed asset
+│   ├── index-Da3x8kQ1.js      ← Main app code (~45KB)
+│   ├── vendor-Bk9mWe7R.js     ← React + libraries (~140KB)
+│   ├── UserDashboard-x8Km2.js ← Lazy-loaded route (~12KB)
+│   ├── index-pQ8sW2e1.css     ← All styles merged (~8KB)
+│   └── logo-kM2xW9.svg        ← Hashed asset
 
-// Hash in filenames = content hash
-// Same content → same hash → browser cache still valid!
-// Only changed files re-download</pre>
+// The hash in filenames (Da3x8kQ1) = content hash
+// If content doesn't change, hash stays the same
+// → Browser cache still valid! Only changed files re-download</pre>
 
-    <div class="callout">
-      <div class="ct" style="color:var(--a2)">Why bundle at all?</div>
-      <p><b>HTTP/1.1</b>: browsers made ~6 parallel requests per domain. 500 files = 83 round trips. Even with <b>HTTP/2</b> multiplexing, fewer files means less overhead. Bundling also enables tree-shaking and code-splitting.</p>
-    </div>
-  </div>
+<div class="hbox" style="background:rgba(59,130,246,.06);border-color:var(--bl)">
+<p class="htitle" style="color:var(--bl)">Why bundle at all?</p>
+<p style="color:var(--t2)"><strong style="color:var(--t)">HTTP/1.1</strong>: browsers could only make ~6 parallel requests per domain. 500 files = 83 round trips. One bundle = 1 request. Even with <strong style="color:var(--t)">HTTP/2</strong> (multiplexed), fewer files means less overhead. Bundling also enables tree-shaking and code-splitting.</p>
+</div>
+</div>
 </div>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(251,191,36,.15);color:var(--y)">2.3</span>
-    <span class="step-title">Optimize — shrink everything to minimum size</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-    <p class="desc">Three optimizations: <b>Minification</b> (shrink code), <b>Tree-shaking</b> (remove unused code), <b>Compression</b> (gzip/brotli). Tools: Terser, cssnano, SWC minifier.</p>
+<!-- 2.3 OPTIMIZE -->
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(251,191,36,.15);color:var(--y)">2.3</span>
+<span class="step-title">Step 3: Optimize — shrink everything to minimum size</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc">Three optimizations: <strong>Minification</strong> (shrink code), <strong>Tree-shaking</strong> (remove unused code), <strong>Compression</strong> (gzip/brotli). Tools: Terser, cssnano, SWC minifier.</p>
 
-    <div class="compare">
-      <div>
-        <span class="code-label" style="background:rgba(248,113,113,.15);color:var(--r)">Before (readable, 847 bytes)</span>
+<div class="comparison">
+<div>
+<span class="code-label" style="background:rgba(248,113,113,.15);color:var(--r)">Before (readable, 847B)</span>
 <pre>function fetchUsers() {
   const apiUrl = '/api/users';
   const headers = {
@@ -481,7 +517,8 @@ import { fetchUsers } from './api/users';
     .then(response =&gt; {
       if (!response.ok) {
         throw new Error(
-          'Failed to fetch');
+          'Failed to fetch'
+        );
       }
       return response.json();
     })
@@ -490,10 +527,10 @@ import { fetchUsers } from './api/users';
       return [];
     });
 }</pre>
-      </div>
-      <div class="vs">→</div>
-      <div>
-        <span class="code-label" style="background:rgba(52,211,153,.15);color:var(--g)">After (minified, 198 bytes)</span>
+</div>
+<div class="vs">→</div>
+<div>
+<span class="code-label" style="background:rgba(52,211,153,.15);color:var(--g)">After (minified, 198B)</span>
 <pre>function f(){return fetch(
 "/api/users",{headers:{
 "Content-Type":
@@ -506,55 +543,58 @@ throw Error(
 return e.json()})
 .catch(e=&gt;(
 console.error(e),[]))}</pre>
-        <p class="desc"><strong>76% smaller!</strong> Variables shortened, whitespace removed, comments stripped.</p>
-      </div>
-    </div>
+<p class="step-desc"><strong>What changed:</strong> variable names shortened, whitespace removed, comments stripped. <strong style="color:var(--g)">76% smaller!</strong></p>
+</div>
+</div>
 
 <span class="code-label" style="background:rgba(52,211,153,.15);color:var(--g)">Tree-shaking — dead code elimination</span>
-<pre>// utils.ts — you wrote 5 functions:
-export function formatDate(d) { ... }     // ✅ Used
-export function formatCurrency(n) { ... } // ✅ Used
-export function slugify(s) { ... }        // ❌ NOT imported
-export function debounce(fn, ms) { ... }  // ❌ NOT imported
-export function throttle(fn, ms) { ... }  // ❌ NOT imported
+<pre>// utils.ts — you wrote 10 functions
+export function formatDate(d) { ... }    // ✅ Used in App.tsx
+export function formatCurrency(n) { ... } // ✅ Used in Cart.tsx
+export function slugify(s) { ... }        // ❌ NOT imported anywhere
+export function debounce(fn, ms) { ... }  // ❌ NOT imported anywhere
+export function throttle(fn, ms) { ... }  // ❌ NOT imported anywhere
 
 // After tree-shaking: slugify, debounce, throttle REMOVED
 // Zero bytes shipped for unused functions</pre>
 
-    <div class="metrics">
-      <div class="metric"><span class="v" style="color:var(--r)">2.4 MB</span><span class="l">Before optimization</span></div>
-      <div class="metric"><span class="v" style="color:var(--y)">380 KB</span><span class="l">After minify + tree-shake</span></div>
-      <div class="metric"><span class="v" style="color:var(--g)">95 KB</span><span class="l">After gzip compress</span></div>
-      <div class="metric"><span class="v" style="color:var(--c)">~96%</span><span class="l">Total reduction</span></div>
-    </div>
-  </div>
+<div class="metrics">
+<div class="metric"><span class="val" style="color:var(--r)">2.4 MB</span><span class="lbl">Before optimization</span></div>
+<div class="metric"><span class="val" style="color:var(--y)">380 KB</span><span class="lbl">After minify + tree-shake</span></div>
+<div class="metric"><span class="val" style="color:var(--g)">95 KB</span><span class="lbl">After gzip compression</span></div>
+<div class="metric"><span class="val" style="color:var(--c)">~96%</span><span class="lbl">Total reduction</span></div>
+</div>
+</div>
 </div>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">2.4</span>
-    <span class="step-title">The final output: dist/ — ready to deploy</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-<pre>dist/                                 # THIS is what gets deployed
-├── index.html                        # Entry HTML (~1KB)
+<!-- 2.4 OUTPUT -->
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">2.4</span>
+<span class="step-title">The final output: dist/ folder — ready to deploy</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<pre>dist/                              # THIS is what gets deployed
+├── index.html                     # Entry HTML (~1KB)
 ├── assets/
-│   ├── index-Da3x8kQ1.js            # App bundle (minified)
-│   ├── vendor-Bk9mWe7R.js           # Vendor chunk (React etc.)
-│   ├── index-pQ8sW2e1.css           # All CSS merged + minified
-│   ├── logo-kM2xW9.svg              # Content-hashed asset
-│   └── inter-latin-wght-x92k.woff2  # Font
+│   ├── index-Da3x8kQ1.js         # App bundle (minified)
+│   ├── vendor-Bk9mWe7R.js        # Vendor chunk (React etc.)
+│   ├── index-pQ8sW2e1.css        # All CSS merged + minified
+│   ├── logo-kM2xW9.svg           # Assets with content hashes
+│   └── inter-latin-wght-x92k.woff2
 └── favicon.ico</pre>
 
-<span class="code-label" style="background:rgba(248,113,113,.15);color:var(--r)">index.html — the tiny entry point</span>
+<span class="code-label" style="background:rgba(251,146,60,.15);color:var(--o)">index.html — the tiny entry point</span>
 <pre>&lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
 &lt;head&gt;
   &lt;meta charset="UTF-8" /&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
   &lt;title&gt;User Dashboard&lt;/title&gt;
+  &lt;link rel="icon" href="/favicon.ico" /&gt;
 
-  &lt;!-- CSS first (render-blocking) --&gt;
+  &lt;!-- CSS first (render-blocking — browser needs it to paint) --&gt;
   &lt;link rel="stylesheet" href="/assets/index-pQ8sW2e1.css" /&gt;
 
   &lt;!-- JS with type="module" (deferred by default) --&gt;
@@ -564,295 +604,299 @@ export function throttle(fn, ms) { ... }  // ❌ NOT imported
   &lt;link rel="modulepreload" href="/assets/vendor-Bk9mWe7R.js" /&gt;
 &lt;/head&gt;
 &lt;body&gt;
-  &lt;div id="root"&gt;&lt;/div&gt;  &lt;!-- React mounts here --&gt;
+  &lt;div id="root"&gt;&lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;</pre>
 
-    <div class="callout green">
-      <div class="ct" style="color:var(--g)">This is everything the browser needs</div>
-      <p>No TypeScript. No SCSS. No node_modules. No JSX. Just plain HTML, CSS, JavaScript, and assets. The entire build pipeline exists to transform developer-friendly source into browser-friendly output.</p>
-    </div>
-  </div>
+<div class="hbox" style="background:rgba(251,146,60,.06);border-color:var(--o)">
+<p class="htitle" style="color:var(--o)">This is everything the browser needs.</p>
+<p style="color:var(--t2)">No TypeScript. No SCSS. No node_modules. No JSX. Just plain HTML, CSS, JavaScript, and assets. The entire build pipeline exists to get from developer-friendly source to browser-friendly output.</p>
+</div>
+</div>
 </div>
 </div>
 
-<div class="phase-arrow">⬇</div>
+<div class="connector">⬇</div>
 
-<!-- ============================================================ -->
-<!-- SECTION 3: DEPLOY TO CLOUD                                   -->
-<!-- ============================================================ -->
+<!-- ============================================ -->
+<!-- SECTION 3 -->
+<!-- ============================================ -->
 <div class="section" id="s3">
-<div class="sec-head">
-  <span class="sec-num" style="background:rgba(59,130,246,.15);color:var(--bl)">03</span>
-  <h2 class="sec-title">Deploy to the cloud</h2>
+<div class="section-head">
+<span class="section-num" style="background:rgba(59,130,246,.15);color:var(--bl)">03</span>
+<h2 class="section-title">Deploy to the cloud</h2>
 </div>
-<p class="sec-sub">The cloud (AWS, Azure, GCP) is just <strong>someone else's powerful computer</strong> in a data center. You upload your <code>dist/</code> folder so millions of users worldwide can request those files 24/7.</p>
+<p class="section-sub">The cloud (AWS, Azure, GCP) is just <strong style="color:var(--t)">someone else's powerful computer</strong> in a data center. You upload your <code>dist/</code> folder so millions of users worldwide can request those files 24/7.</p>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">3.1</span>
-    <span class="step-title">What "the cloud" actually is</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">3.1</span>
+<span class="step-title">What "the cloud" actually is</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
 <pre>  "The Cloud" = Data centers around the world
 
-  ┌───────────────────────────────────────────────┐
-  │  AWS Data Center (us-east-1, Virginia)        │
-  │                                               │
-  │  ┌──────────┐ ┌──────────┐ ┌──────────┐     │
-  │  │ Server   │ │ Server   │ │ Server   │ ×1000│
-  │  │ Rack #1  │ │ Rack #2  │ │ Rack #3  │     │
-  │  │          │ │          │ │          │     │
-  │  │ Your     │ │ Someone  │ │ Netflix  │     │
-  │  │ dist/    │ │ else's   │ │ dist/    │     │
-  │  │ folder   │ │ app      │ │ folder   │     │
-  │  └──────────┘ └──────────┘ └──────────┘     │
-  │                                               │
-  │  + Load balancers, networking, cooling...     │
-  └───────────────────────────────────────────────┘</pre>
+  ┌─────────────────────────────────────────────────────┐
+  │  AWS Data Center (us-east-1, Virginia)              │
+  │                                                     │
+  │  ┌──────────┐ ┌──────────┐ ┌──────────┐           │
+  │  │ Server   │ │ Server   │ │ Server   │  ...×1000s│
+  │  │ Rack #1  │ │ Rack #2  │ │ Rack #3  │           │
+  │  │          │ │          │ │          │           │
+  │  │ Your     │ │ Someone  │ │ Netflix  │           │
+  │  │ dist/    │ │ else's   │ │ dist/    │           │
+  │  │ folder   │ │ app      │ │ folder   │           │
+  │  └──────────┘ └──────────┘ └──────────┘           │
+  │                                                     │
+  │  + Load balancers, networking, storage, cooling...  │
+  └─────────────────────────────────────────────────────┘
 
-    <div class="layers">
-      <div class="layer" style="background:rgba(59,130,246,.1)"><span class="ln" style="color:var(--bl)">AWS S3</span><span class="ld">Store static files. Cheapest. No server logic.</span></div>
-      <div class="layer" style="background:rgba(52,211,153,.1)"><span class="ln" style="color:var(--g)">CloudFront CDN</span><span class="ld">Cache copies at 400+ edge locations worldwide.</span></div>
-      <div class="layer" style="background:rgba(99,102,241,.1)"><span class="ln" style="color:var(--a2)">EC2 / Azure VM</span><span class="ld">Full server — Node.js, SSR, APIs. You control everything.</span></div>
-      <div class="layer" style="background:rgba(251,191,36,.1)"><span class="ln" style="color:var(--y)">Vercel / Netlify</span><span class="ld">Git push → auto-build → deploy → CDN. Zero config.</span></div>
-    </div>
-  </div>
+  Your dist/ folder sits on one (or many) of these servers.
+  Each is a real physical computer with CPU, RAM, SSD.
+  The cloud provider manages hardware, networking, scaling.</pre>
+
+<div class="layers">
+<div class="layer" style="background:rgba(59,130,246,.1)"><span class="name" style="color:var(--bl)">AWS S3</span><span class="desc">Store static files (dist/), serve directly. Cheapest. No server logic.</span></div>
+<div class="layer" style="background:rgba(52,211,153,.1)"><span class="name" style="color:var(--g)">CloudFront CDN</span><span class="desc">Cache copies at 400+ edge locations worldwide. User hits nearest one.</span></div>
+<div class="layer" style="background:rgba(99,102,241,.1)"><span class="name" style="color:var(--a2)">EC2 / Azure VM</span><span class="desc">Full server — run Node.js, SSR, APIs. You control everything.</span></div>
+<div class="layer" style="background:rgba(251,191,36,.1)"><span class="name" style="color:var(--y)">Vercel / Netlify</span><span class="desc">Abstraction on top: git push → auto-build → deploy → CDN. Zero config.</span></div>
+</div>
+</div>
 </div>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">3.2</span>
-    <span class="step-title">CI/CD pipeline — git push to production</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-<pre>Developer:  git push origin main
-                    │
-                    ▼
-GitHub Actions / GitLab CI:
-  ┌──────────────────────────────────┐
-  │  1. npm install    (get deps)    │
-  │  2. npm run lint   (check style) │
-  │  3. npm run test   (run tests)   │
-  │  4. npm run build  (create dist/)│
-  │  5. Upload dist/ → AWS S3        │
-  │  6. Invalidate CDN cache         │
-  │  7. Notify Slack: "Deployed! ✅" │
-  └──────────────────────────────────┘
-                    │
-                    ▼
-  Users now get the NEW version</pre>
-  </div>
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">3.2</span>
+<span class="step-title">CI/CD pipeline &amp; CDN distribution</span>
+<span class="step-arrow">▼</span>
 </div>
+<div class="step-body">
+<pre># What happens when you "git push" to main:
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">3.3</span>
-    <span class="step-title">CDN — copies of your files everywhere</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
+Developer:  git push origin main
+                    │
+                    ▼
+GitHub Actions / GitLab CI picks it up:
+                    │
+  ┌─────────────────┼─────────────────┐
+  │ CI/CD Pipeline                    │
+  │                                   │
+  │  1. npm install    (get deps)     │
+  │  2. npm run lint   (check style)  │
+  │  3. npm run test   (run tests)    │
+  │  4. npm run build  (create dist/) │
+  │  5. Upload dist/ → AWS S3         │
+  │  6. Invalidate CDN cache          │
+  │  7. Notify Slack: "Deployed! ✅"  │
+  └───────────────────────────────────┘</pre>
+
 <pre>Without CDN:
-  User in Tokyo     → Virginia → 200ms
-  User in London    → Virginia → 100ms
-  User in São Paulo → Virginia → 180ms
+  User in Tokyo  → request to Virginia → 200ms latency
+  User in London → request to Virginia → 100ms latency
 
-With CDN (CloudFront, Cloudflare):
-  User in Tokyo     → Tokyo edge   → 15ms ⚡
-  User in London    → London edge  → 10ms ⚡
-  User in São Paulo → SP edge      → 12ms ⚡
+With CDN (CloudFront, Cloudflare, Akamai):
+  User in Tokyo  → Tokyo edge server   → 15ms ⚡
+  User in London → London edge server  → 10ms ⚡
 
-  Edge servers ask origin ONCE, then cache.
-  Every user after that gets the cached copy.</pre>
-  </div>
+  CDN edge servers ask origin ONCE, then cache.
+  Every subsequent user gets served from nearest edge.</pre>
+</div>
 </div>
 </div>
 
-<div class="phase-arrow">⬇</div>
+<div class="connector">⬇</div>
 
-<!-- ============================================================ -->
-<!-- SECTION 4: USER MAKES A REQUEST                              -->
-<!-- ============================================================ -->
+<!-- ============================================ -->
+<!-- SECTION 4 -->
+<!-- ============================================ -->
 <div class="section" id="s4">
-<div class="sec-head">
-  <span class="sec-num" style="background:rgba(248,113,113,.15);color:var(--r)">04</span>
-  <h2 class="sec-title">User makes a request</h2>
+<div class="section-head">
+<span class="section-num" style="background:rgba(251,146,60,.15);color:var(--o)">04</span>
+<h2 class="section-title">User makes a request</h2>
 </div>
-<p class="sec-sub">A user types <code>https://yourdashboard.com</code> and presses Enter. Here's every network step that happens before a single byte of your code arrives.</p>
+<p class="section-sub">A user types <code>https://yourdashboard.com</code> and presses Enter. Here's every network step before a single byte of your code arrives.</p>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">4.1</span>
-    <span class="step-title">DNS — domain name to IP address</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">4.1</span>
+<span class="step-title">DNS resolution — domain name to IP address</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
 <pre>User types: https://yourdashboard.com
 
-Browser: "I need an IP address."
+Browser: "I need an IP address to connect to."
 
-1. Check browser DNS cache     → miss
-2. Check OS DNS cache          → miss
-3. Ask router DNS cache        → miss
-4. Ask ISP DNS resolver        → miss
-5. ISP asks Root DNS           → "Try .com TLD"
-6. Ask .com TLD server         → "Try ns1.cloudflare.com"
-7. Ask Cloudflare nameserver   → "93.184.216.34" ✅
+Step 1: Check browser DNS cache     → miss
+Step 2: Check OS DNS cache          → miss
+Step 3: Ask router's DNS cache      → miss
+Step 4: Ask ISP's DNS resolver      → miss
+Step 5: ISP asks Root DNS server    → "Try .com TLD server"
+Step 6: Ask .com TLD server         → "Try ns1.cloudflare.com"
+Step 7: Ask Cloudflare nameserver   → "93.184.216.34" ✅
 
-Time: ~20-80ms (first visit), ~0ms (cached)</pre>
-  </div>
+Total: ~20-80ms (first visit), ~0ms (cached)</pre>
+</div>
 </div>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">4.2</span>
-    <span class="step-title">TCP handshake — reliable connection</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-<pre>  Browser (Client)                Server
-       │                              │
-       │── SYN (seq=100) ───────────▶│  "Want to talk?"
-       │                              │
-       │◀─ SYN-ACK (seq=300,ack=101)─│  "Sure, ready"
-       │                              │
-       │── ACK (ack=301) ───────────▶│  "Connected!"
-       │                              │
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">4.2</span>
+<span class="step-title">TCP 3-way handshake — reliable connection</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<pre>Browser (Client)                    Server (93.184.216.34)
+     │                                     │
+     │─── SYN (seq=100) ─────────────────▶│  "Want to talk?"
+     │                                     │
+     │◀── SYN-ACK (seq=300, ack=101) ─────│  "Sure, ready"
+     │                                     │
+     │─── ACK (ack=301) ─────────────────▶│  "Connected!"
+     │                                     │
 
-  3-way handshake = 1 round-trip (~30ms)
-  Both sides agree on sequence numbers
-  so packets reassemble in order.</pre>
-  </div>
+This "3-way handshake" takes 1 round-trip (~30ms).
+Both sides agree on sequence numbers so packets
+can be reassembled in order and retransmitted if lost.</pre>
+</div>
 </div>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">4.3</span>
-    <span class="step-title">TLS handshake — encryption (HTTPS)</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-<pre>  Browser                           Server
-     │                                 │
-     │── ClientHello ────────────────▶│
-     │   [TLS version, ciphers]       │
-     │                                 │
-     │◀─ ServerHello + Certificate ──│
-     │   [Chosen cipher, public key]  │
-     │                                 │
-     │   Browser verifies cert:        │
-     │   ✅ Trusted CA?                │
-     │   ✅ Correct domain?            │
-     │   ✅ Not expired?               │
-     │                                 │
-     │── Key Exchange ──────────────▶│
-     │   [Diffie-Hellman shared secret]│
-     │                                 │
-     │══ Encrypted tunnel ready ══════│
-     │   AES-256-GCM from here on     │
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">4.3</span>
+<span class="step-title">TLS handshake — making it secure (HTTPS)</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<pre>Browser                                Server
+   │                                      │
+   │── ClientHello ─────────────────────▶│
+   │   [TLS version, supported ciphers,  │
+   │    random number]                   │
+   │                                      │
+   │◀─ ServerHello + Certificate ────────│
+   │   [Chosen cipher, server's public   │
+   │    key signed by a CA]              │
+   │                                      │
+   │   Browser verifies certificate:      │
+   │   ✅ Signed by trusted CA?           │
+   │   ✅ Domain name correct?            │
+   │   ✅ Not expired?                    │
+   │                                      │
+   │── Key Exchange ───────────────────▶│
+   │   [Diffie-Hellman → shared secret]  │
+   │                                      │
+   │══ Encrypted tunnel established ═════│
+   │   All data encrypted with AES-256   │
 
-  TLS 1.3 = 1 round-trip (~30ms)
-  TLS 1.2 = 2 round-trips (~60ms)</pre>
-  </div>
+TLS 1.3: 1 round-trip (~30ms)
+TLS 1.2: 2 round-trips (~60ms)</pre>
+</div>
 </div>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">4.4</span>
-    <span class="step-title">HTTP request — asking for the page</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">4.4</span>
+<span class="step-title">HTTP request — asking for the page</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
 <pre>GET / HTTP/2
 Host: yourdashboard.com
 User-Agent: Mozilla/5.0 Chrome/120
-Accept: text/html,application/xhtml+xml
-Accept-Encoding: gzip, deflate, br    ← "I can decompress!"
-Cookie: session=abc123; theme=dark     ← Previous session
+Accept: text/html,application/xhtml+xml,*/*;q=0.8
+Accept-Language: pl-PL,pl;q=0.9,en;q=0.8
+Accept-Encoding: gzip, deflate, br     ← "I can handle compressed!"
+Cookie: session=abc123; theme=dark      ← Previous session data
 Cache-Control: no-cache
-Sec-Fetch-Dest: document
-Sec-Fetch-Mode: navigate</pre>
-  </div>
-</div>
-
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">4.5</span>
-    <span class="step-title">Timeline — keystroke to first byte</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-    <div class="timeline" style="border-color:var(--r)">
-      <style>.s4t .tl-item::before{border-color:var(--r)}.s4t.timeline::before{background:linear-gradient(var(--r),var(--o),var(--y))}</style>
-      <div class="timeline s4t">
-        <div class="tl-item"><span class="time" style="color:var(--t3)">0ms</span><span class="detail">User presses Enter</span></div>
-        <div class="tl-item"><span class="time" style="color:var(--a2)">~5ms</span><span class="detail">URL parsed (protocol, domain, path)</span></div>
-        <div class="tl-item"><span class="time" style="color:var(--bl)">~25ms</span><span class="detail">DNS resolved → IP address</span></div>
-        <div class="tl-item"><span class="time" style="color:var(--g)">~55ms</span><span class="detail">TCP connected (3-way handshake)</span></div>
-        <div class="tl-item"><span class="time" style="color:var(--y)">~85ms</span><span class="detail">TLS negotiated (encrypted tunnel)</span></div>
-        <div class="tl-item"><span class="time" style="color:var(--o)">~90ms</span><span class="detail">HTTP request sent through tunnel</span></div>
-        <div class="tl-item"><span class="time" style="color:var(--g)">~150ms</span><span class="detail">First byte received (TTFB)</span></div>
-      </div>
-    </div>
-  </div>
+Sec-Fetch-Dest: document                ← "I want an HTML document"</pre>
 </div>
 </div>
 
-<div class="phase-arrow">⬇</div>
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">4.5</span>
+<span class="step-title">Complete timeline — keystroke to first byte</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<div class="timeline" style="--tc:var(--o)">
+<div class="tl-item"><span class="time" style="color:var(--t3)">0ms</span><span class="detail">User presses Enter</span></div>
+<div class="tl-item"><span class="time" style="color:var(--a2)">~5ms</span><span class="detail">URL parsed — protocol, domain, path</span></div>
+<div class="tl-item"><span class="time" style="color:var(--bl)">~25ms</span><span class="detail">DNS resolved → IP address</span></div>
+<div class="tl-item"><span class="time" style="color:var(--g)">~55ms</span><span class="detail">TCP connected (SYN → SYN-ACK → ACK)</span></div>
+<div class="tl-item"><span class="time" style="color:var(--y)">~85ms</span><span class="detail">TLS negotiated → encrypted tunnel</span></div>
+<div class="tl-item"><span class="time" style="color:var(--o)">~90ms</span><span class="detail">HTTP request sent</span></div>
+<div class="tl-item"><span class="time" style="color:var(--g)">~150ms</span><span class="detail">First byte received (TTFB)</span></div>
+</div>
+</div>
+</div>
+</div>
 
-<!-- ============================================================ -->
-<!-- SECTION 5: SERVER RESPONDS                                   -->
-<!-- ============================================================ -->
+<div class="connector">⬇</div>
+
+<!-- ============================================ -->
+<!-- SECTION 5 -->
+<!-- ============================================ -->
 <div class="section" id="s5">
-<div class="sec-head">
-  <span class="sec-num" style="background:rgba(251,191,36,.15);color:var(--y)">05</span>
-  <h2 class="sec-title">Server responds</h2>
+<div class="section-head">
+<span class="section-num" style="background:rgba(251,191,36,.15);color:var(--y)">05</span>
+<h2 class="section-title">Server responds</h2>
 </div>
-<p class="sec-sub">The server receives the HTTP request and decides what to send back. For a static site: find the file, compress it, send it.</p>
+<p class="section-sub">The server receives your HTTP request and decides what to send back. For a static site: find the file, compress it, send it.</p>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(251,191,36,.15);color:var(--y)">5.1</span>
-    <span class="step-title">Server processing &amp; HTTP response</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(251,191,36,.15);color:var(--y)">5.1</span>
+<span class="step-title">Server processing &amp; HTTP response</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
 <pre>Incoming: GET / HTTP/2
 
-Decision tree:
-├── Cached at CDN edge? → YES → return cached (&lt;5ms) ⚡
-│                        → NO  → forward to origin
+Server decision tree:
+├── Cached at CDN edge?
+│   ├── YES → Return cached copy (&lt;5ms) ⚡
+│   └── NO  → Forward to origin
 │
-└── Origin:
-    ├── Static site: match "/" → serve index.html → compress → send
-    └── Dynamic SSR: run route handler → query DB → render HTML → send
+├── Static site (our case):
+│   1. Match "/" → serve index.html
+│   2. Read file from disk/memory
+│   3. Compress with Brotli
+│   4. Set response headers
+│   5. Send
+│
+└── Dynamic site (SSR):
+    1. Run route handler
+    2. Query database
+    3. Render HTML on server
+    4. Compress and send</pre>
 
-Processing: static ~1-5ms, SSR ~20-200ms</pre>
-
-<span class="code-label" style="background:rgba(251,191,36,.15);color:var(--y)">HTTP response headers</span>
+<span class="code-label" style="background:rgba(251,191,36,.15);color:var(--y)">HTTP response</span>
 <pre>HTTP/2 200 OK
 content-type: text/html; charset=UTF-8
-content-encoding: br                     ← Brotli compressed
-cache-control: no-cache                  ← HTML always re-validated
-etag: "a3f8c2e1"                         ← Fingerprint
-cf-cache-status: HIT                     ← Served from CDN!
+content-encoding: br                       ← Brotli compressed
+cache-control: no-cache                    ← HTML always re-validated
+etag: "a3f8c2e1"                           ← Fingerprint for caching
+cf-cache-status: HIT                       ← Served from CDN cache
 strict-transport-security: max-age=31536000
 
-&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;...&lt;/html&gt;</pre>
-  </div>
+[compressed HTML body follows]</pre>
+</div>
 </div>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(251,191,36,.15);color:var(--y)">5.2</span>
-    <span class="step-title">Cascade of requests — HTML triggers more fetches</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-<pre>Request #1: GET /                        → index.html (1KB)
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(251,191,36,.15);color:var(--y)">5.2</span>
+<span class="step-title">Cascade of requests — HTML triggers more fetches</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<pre>Browser receives index.html, starts parsing.
+As it finds resource references, it fires MORE requests:
+
+Request #1: GET /                        → index.html (1KB)
   └─ Parser finds &lt;link&gt; and &lt;script&gt;:
 
 Request #2: GET /assets/index-pQ8s.css   → styles (8KB)
@@ -860,255 +904,219 @@ Request #3: GET /assets/index-Da3x.js    → app bundle (45KB)
 Request #4: GET /assets/vendor-Bk9m.js   → vendor chunk (140KB)
   └─ JS executes and triggers:
 
-Request #5: GET /assets/logo-kM2x.svg    → image (3KB)
+Request #5: GET /assets/logo-kM2x.svg    → logo (3KB)
 Request #6: GET /api/users               → JSON data (12KB)
 
-HTTP/2: requests 2-4 happen IN PARALLEL over same connection!
+With HTTP/2, requests 2-4 happen IN PARALLEL (multiplexed)
+over the SAME TCP connection. No extra handshakes!
 
 Total: ~209KB compressed → ~850KB decompressed in memory</pre>
 
-    <div class="callout yellow">
-      <div class="ct" style="color:var(--y)">Caching headers control repeat visits</div>
-      <p><b>Hashed assets</b> (app-Da3x.js) get <code>max-age=31536000</code> (1 year!) — the hash changes when content changes. <b>index.html</b> gets <code>no-cache</code> — always re-checked. Second visit: only HTML re-fetched, everything else from disk cache.</p>
-    </div>
-  </div>
+<div class="hbox" style="background:rgba(251,191,36,.06);border-color:var(--y)">
+<p class="htitle" style="color:var(--y)">Caching headers control repeat visits</p>
+<p style="color:var(--t2)"><strong style="color:var(--t)">Hashed assets</strong> (app-Da3x.js) get <code>max-age=31536000</code> (1 year!) because the hash changes when content changes. <strong style="color:var(--t)">index.html</strong> gets <code>no-cache</code> so the browser always checks for a new version. Second visits are <em>much</em> faster.</p>
+</div>
+</div>
 </div>
 </div>
 
-<div class="phase-arrow">⬇</div>
+<div class="connector">⬇</div>
 
-<!-- ============================================================ -->
-<!-- SECTION 6: BROWSER RENDERS                                   -->
-<!-- ============================================================ -->
+<!-- ============================================ -->
+<!-- SECTION 6 -->
+<!-- ============================================ -->
 <div class="section" id="s6">
-<div class="sec-head">
-  <span class="sec-num" style="background:rgba(244,114,182,.15);color:var(--p)">06</span>
-  <h2 class="sec-title">Browser rendering engine</h2>
+<div class="section-head">
+<span class="section-num" style="background:rgba(244,114,182,.15);color:var(--p)">06</span>
+<h2 class="section-title">Browser rendering engine</h2>
 </div>
-<p class="sec-sub">The rendering engine (Blink in Chrome, Gecko in Firefox, WebKit in Safari) takes raw files and turns them into interactive pixels. This is the most complex part of the entire chain.</p>
+<p class="section-sub">The rendering engine (Blink in Chrome, Gecko in Firefox, WebKit in Safari) takes raw files and turns them into interactive pixels. This is the most complex part of the chain.</p>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(244,114,182,.15);color:var(--p)">6.1</span>
-    <span class="step-title">Parse HTML → build the DOM tree</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-    <p class="desc">HTML bytes → characters → tokens → tree of nodes = the <strong>DOM</strong>.</p>
-<pre>Bytes:    3C 21 44 4F 43 54 59 50 45 ...
-            ↓ decode
-Chars:    &lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;...
-            ↓ tokenize
-Tokens:   [DOCTYPE] [StartTag:html] [StartTag:head]...
-            ↓ tree construction
-
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(244,114,182,.15);color:var(--p)">6.1</span>
+<span class="step-title">Parse HTML → Build the DOM tree</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<pre>HTML bytes arrive:  3C 21 44 4F 43 54 59 50 45 ...
+                          ↓ decode
+Characters:         &lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;...
+                          ↓ tokenize
+Tokens:             [DOCTYPE] [StartTag:html] [StartTag:head] ...
+                          ↓ tree construction
 DOM Tree:
   Document
   ├── DOCTYPE: html
   └── html
       ├── head
       │   ├── meta[charset="UTF-8"]
-      │   ├── link[rel="stylesheet"]  ← Triggers CSS download!
-      │   └── script[type="module"]   ← Triggers JS download!
+      │   ├── title → "User Dashboard"
+      │   ├── link[rel="stylesheet" href="index-pQ8s.css"]
+      │   │    ↑ Triggers CSS download! (render-blocking)
+      │   └── script[type="module" src="index-Da3x.js"]
+      │        ↑ Triggers JS download! (deferred with type=module)
       └── body
-          └── div#root                ← Empty (React fills later)</pre>
+          └── div#root
+               ↑ Empty — React fills this later</pre>
 
-    <div class="callout red">
-      <div class="ct" style="color:var(--r)">Parse-blocking behavior</div>
-      <p>A <code>&lt;script&gt;</code> without <code>async</code>/<code>defer</code> <b>STOPS HTML parsing</b> until it downloads and executes. CSS is "render-blocking" — browser won't paint until CSS is parsed, but HTML parsing continues. Modern frameworks use <code>type="module"</code> (deferred by default).</p>
-    </div>
-  </div>
+<div class="hbox" style="background:rgba(244,114,182,.06);border-color:var(--p)">
+<p class="htitle" style="color:var(--p)">Parse-blocking behavior</p>
+<p style="color:var(--t2)">A <code>&lt;script&gt;</code> without <code>async</code>/<code>defer</code> <strong style="color:var(--t)">STOPS HTML parsing</strong> until it downloads and executes (JS might use document.write). Modern frameworks use <code>type="module"</code> (deferred by default). CSS is "render-blocking" — browser won't paint until CSS is parsed, but HTML parsing continues.</p>
+</div>
+</div>
 </div>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(244,114,182,.15);color:var(--p)">6.2</span>
-    <span class="step-title">Parse CSS → build the CSSOM</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-<pre>CSS bytes → characters → tokens → CSSOM tree
-
-CSSOM (CSS Object Model):
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(244,114,182,.15);color:var(--p)">6.2</span>
+<span class="step-title">Parse CSS → Build CSSOM tree</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<pre>CSSOM (CSS Object Model):
   StyleSheet
-  ├── .container → { max-width:800px, margin:0 auto }
-  ├── .title     → { font-size:32px, color:#378ADD }
-  ├── .userCard  → { background:#fff, border-radius:12px }
-  └── .userCard:hover → { transform:translateY(-2px) }
+  ├── Rule: .container
+  │   ├── max-width: 800px
+  │   ├── margin: 0 auto
+  │   └── padding: 40px 24px
+  ├── Rule: .container .title
+  │   ├── font-size: 2rem        → computed: 32px
+  │   ├── color: #378ADD
+  │   └── margin-bottom: 24px
+  └── Rule: .userCard
+      ├── background: white       → computed: rgb(255,255,255)
+      ├── border-radius: 12px
+      └── box-shadow: 0 2px 8px rgba(0,0,0,0.1)
 
 During CSSOM construction:
-  1. Parse all rules
-  2. Resolve cascade (specificity: inline &gt; #id &gt; .class &gt; elem)
+  1. Parse all CSS rules
+  2. Resolve cascade (specificity: inline &gt; #id &gt; .class &gt; element)
   3. Resolve inheritance (color inherits; margin doesn't)
-  4. Compute values (rem→px, %→px, colors→rgba)</pre>
-  </div>
-</div>
-
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(244,114,182,.15);color:var(--p)">6.3</span>
-    <span class="step-title">DOM + CSSOM → Render tree</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-<pre>Merge DOM + CSSOM → Render Tree (only VISIBLE elements)
-
-DOM:                   CSSOM:
-  html                   .container { max-width:800px }
-  └── body               .hidden { display:none }
-      └── div.container
-          ├── h1.title
-          ├── div.hidden  ← display:none!
-          └── ul.userList
-              ├── li
-              └── li
-
-        ↓ MERGE ↓
-
-Render Tree:
-  RenderView (viewport)
-  └── RenderBlock (body)
-      └── RenderBlock (div.container) [max-width:800px]
-          ├── RenderBlock (h1.title) [color:#378ADD, 32px]
-          └── RenderBlock (ul.userList) [display:grid]
-              ├── RenderBlock (li) [bg:white, radius:12px]
-              └── RenderBlock (li) [bg:white, radius:12px]
-
-  ❌ &lt;head&gt;, &lt;script&gt;, display:none → EXCLUDED
-  ✅ Only visually-rendered elements make it in</pre>
-  </div>
-</div>
-
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(244,114,182,.15);color:var(--p)">6.4</span>
-    <span class="step-title">Layout (reflow) — calculate positions &amp; sizes</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-<pre>Viewport: 1440×900
-
-body        → x:0    y:0    w:1440  h:auto
-.container  → x:320  y:0    w:800   h:auto  (centered)
-h1.title    → x:320  y:40   w:800   h:38
-ul.userList → x:320  y:102  w:800   h:auto  (grid: 3 cols)
-li:first    → x:320  y:102  w:256   h:76
-li:second   → x:592  y:102  w:256   h:76
-
-Every element gets exact:
-  • Content box (w × h)
-  • Padding, Border, Margin
-  • Absolute position (x, y)
-
-⚠️ Expensive! Changing one element can cascade
-   to reflow of every sibling and descendant.</pre>
-  </div>
-</div>
-
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(244,114,182,.15);color:var(--p)">6.5</span>
-    <span class="step-title">Paint → Composite → Pixels on screen</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-<pre>PAINT — convert boxes to draw commands:
-  fillRect(0, 0, 1440, 900, #fafaf8)         ← body bg
-  drawText("User Dashboard", 320, 78, blue)   ← h1
-  fillRoundedRect(320, 102, 256, 76, 12, #fff)← card
-  drawBoxShadow(...)                           ← shadow
-  drawText("Jane Smith", 340, 130, #1a1a1a)   ← name
-
-COMPOSITE — GPU layering:
-  Layer 0 (main):  body, container, static elements
-  Layer 1:         .userCard (has transform on hover)
-  Layer 2:         fixed navbar (if any)
-
-  GPU composites layers → final frame → display
-
-  This is why transform/opacity = smooth (60fps)
-  while width/height changes = janky (triggers layout)</pre>
-
-    <div class="metrics">
-      <div class="metric"><span class="v" style="color:var(--p)">~16ms</span><span class="l">Budget/frame (60fps)</span></div>
-      <div class="metric"><span class="v" style="color:var(--g)">~2ms</span><span class="l">Paint (typical)</span></div>
-      <div class="metric"><span class="v" style="color:var(--bl)">~4ms</span><span class="l">Layout (typical)</span></div>
-      <div class="metric"><span class="v" style="color:var(--c)">~1ms</span><span class="l">Composite (GPU)</span></div>
-    </div>
-  </div>
+  4. Compute final values (rem → px, % → px, colors → rgba)</pre>
 </div>
 </div>
 
-<div class="phase-arrow">⬇</div>
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(244,114,182,.15);color:var(--p)">6.3</span>
+<span class="step-title">DOM + CSSOM → Render tree → Layout → Paint</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<pre>RENDER TREE (only visible nodes — &lt;head&gt;, display:none excluded):
 
-<!-- ============================================================ -->
-<!-- SECTION 7: JS EVENT LOOP                                     -->
-<!-- ============================================================ -->
+  RenderView (viewport: 1440×900)
+  └── RenderBlock (body) [font: 16px, color: #1a1a1a]
+      └── RenderBlock (div.container) [max-width: 800px, margin: 0 auto]
+          ├── RenderBlock (h1.title) [color: #378ADD, font-size: 32px]
+          │   └── RenderText "User Dashboard"
+          └── RenderBlock (ul.userList) [display: grid, gap: 16px]
+              ├── RenderBlock (li.userCard) [bg: white, radius: 12px]
+              └── RenderBlock (li.userCard) [bg: white, radius: 12px]</pre>
+
+<pre>LAYOUT (reflow) — exact positions &amp; sizes:
+
+  body       → x:0, y:0, width:1440, height:auto
+  .container → x:320, y:0, width:800, height:auto  (centered)
+  h1.title   → x:320, y:40, width:800, height:38
+  ul.userList→ x:320, y:102, width:800 (3 cols × 256px + gaps)
+  li:first   → x:320, y:102, width:256, height:76
+  li:second  → x:592, y:102, width:256, height:76</pre>
+
+<pre>PAINT — convert to drawing commands:
+
+  1. fillRect(0, 0, 1440, 900, #fafaf8)        ← body bg
+  2. drawText("User Dashboard", 320, 78, blue)  ← h1
+  3. fillRoundedRect(320, 102, 256, 76, 12px)   ← card bg
+  4. drawBoxShadow(...)                          ← card shadow
+  5. drawText("Jane Smith", 340, 130, #1a1a1a)  ← name
+
+COMPOSITE — GPU layers → final frame → display
+  transform/opacity animations = own GPU layer = 60fps smooth
+  width/height animations = layout thrashing = janky</pre>
+
+<div class="metrics">
+<div class="metric"><span class="val" style="color:var(--p)">~16ms</span><span class="lbl">Budget per frame (60fps)</span></div>
+<div class="metric"><span class="val" style="color:var(--g)">~2ms</span><span class="lbl">Paint (typical)</span></div>
+<div class="metric"><span class="val" style="color:var(--bl)">~4ms</span><span class="lbl">Layout (typical)</span></div>
+<div class="metric"><span class="val" style="color:var(--c)">~1ms</span><span class="lbl">Composite (GPU)</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="connector">⬇</div>
+
+<!-- ============================================ -->
+<!-- SECTION 7 -->
+<!-- ============================================ -->
 <div class="section" id="s7">
-<div class="sec-head">
-  <span class="sec-num" style="background:rgba(34,211,238,.15);color:var(--c)">07</span>
-  <h2 class="sec-title">JavaScript event loop</h2>
+<div class="section-head">
+<span class="section-num" style="background:rgba(52,211,153,.15);color:var(--g)">07</span>
+<h2 class="section-title">JavaScript event loop</h2>
 </div>
-<p class="sec-sub">JavaScript is <strong>single-threaded</strong>. The event loop lets async operations (network, timers, user input) work without blocking the UI.</p>
+<p class="section-sub">JavaScript is <strong style="color:var(--t)">single-threaded</strong> — one thing at a time. The event loop lets async operations (network, timers, user input) work without blocking the UI.</p>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(34,211,238,.15);color:var(--c)">7.1</span>
-    <span class="step-title">JS runtime components</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-<pre>┌──────────────────────────────────────────────────┐
-│  JS Engine (V8 in Chrome)                        │
-│                                                  │
-│  ┌─────────────────┐  ┌───────────────────────┐ │
-│  │  CALL STACK      │  │  HEAP (Memory)         │ │
-│  │  (LIFO)          │  │                         │ │
-│  │  ┌─────────────┐ │  │  { users: [...] }      │ │
-│  │  │ fetchUsers()│ │  │  function App() {...}   │ │
-│  │  ├─────────────┤ │  │  [1, 2, 3]             │ │
-│  │  │ App()       │ │  │                         │ │
-│  │  ├─────────────┤ │  │  Objects, closures,     │ │
-│  │  │ render()    │ │  │  garbage collected when  │ │
-│  │  └─────────────┘ │  │  no references remain.  │ │
-│  └─────────────────┘  └───────────────────────┘ │
-└──────────────────────────────────────────────────┘
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(52,211,153,.15);color:var(--g)">7.1</span>
+<span class="step-title">Components of the JS runtime</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<pre>┌─────────────────────────────────────────────────────────┐
+│  JavaScript Engine (V8 in Chrome)                       │
+│                                                         │
+│  ┌──────────────────┐    ┌──────────────────────────┐  │
+│  │   CALL STACK      │    │   HEAP (Memory)           │  │
+│  │   (LIFO)          │    │                            │  │
+│  │  ┌──────────────┐ │    │   { users: [...] }        │  │
+│  │  │ fetchUsers() │ │    │   function App() {...}    │  │
+│  │  ├──────────────┤ │    │   [1, 2, 3, 4, 5]        │  │
+│  │  │ App()        │ │    │                            │  │
+│  │  ├──────────────┤ │    │   Objects, arrays,         │  │
+│  │  │ render()     │ │    │   closures all live here.  │  │
+│  │  └──────────────┘ │    │   Garbage collected when   │  │
+│  │                    │    │   no references remain.    │  │
+│  └──────────────────┘    └──────────────────────────┘  │
+└─────────────────────────────────────────────────────────┘
               ↕ Event Loop checks ↕
-┌──────────────────────────────────────────────────┐
-│  Browser APIs (NOT part of JS engine!)           │
-│                                                  │
-│  • setTimeout/setInterval   → Timer API          │
-│  • fetch/XMLHttpRequest     → Network API        │
-│  • addEventListener         → DOM Event API      │
-│  • requestAnimationFrame    → Animation API      │
-│  • Web Workers              → Threading API      │
-│                                                  │
-│  These run on SEPARATE THREADS.                  │
-│  Callbacks → pushed to queues when done.         │
-└──────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│  Browser APIs (NOT part of JS engine — separate threads)│
+│                                                         │
+│  • setTimeout / setInterval    → Timer API              │
+│  • fetch / XMLHttpRequest      → Network API            │
+│  • addEventListener            → DOM Event API          │
+│  • requestAnimationFrame       → Animation API          │
+│  • IntersectionObserver        → Visibility API         │
+│  • Web Workers                 → Threading API          │
+│                                                         │
+│  When complete, they push callbacks to the queues ↓     │
+└─────────────────────────────────────────────────────────┘
               ↕ Callbacks go to ↕
-┌────────────────────────┐ ┌────────────────────────┐
-│ MICROTASK QUEUE (first)│ │ MACROTASK QUEUE         │
-│                        │ │                          │
-│ • Promise .then/.catch │ │ • setTimeout callbacks  │
-│ • queueMicrotask()     │ │ • setInterval callbacks │
-│ • MutationObserver     │ │ • DOM events (click)    │
-│ • async/await          │ │ • I/O operations        │
-│                        │ │                          │
-│ ⚡ ALL drain before    │ │ 🐢 One per loop tick    │
-│   next macrotask       │ │                          │
-└────────────────────────┘ └────────────────────────┘</pre>
-  </div>
+┌───────────────────────────┐  ┌──────────────────────────┐
+│ MICROTASK QUEUE (priority)│  │ MACROTASK QUEUE           │
+│                            │  │                            │
+│ • Promise .then/.catch     │  │ • setTimeout callbacks    │
+│ • queueMicrotask()         │  │ • setInterval callbacks   │
+│ • MutationObserver         │  │ • DOM events (click etc.) │
+│ • async/await continuations│  │ • I/O operations          │
+│                            │  │                            │
+│ ⚡ ALL drain BEFORE next   │  │ 🐢 One per event loop tick│
+│    macrotask               │  │                            │
+└───────────────────────────┘  └──────────────────────────┘</pre>
+</div>
 </div>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(34,211,238,.15);color:var(--c)">7.2</span>
-    <span class="step-title">Event loop in action — real code walkthrough</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-<span class="code-label" style="background:rgba(34,211,238,.15);color:var(--c)">What order do these logs appear?</span>
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(52,211,153,.15);color:var(--g)">7.2</span>
+<span class="step-title">Event loop in action — real code walkthrough</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<span class="code-label" style="background:rgba(52,211,153,.15);color:var(--g)">What order do logs appear?</span>
 <pre>console.log('1: Script start');
 
 setTimeout(() =&gt; {
@@ -1119,219 +1127,252 @@ Promise.resolve()
   .then(() =&gt; console.log('3: Promise 1'))
   .then(() =&gt; console.log('4: Promise 2'));
 
-console.log('5: Script end');</pre>
+fetch('/api/users')
+  .then(res =&gt; res.json())
+  .then(data =&gt; console.log('5: Data received'));
+
+console.log('6: Script end');</pre>
 
 <span class="code-label" style="background:rgba(251,191,36,.15);color:var(--y)">Execution order — step by step</span>
-<pre>TICK 1 — Synchronous:
-  → "1: Script start"             // sync
-  → setTimeout(cb, 0)             // cb → Timer API
-  → Promise.resolve().then(cb1)   // cb1 → microtask queue
-  → "5: Script end"               // sync
-  Stack: empty
+<pre>TICK 1 — Synchronous execution:
+  → console.log('1: Script start')     // ✅ OUTPUT
+  → setTimeout(cb, 0)                  // cb → Timer API
+  → Promise.resolve().then(cb1)        // cb1 → microtask queue
+  → fetch('/api/users')                // → Network API
+  → console.log('6: Script end')       // ✅ OUTPUT
+  Call Stack: [] (empty)
 
-TICK 2 — Drain microtasks:
-  → "3: Promise 1"                // microtask
-  → .then chains cb2 → microtask queue
-  → "4: Promise 2"                // microtask
-  Microtask queue: empty
+TICK 2 — Drain microtask queue:
+  → console.log('3: Promise 1')        // ✅ OUTPUT
+  → .then chains → console.log('4: Promise 2')  // ✅ OUTPUT
 
-TICK 3 — Process macrotask:
-  → "2: setTimeout"               // macrotask
+TICK 3 — Process one macrotask:
+  → console.log('2: setTimeout')       // ✅ OUTPUT
+
+TICK 4+ — fetch completes eventually:
+  → console.log('5: Data received')    // ✅ OUTPUT
 
 FINAL ORDER:
-  "1: Script start"     ← sync
-  "5: Script end"       ← sync
-  "3: Promise 1"        ← microtask
-  "4: Promise 2"        ← microtask
-  "2: setTimeout"       ← macrotask (even with 0ms!)</pre>
+  "1: Script start"    ← synchronous
+  "6: Script end"      ← synchronous
+  "3: Promise 1"       ← microtask
+  "4: Promise 2"       ← microtask
+  "2: setTimeout"      ← macrotask (even with 0ms delay!)
+  "5: Data received"   ← microtask (when network resolves)</pre>
 
-    <div class="callout cyan">
-      <div class="ct" style="color:var(--c)">setTimeout(fn, 0) is NOT instant</div>
-      <p>Even with 0ms delay, it goes to the <b>macrotask</b> queue. Must wait for: (1) sync code to finish, (2) ALL microtasks to drain, (3) its turn. Promises always run before setTimeout.</p>
-    </div>
-  </div>
+<div class="hbox" style="background:rgba(52,211,153,.06);border-color:var(--g)">
+<p class="htitle" style="color:var(--g)">setTimeout(fn, 0) is NOT instant</p>
+<p style="color:var(--t2)">Even with 0ms delay, <code>setTimeout</code> goes to the <strong style="color:var(--t)">macrotask</strong> queue. It must wait for: (1) synchronous code to finish, (2) ALL microtasks to drain, (3) its turn. Promise callbacks always run before setTimeout, even if setTimeout was registered first.</p>
+</div>
+</div>
 </div>
 </div>
 
-<div class="phase-arrow">⬇</div>
+<div class="connector">⬇</div>
 
-<!-- ============================================================ -->
-<!-- SECTION 8: USER SEES & INTERACTS                             -->
-<!-- ============================================================ -->
+<!-- ============================================ -->
+<!-- SECTION 8 -->
+<!-- ============================================ -->
 <div class="section" id="s8">
-<div class="sec-head">
-  <span class="sec-num" style="background:rgba(251,146,60,.15);color:var(--o)">08</span>
-  <h2 class="sec-title">User sees &amp; interacts</h2>
+<div class="section-head">
+<span class="section-num" style="background:rgba(248,113,113,.15);color:var(--r)">08</span>
+<h2 class="section-title">User sees &amp; interacts</h2>
 </div>
-<p class="sec-sub">The page is visible and interactive. Every user action triggers: <strong>Event → JS handler → State change → Re-render → New pixels</strong>. This loop runs at up to 60fps.</p>
+<p class="section-sub">The page is visible and interactive. Every action triggers: <strong style="color:var(--t)">Event → JS handler → State change → Re-render → New pixels</strong>. This loop runs at up to 60fps.</p>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">8.1</span>
-    <span class="step-title">Core Web Vitals — measuring UX</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-    <div class="timeline s4t" style="margin:12px 0">
-      <div class="tl-item"><span class="time" style="color:var(--g)">FCP ~1.2s</span><span class="detail">First Contentful Paint — user sees "something"</span></div>
-      <div class="tl-item"><span class="time" style="color:var(--bl)">LCP ~2.0s</span><span class="detail">Largest Contentful Paint — main content visible</span></div>
-      <div class="tl-item"><span class="time" style="color:var(--y)">INP ~100ms</span><span class="detail">Interaction to Next Paint — input responsiveness</span></div>
-      <div class="tl-item"><span class="time" style="color:var(--c)">TTI ~3.5s</span><span class="detail">Time to Interactive — fully interactive</span></div>
-      <div class="tl-item"><span class="time" style="color:var(--a2)">CLS ~0.05</span><span class="detail">Cumulative Layout Shift — visual stability</span></div>
-    </div>
-  </div>
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">8.1</span>
+<span class="step-title">Core Web Vitals — measuring user experience</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<div class="timeline">
+<div class="tl-item"><span class="time" style="color:var(--g)">FCP — First Contentful Paint (~1.2s)</span><span class="detail">First text or image rendered. No longer blank.</span></div>
+<div class="tl-item"><span class="time" style="color:var(--bl)">LCP — Largest Contentful Paint (~2.0s)</span><span class="detail">Biggest element (hero image, main heading) finishes rendering.</span></div>
+<div class="tl-item"><span class="time" style="color:var(--y)">INP — Interaction to Next Paint (~100ms)</span><span class="detail">Time between user input and next visual update.</span></div>
+<div class="tl-item"><span class="time" style="color:var(--c)">TTI — Time to Interactive (~3.5s)</span><span class="detail">Fully interactive. All JS loaded, handlers attached.</span></div>
+<div class="tl-item"><span class="time" style="color:var(--a2)">CLS — Cumulative Layout Shift (~0.05)</span><span class="detail">Unexpected layout movement. Images without dimensions cause this.</span></div>
+</div>
+</div>
 </div>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">8.2</span>
-    <span class="step-title">The re-render cycle — every click step by step</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-<pre>User clicks "Delete User":
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">8.2</span>
+<span class="step-title">The re-render cycle — what happens on every click</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<pre>User clicks "Delete User". Every step:
 
 1. BROWSER EVENT
    └── Click detected → Event object created
-   └── Dispatched (capture → target → bubble)
+   └── Dispatched through DOM (capture → target → bubble)
 
 2. JS HANDLER
-   └── React catches event
+   └── React's delegated listener catches it
    └── handleDelete(userId) runs
-   └── setState({ users: users.filter(...) })
+   └── setState({ users: users.filter(u =&gt; u.id !== userId) })
 
-3. REACT RECONCILIATION
-   └── New virtual DOM tree with updated state
+3. REACT RECONCILIATION (Virtual DOM)
+   └── New virtual DOM built with updated state
    └── Diff vs previous tree
    └── Finds: "remove 3rd &lt;li&gt;"
    └── Batches DOM mutations
 
 4. DOM UPDATE
-   └── removeChild(liElement)  ← minimal change!
+   └── removeChild(liElement)  ← only this one operation!
    └── NOT re-rendering entire page
 
 5. BROWSER RE-RENDER (partial)
    └── Style recalc → affected elements only
-   └── Layout → list items reposition
-   └── Paint → repaint affected area
-   └── Composite → GPU recomposite
+   └── Layout       → list items reposition
+   └── Paint        → repaint affected area
+   └── Composite    → GPU recomposite
 
-6. PIXELS UPDATED
-   └── User sees the card disappear
-   └── Total: ~8-16ms (within frame budget)</pre>
-  </div>
+6. PIXELS UPDATED (~8-16ms total)</pre>
+</div>
 </div>
 
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">8.3</span>
-    <span class="step-title">The infinite interaction loop</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-<pre>┌─────────────────────────────────────────────┐
-│                                             │
-│   User Action (click, scroll, type)         │
-│         │                                   │
-│         ▼                                   │
-│   Browser creates Event                     │
-│         │                                   │
-│         ▼                                   │
-│   JS Handler runs (onClick, onSubmit)       │
-│         │                                   │
-│         ▼                                   │
-│   State changes (setState, dispatch)        │
-│         │                                   │
-│         ▼                                   │
-│   Framework reconciliation (VDOM diff)      │
-│         │                                   │
-│         ▼                                   │
-│   Minimal DOM mutations                     │
-│         │                                   │
-│         ▼                                   │
-│   Style → Layout → Paint → Composite       │
-│         │                                   │
-│         ▼                                   │
-│   Updated pixels ← user sees result        │
-│         │                                   │
-│         └── waits for next action ──────┐  │
-│                                          │  │
-└──────────────────────────────────────────┘  │
-          ▲                                   │
-          └───────────────────────────────────┘
-
-  This runs FOREVER while the page is open.
-  60× per second for smooth interactions.
-
-  If any step &gt; 16ms → jank, stutter, "unresponsive"</pre>
-  </div>
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">8.3</span>
+<span class="step-title">Network round-trip during interaction</span>
+<span class="step-arrow">▼</span>
 </div>
-
-<div class="step" onclick="this.classList.toggle('open')">
-  <div class="step-h">
-    <span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">8.4</span>
-    <span class="step-title">Network round-trips during interaction</span>
-    <span class="step-arrow">▼</span>
-  </div>
-  <div class="step-body">
-<pre>User clicks "Delete":
+<div class="step-body">
+<pre>User clicks "Delete"
       │
-      ▼
-JS: fetch('/api/users/42', { method: 'DELETE' })
-      │
-      ├── Optimistic update: remove from UI NOW
+      ├── Optimistic update: remove from UI immediately
       │   (user sees instant feedback!)
       │
       ▼
-Network (same TCP connection, TLS resumed):
-  → DELETE /api/users/42 HTTP/2
+fetch('/api/users/42', { method: 'DELETE' })
+      │
+      ▼ TCP already open (keep-alive) ✅
+      ▼ TLS session resumed ✅
+      ▼ Just sends: DELETE /api/users/42 HTTP/2
       │
       ▼
 Server:
-  → Auth check → Controller → DB: DELETE WHERE id=42
+  → Check auth → Users.destroy(42)
+  → DELETE FROM users WHERE id = 42
   → Response: 204 No Content
       │
-      ▼
-Back in browser (~50-200ms):
-  → Success → state already correct (optimistic)
-  → Failure → ROLLBACK: put user back, show error
+      ▼ (~50-200ms later)
+  → Success → state already updated ✅
+  → Failure → ROLLBACK: put user back, show error toast
 
 OPTIMISTIC UPDATES = update UI before server confirms
-  If server says "no" → undo</pre>
-  </div>
+If server says "no" → undo the change</pre>
 </div>
 </div>
 
-<!-- ============================================================ -->
-<!-- FINAL SUMMARY                                                -->
-<!-- ============================================================ -->
-<div style="margin-top:3rem">
-<h2 style="font-size:1.6rem;font-weight:800;color:#fff;margin-bottom:1rem;text-align:center">The complete chain</h2>
-<div class="chain" style="justify-content:center">
-  <span class="item" style="background:rgba(99,102,241,.2);color:var(--a2)">Write TSX</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(52,211,153,.2);color:var(--g)">Transpile</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(52,211,153,.2);color:var(--g)">Bundle</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(52,211,153,.2);color:var(--g)">Minify</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(59,130,246,.2);color:var(--bl)">Deploy</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(59,130,246,.2);color:var(--bl)">CDN</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(248,113,113,.2);color:var(--r)">DNS</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(248,113,113,.2);color:var(--r)">TCP+TLS</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(248,113,113,.2);color:var(--r)">HTTP</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(251,191,36,.2);color:var(--y)">Server</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(244,114,182,.2);color:var(--p)">Parse</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(244,114,182,.2);color:var(--p)">Render</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(34,211,238,.2);color:var(--c)">Event Loop</span><span class="arr">→</span>
-  <span class="item" style="background:rgba(52,211,153,.2);color:var(--g)">Pixels!</span>
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">8.4</span>
+<span class="step-title">The infinite interaction loop</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<pre>┌──────────────────────────────────────────────────────┐
+│                                                      │
+│   User Action (click, scroll, type, hover)           │
+│         │                                            │
+│         ▼                                            │
+│   Browser creates Event object                       │
+│         │                                            │
+│         ▼                                            │
+│   Event dispatched (capture → target → bubble)       │
+│         │                                            │
+│         ▼                                            │
+│   JS handler runs (onClick, onSubmit, etc.)          │
+│         │                                            │
+│         ▼                                            │
+│   State changes (setState / dispatch / signal)       │
+│         │                                            │
+│         ▼                                            │
+│   Framework reconciliation (VDOM diff / reactivity)  │
+│         │                                            │
+│         ▼                                            │
+│   Minimal DOM mutations                              │
+│         │                                            │
+│         ▼                                            │
+│   Browser: Style → Layout → Paint → Composite        │
+│         │                                            │
+│         ▼                                            │
+│   Updated pixels on screen ◄── User sees result      │
+│         │                                            │
+│         └──────── waits for next action ─────────┐  │
+│                                                   │  │
+└───────────────────────────────────────────────────┘  │
+          ▲                                            │
+          └────────────────────────────────────────────┘
+
+  Runs FOREVER while page is open. 60× per second.
+  If any step &gt; 16ms → janky animation / delayed response.</pre>
+</div>
 </div>
 </div>
 
+<!-- ============================================ -->
+<!-- FINAL SUMMARY -->
+<!-- ============================================ -->
+<div class="connector" style="font-size:1rem;color:var(--t3);padding:2rem 0 1rem">— Complete Chain —</div>
+
+<div class="flow" style="justify-content:center">
+<span class="item" style="background:rgba(99,102,241,.15);color:var(--a2)">Write TSX</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(52,211,153,.15);color:var(--g)">Transpile</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(52,211,153,.15);color:var(--g)">Bundle</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(251,191,36,.15);color:var(--y)">Minify</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(59,130,246,.15);color:var(--bl)">Deploy</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(59,130,246,.15);color:var(--bl)">CDN</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(251,146,60,.15);color:var(--o)">DNS</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(251,146,60,.15);color:var(--o)">TCP+TLS</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(251,146,60,.15);color:var(--o)">HTTP</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(251,191,36,.15);color:var(--y)">Server</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(244,114,182,.15);color:var(--p)">Parse</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(244,114,182,.15);color:var(--p)">Render</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(52,211,153,.15);color:var(--g)">Event Loop</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(248,113,113,.15);color:var(--r)">Pixels!</span>
 </div>
+
+</div><!-- /wrap -->
 
 <footer>
-  <a href="index.html" style="color:var(--c)">← Back to Knowledge Base</a><br>
-  Dev Knowledge Base · Last updated April 2026<br>
+  <a href="index.html" style="color:var(--c)">← Back to Knowledge Base</a><br><br>
+  Dev Knowledge Base · Web Dev A → Z · Last updated April 2026<br>
   <span style="color:var(--t3)">Keep learning, keep building.</span>
 </footer>
 
+<script>
+function toggle(el){
+  var body=el.nextElementSibling;
+  var arrow=el.querySelector('.step-arrow');
+  body.classList.toggle('open');
+  arrow.classList.toggle('open');
+}
+document.querySelectorAll('.toc a').forEach(function(a){
+  a.addEventListener('click',function(e){
+    e.preventDefault();
+    var t=document.querySelector(this.getAttribute('href'));
+    if(t)t.querySelector('.section-head').scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+</script>
 </body>
 </html>
