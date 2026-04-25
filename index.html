@@ -53,6 +53,8 @@
   .gc.packages .dot{background:#cb3837}
   .gc.queues::before{background:linear-gradient(90deg,#34d399,#38bdf8)}
   .gc.queues .dot{background:#38bdf8}
+  .gc.backend-arch::before{background:linear-gradient(90deg,#34d399,#22d3ee)}
+.gc.backend-arch .dot{background:#34d399}
 
   .img-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:1rem 0}
   .img-grid img{width:100%;border-radius:12px;border:1px solid var(--b);transition:.2s;cursor:pointer}
@@ -104,6 +106,16 @@
   <!-- ═══════ GUIDES ═══════ -->
   <div class="sec-title">Guides</div>
   <div class="guides">
+
+    <a href="backend-architecture.html" class="gc backend-arch">
+  <div class="top"><span class="dot"></span><span class="badge">Backend</span></div>
+  <h3>Modern Backend Architecture</h3>
+  <p>11 architecture styles, layering patterns, API design, data access, caching, resilience, observability, security. The backend counterpart to the frontend architecture guide.</p>
+  <div class="tags">
+    <span class="tag tag-green">Monolith</span><span class="tag tag-cyan">Microservices</span><span class="tag tag-blue">CQRS</span><span class="tag tag-orange">Resilience</span><span class="tag tag-red">Security</span>
+  </div>
+  <span class="cta">Read guide →</span>
+</a>
 
 <a href="queues-and-events.html" class="gc queues">
   <div class="top"><span class="dot"></span><span class="badge">Backend</span></div>
