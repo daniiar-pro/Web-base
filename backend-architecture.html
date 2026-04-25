@@ -1,0 +1,2325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern Backend Architecture — Complete Guide</title>
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --surface: #131927;
+    --surface2: #1a2236;
+    --border: #2a3550;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --accent: #6366f1;
+    --accent2: #818cf8;
+    --green: #34d399;
+    --yellow: #fbbf24;
+    --red: #f87171;
+    --cyan: #22d3ee;
+    --pink: #f472b6;
+    --orange: #fb923c;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  header { text-align: center; padding: 4rem 1rem 3rem; border-bottom: 1px solid var(--border); }
+  header h1 { font-size: 2.6rem; background: linear-gradient(135deg, var(--green), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
+  header p { color: var(--text2); font-size: 1.1rem; max-width: 700px; margin: 0 auto; }
+
+  .toc { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin: 2.5rem 0; }
+  .toc h2 { font-size: 1.3rem; color: var(--accent2); margin-bottom: 1rem; }
+  .toc ol { padding-left: 1.5rem; }
+  .toc li { margin-bottom: 0.4rem; }
+  .toc a { color: var(--cyan); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  section { margin: 3rem 0; }
+  h2 { font-size: 1.9rem; color: var(--accent2); border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
+  h3 { font-size: 1.4rem; color: var(--green); margin: 2rem 0 1rem; }
+  h4 { font-size: 1.15rem; color: var(--yellow); margin: 1.5rem 0 0.8rem; }
+  p { margin-bottom: 1rem; color: var(--text); }
+
+  .diagram { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0; overflow-x: auto; }
+  .diagram pre { font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 0.85rem; color: var(--cyan); line-height: 1.5; white-space: pre; }
+  .diagram-label { font-size: 0.8rem; color: var(--text2); text-align: center; margin-top: 0.75rem; font-style: italic; }
+
+  .code { background: #0d1117; border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; margin: 1rem 0; overflow-x: auto; }
+  .code pre { font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 0.82rem; color: #c9d1d9; line-height: 1.6; white-space: pre; }
+  .code-label { display: inline-block; background: var(--accent); color: #fff; font-size: 0.7rem; padding: 2px 10px; border-radius: 4px 4px 0 0; margin-bottom: -1px; position: relative; top: 1px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  th, td { padding: 0.75rem 1rem; text-align: left; border: 1px solid var(--border); font-size: 0.9rem; }
+  th { background: var(--surface2); color: var(--accent2); font-weight: 600; }
+  td { background: var(--surface); }
+
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.2rem; margin: 1.5rem 0; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.4rem; }
+  .card h4 { margin-top: 0; }
+  .card p { font-size: 0.9rem; color: var(--text2); }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600; margin-right: 4px; }
+  .badge-green { background: rgba(52,211,153,0.15); color: var(--green); }
+  .badge-yellow { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .badge-red { background: rgba(248,113,113,0.15); color: var(--red); }
+  .badge-cyan { background: rgba(34,211,238,0.15); color: var(--cyan); }
+  .badge-pink { background: rgba(244,114,182,0.15); color: var(--pink); }
+  .badge-orange { background: rgba(251,146,60,0.15); color: var(--orange); }
+
+  .callout { border-left: 4px solid var(--accent); background: var(--surface); padding: 1rem 1.2rem; border-radius: 0 8px 8px 0; margin: 1.2rem 0; }
+  .callout strong { color: var(--accent2); }
+
+  .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  .pros, .cons { padding: 1rem; border-radius: 8px; font-size: 0.9rem; }
+  .pros { background: rgba(52,211,153,0.08); border: 1px solid rgba(52,211,153,0.25); }
+  .cons { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.25); }
+  .pros strong { color: var(--green); }
+  .cons strong { color: var(--red); }
+  .pros li, .cons li { margin: 0.3rem 0; list-style: none; }
+  .pros li::before { content: "✓ "; color: var(--green); font-weight: bold; }
+  .cons li::before { content: "✗ "; color: var(--red); font-weight: bold; }
+
+  @media (max-width: 700px) {
+    header h1 { font-size: 1.8rem; }
+    .card-grid { grid-template-columns: 1fr; }
+    .pros-cons { grid-template-columns: 1fr; }
+    .diagram pre { font-size: 0.7rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Modern Backend Architecture</h1>
+  <p>A comprehensive A-to-Z deep-dive into every architecture style, structural pattern, design principle, API design, data access pattern, caching strategy, resilience pattern, and more — with diagrams, real-world examples, tech-stack mappings, and code.</p>
+</header>
+
+<!-- TABLE OF CONTENTS -->
+<nav class="toc">
+  <h2>Table of Contents</h2>
+  <ol>
+    <li><a href="#architecture-styles">Architecture Styles (Complete — 11 Styles)</a></li>
+    <li><a href="#structural">Structural / Layering Patterns</a></li>
+    <li><a href="#design-principles">Design Principles</a></li>
+    <li><a href="#api-design">API Design Patterns</a></li>
+    <li><a href="#data-access">Data Access Patterns</a></li>
+    <li><a href="#database">Database Architecture</a></li>
+    <li><a href="#caching">Caching Strategies</a></li>
+    <li><a href="#async">Async &amp; Messaging</a></li>
+    <li><a href="#performance">Performance &amp; Scalability</a></li>
+    <li><a href="#resilience">Resilience Patterns</a></li>
+    <li><a href="#testing">Testing Strategies</a></li>
+    <li><a href="#observability">Observability</a></li>
+    <li><a href="#security">Security Patterns</a></li>
+    <li><a href="#deployment">Deployment Patterns</a></li>
+    <li><a href="#decision">Decision Matrix — Choosing Your Stack</a></li>
+  </ol>
+</nav>
+
+<!-- ============================================================ -->
+<!-- 1. ARCHITECTURE STYLES (COMPLETE) -->
+<!-- ============================================================ -->
+<section id="architecture-styles">
+<h2>1. Architecture Styles (Complete)</h2>
+<p>The architecture style determines <em>how</em> your backend is decomposed, deployed, and scaled. This single decision has cascading effects on team structure, deployment cadence, infrastructure cost, fault tolerance, and developer experience. Below is every major backend architecture style used in modern systems.</p>
+
+<h3>1.1 Monolith (Single Deployable Unit)</h3>
+<p>One codebase, one process, one deployment. All features share the same memory, database, and lifecycle. The classical and simplest architecture — and still the right choice for most applications.</p>
+<div class="diagram">
+<pre>
+  ┌──────────────────────────────────────────────┐
+  │               MONOLITH (one app)              │
+  │  ┌─────────┐ ┌─────────┐ ┌─────────────────┐ │
+  │  │  Users   │ │ Orders  │ │   Catalog       │ │
+  │  │  Module  │ │ Module  │ │   Module        │ │
+  │  └─────────┘ └─────────┘ └─────────────────┘ │
+  │  ┌─────────┐ ┌─────────┐ ┌─────────────────┐ │
+  │  │  Auth    │ │Payments │ │   Notifications │ │
+  │  └─────────┘ └─────────┘ └─────────────────┘ │
+  │              In-process function calls        │
+  │              ↓        ↓        ↓             │
+  │          Single shared database               │
+  └──────────────────────────────────────────────┘
+  
+  Pros: Simple deploy, easy debugging, fast in-process calls.
+  Cons: Whole app rebuilds for any change. Scaling = scaling everything.
+</pre>
+<div class="diagram-label">Monolith — one process, one DB, function calls between modules</div>
+</div>
+
+<div class="callout"><strong>Tech Stacks:</strong> Ruby on Rails, Django, Laravel, Spring Boot, NestJS, ASP.NET, Phoenix. Most CRUD apps and SaaS startups should start here.</div>
+<div class="callout"><strong>Real-World Usage:</strong> GitHub (mostly Rails monolith for years), Shopify (Ruby monolith), Basecamp (Rails), early Twitter/Instagram. "Majestic Monolith" has had a renaissance — DHH, Shopify, and others actively defend this style.</div>
+
+<div class="pros-cons">
+  <div class="pros"><strong>Advantages</strong><ul>
+    <li>Simplest possible architecture</li>
+    <li>One deploy, one log stream, one DB</li>
+    <li>Refactoring across modules is trivial</li>
+    <li>Local dev = one process</li>
+    <li>Transactions are easy (single DB)</li>
+  </ul></div>
+  <div class="cons"><strong>Disadvantages</strong><ul>
+    <li>Bottleneck: all teams ship to one binary</li>
+    <li>Tech stack lock-in (one language)</li>
+    <li>Scaling is all-or-nothing</li>
+    <li>Tight coupling creeps in over years</li>
+    <li>Long startup times when huge</li>
+  </ul></div>
+</div>
+
+<h3>1.2 Modular Monolith</h3>
+<p>Still one deployable, but with strict <em>internal</em> boundaries between modules. Modules expose explicit APIs to each other and own their tables. The pragmatic middle ground — most of monolith's simplicity, most of microservices' clean boundaries.</p>
+<div class="diagram">
+<pre>
+  ┌────────────────────────────────────────────────────┐
+  │             MODULAR MONOLITH (one app, strict)     │
+  │                                                    │
+  │  ┌────────────────┐    ┌────────────────┐          │
+  │  │ Users Module   │    │ Orders Module  │          │
+  │  │  ├ public API  │◄──►│  ├ public API  │          │
+  │  │  ├ internal    │    │  ├ internal    │          │
+  │  │  └ users table │    │  └ orders table│          │
+  │  └────────────────┘    └────────────────┘          │
+  │                                                    │
+  │  ┌────────────────┐    ┌────────────────┐          │
+  │  │ Catalog Module │    │ Billing Module │          │
+  │  └────────────────┘    └────────────────┘          │
+  └────────────────────────────────────────────────────┘
+  
+  RULES:
+  • Modules talk via PUBLIC interfaces only (typed contracts)
+  • Each module OWNS its tables — no cross-module SQL joins
+  • Database can be split later (1 schema → N services) easily
+  • Compile-time enforcement (e.g., NestJS modules, .NET assemblies)
+</pre>
+<div class="diagram-label">Modular Monolith — single deploy, but each module is a "future microservice"</div>
+</div>
+
+<div class="callout"><strong>Tech Stacks:</strong> NestJS (modules + DI), .NET (project references), Spring Boot (Spring Modulith), Ruby (packwerk). Tools like ArchUnit (Java), ts-arch (TypeScript), and dependency-cruiser enforce module boundaries automatically.</div>
+<div class="callout"><strong>Real-World Usage:</strong> Shopify (modular Rails monolith with packs), GitHub (similar evolution), Stack Overflow. Increasingly the recommended starting point in 2025-2026.</div>
+
+<h3>1.3 Microservices</h3>
+<p>The application is decomposed into independently deployable services, each owning its data and bounded context. Services communicate over the network (HTTP, gRPC, message queues). Each can use its own language, database, and team.</p>
+<div class="diagram">
+<pre>
+  ┌─────────────┐      ┌──────────────────┐      ┌──────────────┐
+  │  API GATEWAY │ ───► │   Users Service   │      │ Orders Service│
+  │   (routing,  │      │  (Node.js + PG)   │      │ (Go + Mongo)  │
+  │    auth)     │      └────────┬──────────┘      └──────┬────────┘
+  └─────────────┘               │                         │
+        │                       │  HTTP / gRPC / events  │
+        │                       │                         │
+        ▼              ┌────────▼────────┐    ┌──────────▼──────┐
+  ┌─────────────┐      │ Catalog Service │    │ Payment Service │
+  │   Frontend   │      │ (Python + ES)   │    │ (Java + MySQL)  │
+  └─────────────┘      └─────────────────┘    └─────────────────┘
+  
+  Each service:
+  • Owns its database (no shared schema!)
+  • Has its own deploy pipeline
+  • Can be scaled independently
+  • Can be rewritten without touching others
+  • Communicates over the network only
+</pre>
+<div class="diagram-label">Microservices — independent services, network communication, polyglot</div>
+</div>
+
+<div class="callout"><strong>Tech Stacks:</strong> Kubernetes + Docker, service mesh (Istio, Linkerd), API Gateway (Kong, Envoy, AWS API GW), gRPC, Kafka, RabbitMQ, distributed tracing (Jaeger, Tempo). Languages mix freely: Go, Java, Node, Python, Rust.</div>
+<div class="callout"><strong>Real-World Usage:</strong> Netflix (the canonical example, ~1000+ services), Uber, Amazon, Spotify, Airbnb. Generally only worth the complexity at significant scale or organizational size.</div>
+
+<div class="pros-cons">
+  <div class="pros"><strong>Advantages</strong><ul>
+    <li>Independent deploys per team</li>
+    <li>Per-service scaling (scale only what's hot)</li>
+    <li>Polyglot — pick best tool per service</li>
+    <li>Fault isolation (one service down ≠ system down)</li>
+    <li>Smaller, focused codebases</li>
+  </ul></div>
+  <div class="cons"><strong>Disadvantages</strong><ul>
+    <li>Distributed systems = much harder</li>
+    <li>Network calls fail / are slow</li>
+    <li>Distributed transactions are nightmare-tier</li>
+    <li>Eventual consistency everywhere</li>
+    <li>Operational overhead (monitoring × N)</li>
+  </ul></div>
+</div>
+
+<h3>1.4 Service-Oriented Architecture (SOA)</h3>
+<p>The grandparent of microservices. Services are larger, more coarse-grained, and traditionally communicate through an Enterprise Service Bus (ESB) using SOAP/XML. Modern variants use REST/messaging instead. Microservices = SOA done right (smaller services, no central ESB, decentralized governance).</p>
+<div class="diagram">
+<pre>
+  Classic SOA                          Microservices
+  ───────────                          ─────────────
+  ┌─────┐ ┌─────┐ ┌─────┐              ┌─────┐ ┌─────┐ ┌─────┐
+  │ Svc │ │ Svc │ │ Svc │              │ Svc │ │ Svc │ │ Svc │
+  └──┬──┘ └──┬──┘ └──┬──┘              └──┬──┘ └──┬──┘ └──┬──┘
+     └──────┼──────┘                      └──────┼──────┘
+            ▼                                    ▼
+  ┌──────────────────────┐              direct HTTP/gRPC/Kafka
+  │  Enterprise Service  │              (no central pipe!)
+  │       Bus (ESB)      │              
+  │  routing, transform, │              Smarter endpoints,
+  │   orchestration      │              dumber pipes.
+  └──────────────────────┘
+  
+  "Smart pipes, dumb endpoints"        "Dumb pipes, smart endpoints"
+</pre>
+<div class="diagram-label">SOA's centralized bus → Microservices' decentralized communication</div>
+</div>
+
+<h3>1.5 Serverless / FaaS (Functions as a Service)</h3>
+<p>You write functions; the cloud runs them. No servers to manage, no idle costs — you pay per invocation. Functions auto-scale from zero to thousands of concurrent executions. Cold starts and stateless constraints are the trade-offs.</p>
+<div class="diagram">
+<pre>
+  Traditional Server                   Serverless / FaaS
+  ──────────────────                   ─────────────────────
+  Always-on VM/container               Function dormant when not called
+       │                                       │
+       │  ↑ pays $$$ even idle                 │  ↑ $0 when idle
+       │                                       │
+  Request comes in                     Request comes in
+       ↓                                       ↓
+  Handled immediately                   Cold start (50-2000ms)
+       ↓                                       ↓
+  Response                             Function instantiated
+                                              ↓
+  Capacity: fixed                       Handle request
+  Scaling:  manual / autoscaler         ↓
+                                       Response
+                                       (instance reused for ~minutes)
+                                       
+  Capacity: 0 to ∞ automatically
+  Scaling:  free, instant, automatic
+  
+  ┌──────────────────────────────────────────────────────┐
+  │  Lambda function example                            │
+  │  exports.handler = async (event) => {              │
+  │    const order = await db.orders.create(event.body)│
+  │    await sqs.send({ orderId: order.id })           │
+  │    return { statusCode: 200, body: order }          │
+  │  }                                                  │
+  │  Limits: 15min max execution, 10GB RAM, stateless   │
+  └──────────────────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">Serverless — pay-per-use, auto-scale, but stateless and cold-start prone</div>
+</div>
+
+<div class="callout"><strong>Tech Stacks:</strong> AWS Lambda, Azure Functions, Google Cloud Functions, Cloudflare Workers (V8 isolates — almost no cold start), Vercel/Netlify Functions, Deno Deploy. Frameworks: Serverless Framework, SST, AWS CDK, Pulumi.</div>
+<div class="callout"><strong>Real-World Usage:</strong> Image processing pipelines, scheduled jobs, webhooks, glue code between SaaS, low-traffic APIs, edge personalization. Bad fit for: long-running tasks, WebSocket servers, heavy stateful workloads, latency-critical services.</div>
+
+<h3>1.6 Event-Driven Architecture</h3>
+<p>Services don't call each other directly — they <em>publish events</em> ("OrderPlaced", "PaymentReceived") to a message broker. Other services <em>subscribe</em> to events they care about. Loosely coupled, asynchronous, and scalable.</p>
+<div class="diagram">
+<pre>
+  Synchronous (request/response)        Event-Driven
+  ─────────────────────────────          ──────────────
+  Order Svc ──► Payment Svc              Order Svc ─► [event bus]
+              ├─► Email Svc                              │   │   │
+              ├─► Inventory                              │   │   ▼
+              ├─► Analytics                              │   │  Email Svc
+              └─► Recommend                              │   ▼
+                                                         │  Inventory Svc
+  Order Svc must KNOW about each            ─────────────┘
+  downstream. Adding a 6th = touch         Order Svc just FIRES the event.
+  Order Svc.                                It doesn't know who listens.
+                                            Add a 6th consumer? No code changes.
+  
+  Event bus options:
+  ┌────────────────────────────────────────────────────────┐
+  │ Kafka       — log-based, replayable, high throughput   │
+  │ RabbitMQ    — classic queue/exchange model             │
+  │ NATS        — lightweight, simple, fast                │
+  │ AWS SNS/SQS — managed, pub/sub + queue                 │
+  │ Redpanda    — Kafka-compatible, no JVM, fast           │
+  │ Pulsar      — multi-tenant, geo-replication            │
+  └────────────────────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">Event-driven — publish events, subscribers react, no direct coupling</div>
+</div>
+
+<div class="callout"><strong>Real-World Usage:</strong> LinkedIn (Kafka was born there), Uber, Netflix, Stripe (events for everything: subscription.created, charge.succeeded, etc.). The norm at any scale where many services react to user actions. See the dedicated <em>Async Architecture A→Z</em> page for queues, jobs, DLQs, idempotency, and saga details.</div>
+
+<h3>1.7 Hexagonal / Clean / Onion Architecture (as a style)</h3>
+<p>The application's domain logic sits at the center, isolated from frameworks, databases, and external services. The outer layers ("adapters") implement interfaces ("ports") defined by the domain. Dependencies flow inward — domain knows nothing about Postgres or HTTP.</p>
+<div class="diagram">
+<pre>
+                ┌─────────────────────────────────────────┐
+                │       Frameworks &amp; Drivers (outer)      │
+                │  HTTP, CLI, Cron, Message Queue          │
+                │  ┌───────────────────────────────────┐  │
+                │  │   Interface Adapters              │  │
+                │  │   Controllers, Presenters         │  │
+                │  │  ┌─────────────────────────────┐  │  │
+                │  │  │   Application / Use Cases   │  │  │
+                │  │  │   PlaceOrder, CancelOrder   │  │  │
+                │  │  │  ┌─────────────────────┐    │  │  │
+                │  │  │  │   Domain (entities) │    │  │  │
+                │  │  │  │   Order, Money,     │    │  │  │
+                │  │  │  │   Customer          │    │  │  │
+                │  │  │  └─────────────────────┘    │  │  │
+                │  │  └─────────────────────────────┘  │  │
+                │  └───────────────────────────────────┘  │
+                │  Postgres adapter, Stripe adapter, etc. │
+                └─────────────────────────────────────────┘
+  
+  Dependencies point INWARD only:
+  Domain ◄─── Application ◄─── Adapters ◄─── Frameworks
+  
+  Domain is pure: no `import express`, no `import @prisma/client`.
+  Swap Postgres → Mongo? Only the Postgres adapter changes.
+  Swap REST → GraphQL? Only the controller adapter changes.
+</pre>
+<div class="diagram-label">Hexagonal — pure domain at center, frameworks at the edges</div>
+</div>
+
+<div class="callout"><strong>Real-World Usage:</strong> The default for any team that practices DDD or expects to outlive its current framework choice. Common in fintech, healthcare, and any domain where the rules of the business outlast specific tech. We cover it again as a "structural pattern" in §2 — it can be both an overall style AND a pattern within any service.</div>
+
+<h3>1.8 Cell-Based Architecture</h3>
+<p>The system is composed of independent "cells" — fully self-contained vertical slices that include compute, storage, and networking. Each cell handles a partition of users/traffic. If one cell fails, only that subset of users is affected. Used by AWS, Slack, and others at extreme scale for blast-radius reduction.</p>
+<div class="diagram">
+<pre>
+  ┌────────────────────────── Cell-Based Architecture ──────────────────────────┐
+  │                                                                             │
+  │   Router (sharded by user ID hash)                                          │
+  │       │                                                                     │
+  │       ├──► Cell A ────────►  Self-contained: services + DB + cache + queue │
+  │       │    Users 0-25%       (own everything; no shared state with others) │
+  │       │                                                                     │
+  │       ├──► Cell B ────────►  Same stack, different users (25-50%)          │
+  │       │                                                                     │
+  │       ├──► Cell C ────────►  Same stack, different users (50-75%)          │
+  │       │                                                                     │
+  │       └──► Cell D ────────►  Same stack, different users (75-100%)         │
+  │                                                                             │
+  │   If Cell B has a bad deploy → only 25% of users impacted.                  │
+  │   Add a new cell to scale out, drain &amp; rebuild a cell to upgrade.           │
+  └─────────────────────────────────────────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">Cell-based — partition users into independent stacks, contain blast radius</div>
+</div>
+
+<div class="callout"><strong>Real-World Usage:</strong> AWS DynamoDB, S3, Lambda (all cell-based internally). Slack moved to cells after a major outage. Doordash, Roblox. Generally only worth it at scale where uptime SLAs matter more than infrastructure cost.</div>
+
+<h3>1.9 Backend for Frontend (BFF)</h3>
+<p>Instead of one API serving every client (web, mobile, smart TV), each client gets its own dedicated backend — a "BFF" — that aggregates downstream services and tailors responses to that specific client's needs. Mobile apps want trimmed payloads; web apps want different data shapes. BFFs prevent over-/under-fetching.</p>
+<div class="diagram">
+<pre>
+  Without BFF (one API for all)         With BFF (one API per client type)
+  ──────────────────────────────         ──────────────────────────────────
+  Web ─┐                                 Web ───────► Web BFF ─┐
+       │                                                       │
+  iOS ─┼──► Single API ──► services      iOS ───────► iOS BFF ─┼──► services
+       │                                                       │
+  TV  ─┘                                 TV  ───────► TV BFF  ─┘
+  
+  Problem:                              Each BFF:
+  • Mobile gets bloated payloads        • Tailored response shape
+  • Web has to do many round trips      • Aggregates calls server-side
+  • One API change breaks all clients   • Owned by client team
+                                        • Versioned with the client
+</pre>
+<div class="diagram-label">BFF — one backend per client type, optimized payloads, no over-fetching</div>
+</div>
+
+<div class="callout"><strong>Real-World Usage:</strong> SoundCloud (originated the term), Netflix, Spotify, Booking.com. Often paired with GraphQL (each BFF is a small GraphQL server) or tRPC. Mobile teams especially benefit.</div>
+
+<h3>1.10 Edge Computing / Distributed Backend</h3>
+<p>Instead of a centralized backend in one or two regions, your code runs at hundreds of edge locations close to users. V8 isolates (Cloudflare Workers, Deno Deploy) make this practical for stateful logic too — sub-50ms TTFB globally.</p>
+<div class="diagram">
+<pre>
+  Centralized Backend                    Edge Backend
+  ────────────────────                    ─────────────────────
+  ┌──────────┐                            User (Tokyo) ─► nearest edge (15ms)
+  │  Origin   │ ◄── User in Tokyo         User (Berlin) ─► nearest edge (12ms)
+  │ (US-East) │       (300ms RTT)         User (NYC)    ─► nearest edge (8ms)
+  │ Postgres  │
+  └──────────┘                            Each edge runs your code in V8 isolates.
+                                          Cold start: ~5ms (vs Lambda's 200-2000ms).
+  All requests go to one place.
+                                          State: edge KV stores, Durable Objects,
+                                                 D1 (SQLite at edge), Turso.
+  
+  Hybrid pattern:
+  • Static assets &amp; auth   → edge
+  • Read-heavy queries     → edge with cache
+  • Writes &amp; transactions  → origin (write-through to edge cache)
+</pre>
+<div class="diagram-label">Edge computing — code runs near users, sub-50ms TTFB globally</div>
+</div>
+
+<div class="callout"><strong>Tech Stacks:</strong> Cloudflare Workers + D1 + KV + R2 + Durable Objects, Vercel Edge Functions, Deno Deploy + Deno KV, Fastly Compute@Edge (Wasm), AWS Lambda@Edge, Netlify Edge Functions. Frameworks: Hono, itty-router, Elysia.</div>
+
+<h3>1.11 CQRS &amp; Event Sourcing (as a style)</h3>
+<p>Two related but separable ideas, often used together. <strong>CQRS</strong> (Command Query Responsibility Segregation) means writes and reads use separate models. <strong>Event Sourcing</strong> means the source of truth is an append-only log of events, not the current state — current state is derived by replaying events.</p>
+<div class="diagram">
+<pre>
+  Traditional CRUD                       CQRS + Event Sourcing
+  ─────────────────                       ──────────────────────
+  Update users                            Command: "ChangeEmail"
+  SET email = 'new@x.com'                       │
+  WHERE id = 42                                 ▼
+                                          ┌──────────────┐
+  Old email is GONE.                       │ Event Store  │ ← append-only
+  No history.                              │ (log of all  │
+                                          │  events)      │   UserCreated  ─┐
+  ┌─────────────────┐                     └──────┬───────┘   EmailChanged ─┤
+  │   Users Table    │                            │            EmailChanged─┤
+  │  id, name, email │                            │                         │
+  └─────────────────┘                       Project to read models          │
+  Same model for reads &amp; writes.                  │                         │
+                                                  ▼                         │
+                                          ┌──────────────┐ ┌──────────┐    │
+                                          │User Profile   │ │Audit Log │ ◄──┘
+                                          │ (read model)  │ │(another  │
+                                          │  current view │ │ read model)
+                                          └──────────────┘ └──────────┘
+                                          
+                                          Replay events to rebuild state.
+                                          Add new read models any time.
+</pre>
+<div class="diagram-label">CQRS + Event Sourcing — events are truth, current state is derived</div>
+</div>
+
+<div class="callout"><strong>Real-World Usage:</strong> Banking and ledgers (every transaction is an event), e-commerce order systems, audit-heavy domains. Heavy lift — only worth it when audit history, time-travel, or complex projections are core requirements. Frameworks: EventStoreDB, Axon, Marten, Equinox.</div>
+
+<h3>1.12 Complete Architecture Style Comparison</h3>
+<table>
+  <tr><th>Style</th><th>Complexity</th><th>Scaling</th><th>Team Size</th><th>Failure Isolation</th><th>Cost</th><th>Best For</th></tr>
+  <tr><td><span class="badge badge-green">Monolith</span></td><td>Low</td><td>Vertical</td><td>1-10</td><td>None (all-or-nothing)</td><td>Low</td><td>Most apps, MVPs</td></tr>
+  <tr><td><span class="badge badge-green">Modular Monolith</span></td><td>Low-Med</td><td>Vertical</td><td>5-30</td><td>Logical only</td><td>Low</td><td>Growing SaaS</td></tr>
+  <tr><td><span class="badge badge-cyan">Microservices</span></td><td>High</td><td>Horizontal/per-svc</td><td>30+</td><td>Per service</td><td>High</td><td>Large orgs</td></tr>
+  <tr><td><span class="badge badge-yellow">SOA</span></td><td>High</td><td>Horizontal</td><td>50+</td><td>Per service</td><td>High</td><td>Legacy enterprise</td></tr>
+  <tr><td><span class="badge badge-pink">Serverless</span></td><td>Low-Med</td><td>Auto, ∞</td><td>Any</td><td>Per function</td><td>Pay-per-use</td><td>Spiky/event workloads</td></tr>
+  <tr><td><span class="badge badge-orange">Event-Driven</span></td><td>Med-High</td><td>Per consumer</td><td>10+</td><td>Strong</td><td>Medium</td><td>Async workflows</td></tr>
+  <tr><td><span class="badge badge-cyan">Hexagonal</span></td><td>Med</td><td>(orthogonal)</td><td>Any</td><td>(orthogonal)</td><td>Med</td><td>Long-lived domains</td></tr>
+  <tr><td><span class="badge badge-red">Cell-Based</span></td><td>Very High</td><td>Per cell</td><td>100+</td><td>Excellent</td><td>Very High</td><td>Mass scale, high SLA</td></tr>
+  <tr><td><span class="badge badge-pink">BFF</span></td><td>Med</td><td>Per client</td><td>Multi-team</td><td>Per BFF</td><td>Med</td><td>Multi-client apps</td></tr>
+  <tr><td><span class="badge badge-yellow">Edge</span></td><td>Med</td><td>Auto, global</td><td>Any</td><td>Per region</td><td>Low-Med</td><td>Global reads</td></tr>
+  <tr><td><span class="badge badge-red">CQRS+ES</span></td><td>Very High</td><td>Per side</td><td>10+</td><td>Strong</td><td>High</td><td>Audit, finance, ledgers</td></tr>
+</table>
+
+<h3>1.13 Architecture → Tech Stack Map</h3>
+<table>
+  <tr><th>Architecture</th><th>Languages / Frameworks</th><th>Infra</th></tr>
+  <tr><td>Monolith</td><td>Rails, Django, Laravel, Spring Boot, NestJS, ASP.NET</td><td>Single VM, Heroku, App Service</td></tr>
+  <tr><td>Modular Monolith</td><td>NestJS modules, Spring Modulith, .NET, packwerk</td><td>Same as monolith</td></tr>
+  <tr><td>Microservices</td><td>Go, Java/Spring, Node, Python — polyglot</td><td>Kubernetes, Istio, gRPC, Kafka</td></tr>
+  <tr><td>Serverless</td><td>Node, Python, Go, Java (Lambda); JS (Workers)</td><td>AWS Lambda, Cloudflare Workers, Vercel Edge</td></tr>
+  <tr><td>Event-Driven</td><td>Any + Kafka client / NATS / RabbitMQ SDK</td><td>Kafka, Redpanda, Pulsar, NATS, AWS SNS+SQS</td></tr>
+  <tr><td>Cell-Based</td><td>Any (often Java + Go in practice)</td><td>K8s with topology-aware routing, Route 53</td></tr>
+  <tr><td>BFF</td><td>Node + GraphQL, tRPC, Hono, Express</td><td>Per-team deploy, API Gateway in front</td></tr>
+  <tr><td>Edge</td><td>JS/TS + Hono / itty-router / Elysia</td><td>Cloudflare Workers, Deno Deploy, Vercel Edge</td></tr>
+  <tr><td>CQRS / ES</td><td>Axon (Java), Marten (.NET), EventStoreDB</td><td>Kafka or EventStoreDB as log; Postgres for read models</td></tr>
+</table>
+</section>
+
+<!-- ============================================================ -->
+<!-- 2. STRUCTURAL / LAYERING PATTERNS -->
+<!-- ============================================================ -->
+<section id="structural">
+<h2>2. Structural / Layering Patterns</h2>
+<p>Within any architecture style, you still need to organize the code <em>inside</em> a service. These patterns govern how you separate concerns, where business rules live, and which layer can call which.</p>
+
+<h3>2.1 Layered (N-tier) Architecture</h3>
+<div class="diagram">
+<pre>
+  ┌─────────────────────────────────────────────────┐
+  │           Presentation Layer                     │
+  │  Controllers, request validation, serialization  │
+  │  (Express handlers, NestJS controllers, etc.)    │
+  └────────────────────┬────────────────────────────┘
+                       │ depends on ▼
+  ┌─────────────────────────────────────────────────┐
+  │             Service / Application Layer         │
+  │  Use cases, transactions, orchestration          │
+  └────────────────────┬────────────────────────────┘
+                       │ depends on ▼
+  ┌─────────────────────────────────────────────────┐
+  │              Domain Layer                        │
+  │  Entities, value objects, business rules         │
+  │  Pure — no framework, no DB                      │
+  └────────────────────┬────────────────────────────┘
+                       │ depends on ▼
+  ┌─────────────────────────────────────────────────┐
+  │            Infrastructure Layer                  │
+  │  ORM, HTTP clients, message queue, file storage  │
+  └─────────────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">Layered architecture — top-down dependency, no skipping or backward arrows</div>
+</div>
+
+<h3>2.2 Clean Architecture / Onion Architecture</h3>
+<p>Same concentric ring as hexagonal — domain at the center, dependencies point inward. The difference from layered: <em>infrastructure depends on domain interfaces</em>, not the other way around. The "dependency inversion" makes the domain testable without any infrastructure.</p>
+<div class="diagram">
+<pre>
+                ┌─────────────────────────────────────┐
+                │  Frameworks &amp; Drivers (Express, K8s)│
+                │ ┌─────────────────────────────────┐ │
+                │ │    Adapters (DB, HTTP clients)  │ │
+                │ │ ┌─────────────────────────────┐ │ │
+                │ │ │  Application Services / UC  │ │ │
+                │ │ │ ┌─────────────────────────┐ │ │ │
+                │ │ │ │       Domain            │ │ │ │
+                │ │ │ │  Entities + Value Obj   │ │ │ │
+                │ │ │ │  Business Rules (pure)  │ │ │ │
+                │ │ │ └─────────────────────────┘ │ │ │
+                │ │ └─────────────────────────────┘ │ │
+                │ └─────────────────────────────────┘ │
+                └─────────────────────────────────────┘
+  
+  Domain layer:        const order = Order.place(items, customer)  // pure logic
+  Application:         await orderRepo.save(order)                 // calls interface
+  Adapter (Postgres):  class PgOrderRepo implements OrderRepository { ... }
+  Test (in-memory):    class InMemOrderRepo implements OrderRepository { ... }
+</pre>
+<div class="diagram-label">Clean / Onion — same shape as hexagonal, "use cases" layer is explicit</div>
+</div>
+
+<h3>2.3 Hexagonal / Ports &amp; Adapters</h3>
+<p>Functionally identical to Clean / Onion. The vocabulary is different: "ports" are interfaces the domain defines (e.g., <code>OrderRepository</code>); "adapters" are implementations of those ports (e.g., <code>PostgresOrderRepository</code>, <code>RedisOrderRepository</code>, <code>InMemoryOrderRepository</code>). The metaphor: the domain has ports like a USB hub; you can plug in any compatible adapter.</p>
+
+<h3>2.4 Domain-Driven Design (DDD)</h3>
+<p>Not strictly a layering pattern but the philosophy that drives them. Identify <em>bounded contexts</em> (parts of the business with their own ubiquitous language), build a rich <em>domain model</em> in each, and treat external systems as detail. Tactical patterns: Entity, Value Object, Aggregate, Repository, Domain Event, Domain Service.</p>
+<div class="diagram">
+<pre>
+  Bounded Context: Sales              Bounded Context: Shipping
+  ──────────────────────              ───────────────────────────
+  • Order (aggregate root)            • Shipment (aggregate root)
+  • OrderLine                         • Package
+  • Money (value object)              • Address (value object)
+  • Customer                          • Carrier
+  
+  "Order" means something different in each context:
+  Sales:    items, prices, discounts, customer
+  Shipping: weight, dimensions, address, tracking number
+  
+  ┌──────────────────────────────────────────────────────┐
+  │ Communication BETWEEN contexts: events or APIs.      │
+  │ NEVER share entities or DB tables across contexts.   │
+  │                                                      │
+  │ Sales publishes "OrderConfirmed" event.              │
+  │ Shipping subscribes &amp; creates its OWN Shipment.      │
+  └──────────────────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">DDD bounded contexts — same word, different meaning, separate models</div>
+</div>
+
+<h3>2.5 Vertical Slice Architecture</h3>
+<p>Instead of horizontal layers (presentation → service → domain → infra), organize each <em>feature</em> as a self-contained vertical slice. Each slice has its own controller, handler, validation, and data access — minimal sharing between slices. Popular with CQRS and "Request → Handler" patterns (MediatR in .NET).</p>
+<div class="diagram">
+<pre>
+  Layered                              Vertical Slice
+  ────────                              ──────────────
+  src/                                  src/features/
+  ├── controllers/                      ├── place-order/
+  │   ├── orders.controller.ts          │   ├── PlaceOrderCommand.ts
+  │   └── users.controller.ts           │   ├── PlaceOrderHandler.ts
+  ├── services/                         │   ├── PlaceOrderValidator.ts
+  │   ├── order.service.ts              │   └── place-order.endpoint.ts
+  │   └── user.service.ts               ├── cancel-order/
+  ├── repositories/                     │   ├── CancelOrderCommand.ts
+  │   ├── order.repository.ts           │   ├── CancelOrderHandler.ts
+  │   └── user.repository.ts            │   └── ...
+  └── domain/                           └── get-order-history/
+      ├── order.ts                          ├── GetOrderHistoryQuery.ts
+      └── user.ts                           ├── GetOrderHistoryHandler.ts
+                                            └── ...
+  
+  Adding a feature touches 4+ folders.   Adding a feature = one folder.
+  Removing a feature is risky.           Removing = delete folder.
+</pre>
+<div class="diagram-label">Vertical slices — features as units, not layers</div>
+</div>
+
+<h3>2.6 MVC / MVT in Backend</h3>
+<p>The classic web MVC pattern. <strong>Model</strong> = data + business rules, <strong>View</strong> = HTML template, <strong>Controller</strong> = handles request, calls model, returns view. Django uses MVT (Template instead of View) but the concept is the same.</p>
+<div class="diagram">
+<pre>
+                 HTTP request
+                       │
+                       ▼
+                ┌──────────────┐
+                │  Controller   │
+                │  (request    ─┼──► reads/writes Model (DB)
+                │   handler)    │
+                └──────┬───────┘
+                       │ passes data
+                       ▼
+                ┌──────────────┐
+                │  View        │ ──► HTML response
+                │  (template)  │
+                └──────────────┘
+  
+  Frameworks:
+  • Rails       — true MVC
+  • Django      — MVT (Template = View terminology)
+  • Laravel     — MVC
+  • ASP.NET MVC — MVC
+  • Spring MVC  — MVC
+</pre>
+<div class="diagram-label">Server-side MVC — the original web framework pattern</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 3. DESIGN PRINCIPLES -->
+<!-- ============================================================ -->
+<section id="design-principles">
+<h2>3. Design Principles</h2>
+<p>Universal guidelines that apply regardless of language or framework. These keep your codebase healthy as it grows.</p>
+
+<h3>3.1 SOLID Principles (Backend Edition)</h3>
+
+<h4>S — Single Responsibility Principle</h4>
+<p>A class/module should have one reason to change. A service that handles HTTP, validates input, talks to the DB, sends emails, and renders PDFs has five reasons to change.</p>
+<div class="code">
+<div class="code-label">SRP — split by reason to change</div>
+<pre>
+// ❌ Violates SRP — controller does everything
+class OrderController {
+  async placeOrder(req, res) {
+    if (!req.body.items?.length) return res.status(400).json({error: '...'})
+    const total = req.body.items.reduce((s, i) =&gt; s + i.price * i.qty, 0)
+    const order = await db.orders.create({ ...req.body, total })
+    await sendgrid.send({ to: req.user.email, subject: 'Confirmed', ... })
+    await analytics.track('order_placed', { orderId: order.id })
+    res.json(order)
+  }
+}
+
+// ✅ SRP applied
+class OrderController {
+  constructor(private placeOrderUseCase: PlaceOrderUseCase) {}
+  async placeOrder(req, res) {
+    const order = await this.placeOrderUseCase.execute(req.body, req.user)
+    res.json(order)
+  }
+}
+class PlaceOrderUseCase {
+  constructor(
+    private orders: OrderRepository,
+    private events: EventBus,
+  ) {}
+  async execute(input, user) {
+    const order = Order.place(input.items, user)   // domain logic
+    await this.orders.save(order)                   // persistence
+    await this.events.publish(new OrderPlacedEvent(order))  // side effects async
+    return order
+  }
+}
+</pre>
+</div>
+
+<h4>O — Open/Closed Principle</h4>
+<p>Open for extension, closed for modification. Use strategies/plugins for new behavior instead of editing existing code.</p>
+<div class="code">
+<div class="code-label">OCP — strategy pattern for payment methods</div>
+<pre>
+// ✅ Add new payment methods without touching existing code
+interface PaymentProvider {
+  charge(amount: Money, customerId: string): Promise&lt;PaymentResult&gt;
+}
+class StripeProvider implements PaymentProvider { ... }
+class PayPalProvider implements PaymentProvider { ... }
+class CryptoProvider implements PaymentProvider { ... }   // ← new, no edits to others
+
+class PaymentService {
+  constructor(private providers: Map&lt;string, PaymentProvider&gt;) {}
+  charge(method: string, amount: Money, customerId: string) {
+    return this.providers.get(method)!.charge(amount, customerId)
+  }
+}
+</pre>
+</div>
+
+<h4>L — Liskov Substitution Principle</h4>
+<p>Subtypes must be usable wherever the base type is expected, without surprising behavior. A <code>SqlOrderRepository</code> and an <code>InMemoryOrderRepository</code> implementing the same <code>OrderRepository</code> interface must <em>both</em> save orders the same way semantically — same error contract, same idempotency, same observable behavior.</p>
+
+<h4>I — Interface Segregation Principle</h4>
+<p>Don't force consumers to depend on methods they don't use. Many small interfaces beat one fat interface.</p>
+<div class="code">
+<div class="code-label">ISP — split fat interfaces</div>
+<pre>
+// ❌ Fat interface
+interface UserService {
+  create(input): Promise&lt;User&gt;
+  update(id, input): Promise&lt;User&gt;
+  delete(id): Promise&lt;void&gt;
+  changePassword(id, pw): Promise&lt;void&gt;
+  resetPassword(email): Promise&lt;void&gt;
+  uploadAvatar(id, file): Promise&lt;string&gt;
+  exportGdprData(id): Promise&lt;Buffer&gt;
+}
+// Read-only consumer (e.g., a reporting service) doesn't need any of this.
+
+// ✅ Segregated
+interface UserReader { findById(id): Promise&lt;User&gt;; findByEmail(email): Promise&lt;User&gt; }
+interface UserWriter { create(input): Promise&lt;User&gt;; update(id, input): Promise&lt;User&gt; }
+interface UserAuthOps { changePassword(id, pw): Promise&lt;void&gt;; resetPassword(email) }
+interface UserGdprOps { exportData(id): Promise&lt;Buffer&gt;; deleteAccount(id) }
+
+// Reporting service depends on UserReader only.
+</pre>
+</div>
+
+<h4>D — Dependency Inversion Principle</h4>
+<p>High-level modules should not depend on low-level modules. Both depend on abstractions. In backend: business logic depends on repository <em>interfaces</em>, not Postgres clients.</p>
+<div class="diagram">
+<pre>
+  ❌ Direct dependency                   ✅ Inverted dependency
+  ──────────────────                      ──────────────────────
+  PlaceOrderUseCase                      PlaceOrderUseCase
+       │                                      │
+       │ import { Pool } from 'pg'             │ depends on
+       │ pool.query('INSERT ...')              ▼
+       ▼                                  OrderRepository (interface)
+  [pg driver]                                  ▲        ▲
+                                                │        │
+  Switch to Mongo or Cosmos?                Pg-Repo   InMem-Repo
+  PlaceOrderUseCase changes.            (production)  (tests)
+                                        Use case never changes when DB does.
+</pre>
+<div class="diagram-label">DIP — domain depends on abstractions, infra implements them</div>
+</div>
+
+<h3>3.2 DRY, KISS, YAGNI</h3>
+<div class="card-grid">
+  <div class="card">
+    <h4>DRY — Don't Repeat Yourself</h4>
+    <p>Extract repeated logic. But "Rule of Three" first — wait until you've seen the same thing three times before extracting. Premature DRY creates wrong abstractions, and a wrong abstraction is more expensive than duplication.</p>
+  </div>
+  <div class="card">
+    <h4>KISS — Keep It Simple, Stupid</h4>
+    <p>Pick the simplest thing that works. Don't reach for Kafka if a Postgres queue table is enough. Don't build microservices for a 5-person team. Complexity must be justified by current pain, not anticipated future pain.</p>
+  </div>
+  <div class="card">
+    <h4>YAGNI — You Aren't Gonna Need It</h4>
+    <p>Don't add hooks, plugin systems, or configuration knobs for hypothetical future use cases. Half of "future-proofing" gets thrown away when the actual future arrives looking nothing like the prediction.</p>
+  </div>
+</div>
+
+<h3>3.3 Composition over Inheritance</h3>
+<p>Inheritance creates rigid hierarchies and tight coupling. Composition (combining small, focused pieces) is more flexible. In backend: prefer middleware chains, decorators, dependency injection, and small interfaces over deep class trees.</p>
+<div class="code">
+<div class="code-label">Composition via middleware chain (Express/Hono/etc.)</div>
+<pre>
+// ❌ Deep inheritance
+class ApiController { ... }
+class AuthenticatedController extends ApiController { ... }
+class AdminAuthenticatedController extends AuthenticatedController { ... }
+class RateLimitedAdminAuthenticatedController extends AdminAuthenticatedController { ... }
+// Adding "logged" or "cached"? Combinatorial explosion.
+
+// ✅ Composition
+app.post('/admin/users',
+  authenticate,           // adds req.user
+  authorize('admin'),     // checks role
+  rateLimit({ rpm: 60 }), // throttles
+  validate(CreateUserSchema),
+  cache({ ttl: 30 }),
+  createUserHandler
+)
+// Each piece is independent. Mix-and-match per route.
+</pre>
+</div>
+
+<h3>3.4 Law of Demeter</h3>
+<p>"Talk to friends, not strangers." A method should call methods on: itself, its parameters, objects it creates, or its direct dependencies. Avoid <code>order.customer.address.country.taxRate</code> chains — you've now coupled to four levels of internal structure. Either ask for what you need (<code>order.getTaxRate()</code>) or pass the right object directly.</p>
+
+<h3>3.5 Twelve-Factor App</h3>
+<p>The classical checklist for cloud-native services. Worth knowing by heart.</p>
+<div class="diagram">
+<pre>
+   1. Codebase     — one app per repo, many deploys
+   2. Dependencies — declared explicitly, isolated (lockfile, container)
+   3. Config       — in environment variables, NEVER in code
+   4. Backing svcs — DB, Redis, etc. as attached resources via URL
+   5. Build/release/run — strict separation; no editing in production
+   6. Processes    — stateless; share nothing (state goes to DB/cache)
+   7. Port binding — app exposes itself via HTTP port; no Apache/Nginx baked in
+   8. Concurrency  — scale by adding processes, not threads
+   9. Disposability — fast startup, graceful shutdown (SIGTERM)
+  10. Dev/prod parity — same backing services in dev as in prod
+  11. Logs        — write to stdout; let infra collect &amp; route
+  12. Admin tasks — run as one-off processes (db migrate, cron)
+</pre>
+<div class="diagram-label">Twelve-Factor — the canonical cloud-native checklist</div>
+</div>
+
+<h3>3.6 Separation of Concerns</h3>
+<p>Each module should care about one slice of the problem. Authentication ≠ business logic ≠ persistence ≠ logging. Mixing concerns is the #1 cause of "I can't change X without breaking Y."</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- 4. API DESIGN PATTERNS -->
+<!-- ============================================================ -->
+<section id="api-design">
+<h2>4. API Design Patterns</h2>
+<p>How clients talk to your backend. The choice impacts coupling, type safety, performance, and developer ergonomics.</p>
+
+<h3>4.1 REST</h3>
+<p>Resources identified by URLs, manipulated with HTTP verbs. Stateless. The default for public APIs since 2005. Best when resources map cleanly to nouns and clients are diverse.</p>
+<div class="diagram">
+<pre>
+  GET    /api/orders            → list orders
+  GET    /api/orders/42         → fetch order 42
+  POST   /api/orders            → create order
+  PUT    /api/orders/42         → replace order 42
+  PATCH  /api/orders/42         → partial update
+  DELETE /api/orders/42         → delete order 42
+  
+  GET /api/orders/42/items      → nested resource
+  
+  Status codes:
+  2xx success | 3xx redirect | 4xx client error | 5xx server error
+  
+  Levels of REST (Richardson Maturity Model):
+  Level 0: HTTP-RPC (one URL, one verb)
+  Level 1: Resources (many URLs)
+  Level 2: HTTP verbs + status codes (most "REST" APIs are here)
+  Level 3: HATEOAS — responses include links to next actions
+</pre>
+<div class="diagram-label">REST — resources + HTTP verbs, stateless, cacheable</div>
+</div>
+
+<h3>4.2 GraphQL</h3>
+<p>One endpoint (<code>/graphql</code>). Clients send a query specifying exactly the fields they need. Solves over-fetching and under-fetching elegantly. Great for mobile clients, complex front-ends, and federating multiple backends.</p>
+<div class="diagram">
+<pre>
+  REST (multiple round trips)            GraphQL (one query)
+  ───────────────────────────             ─────────────────────
+  GET /api/users/42         → { id, name, email, ... 30 fields }
+  GET /api/users/42/posts   → [{ ... }, { ... }]
+  GET /api/users/42/orders  → [{ ... }, { ... }]
+  
+  3 requests, lots of unused fields.     query {
+                                          user(id: 42) {
+                                            name
+                                            posts(limit: 5) { title }
+                                            orders(status: SHIPPED) { id, total }
+                                          }
+                                         }
+                                         
+                                         1 request. Exactly the fields needed.
+  
+  Trade-offs:
+  • Caching is harder (HTTP cache layer doesn't work)
+  • Authorization per field (n+1 risks if naive)
+  • Tooling: Apollo, urql, Relay; servers: Apollo Server, Yoga, Mercurius, Hot Chocolate
+</pre>
+<div class="diagram-label">GraphQL — one endpoint, client-driven queries, no over/under-fetching</div>
+</div>
+
+<h3>4.3 gRPC</h3>
+<p>Binary RPC over HTTP/2 using Protocol Buffers (Protobuf) for schema. Extremely fast and type-safe. The default for service-to-service communication in microservice landscapes. Bad fit for browsers (need a gRPC-Web proxy).</p>
+<div class="code">
+<div class="code-label">orders.proto</div>
+<pre>
+syntax = "proto3";
+
+service OrderService {
+  rpc PlaceOrder(PlaceOrderRequest) returns (Order);
+  rpc StreamOrders(StreamOrdersRequest) returns (stream OrderEvent);
+}
+
+message Order {
+  string id = 1;
+  string customer_id = 2;
+  repeated OrderItem items = 3;
+  Money total = 4;
+}
+
+// Generates type-safe clients/servers in 11+ languages.
+// Wire format is binary — much smaller than JSON.
+// Built-in: streaming, deadlines, cancellation, retries.
+</pre>
+</div>
+
+<h3>4.4 tRPC</h3>
+<p>Type-safe RPC for TypeScript monorepos. The server defines functions; the client calls them with full TypeScript inference — no codegen, no schema files. Best when both ends are TypeScript and you control the client.</p>
+<div class="diagram">
+<pre>
+  Server                                    Client (browser/mobile)
+  ──────                                    ──────────────────────────
+  const appRouter = router({                const user = await
+    getUser: publicProcedure                  trpc.getUser.query({ id: '42' })
+      .input(z.object({ id: z.string() }))    //     ^? { name, email, ... }
+      .query(({ input }) =&gt;                  //     fully typed!
+        db.user.findUnique({ where:           
+          { id: input.id }})),                Server change → client compile error.
+    
+    createPost: publicProcedure               No codegen step. No HTTP boilerplate.
+      .input(CreatePostSchema)
+      .mutation(({ input }) =&gt; ...)
+  })
+  
+  export type AppRouter = typeof appRouter   // ← shared type
+</pre>
+<div class="diagram-label">tRPC — full-stack TypeScript inference, zero schema duplication</div>
+</div>
+
+<h3>4.5 WebSockets</h3>
+<p>Persistent bidirectional connection over a single TCP connection. The server can push data without the client polling. Best for chat, collaborative editing, live dashboards, multiplayer games.</p>
+<div class="diagram">
+<pre>
+  HTTP polling                            WebSocket
+  ─────────────                            ──────────
+  Client: GET /messages?since=...         Client → Server: handshake (HTTP upgrade)
+  Server: [...]                                              │
+  (every 2 seconds, ~30 reqs/min)                            │  upgraded to WS
+                                                              │
+  ❌ wasted requests when no new data     Client ◄───────────►Server
+  ❌ ~2s latency                                bidirectional, full-duplex
+                                          
+  Server PUSHES data instantly.
+  Latency: ~ms.
+  
+  Tooling: Socket.IO, ws (Node), Phoenix Channels, SignalR (.NET), 
+           Centrifugo, Soketi, Ably, Pusher (managed).
+</pre>
+<div class="diagram-label">WebSockets — persistent bidirectional channel, real-time push</div>
+</div>
+
+<h3>4.6 Server-Sent Events (SSE)</h3>
+<p>One-way push from server to client over plain HTTP. Simpler than WebSockets when you don't need bidirectional flow. Works through proxies and corporate firewalls without special config. Auto-reconnects built in.</p>
+<div class="code">
+<div class="code-label">SSE — push notifications, AI streaming responses, live updates</div>
+<pre>
+// Server (Node)
+res.writeHead(200, {
+  'Content-Type': 'text/event-stream',
+  'Cache-Control': 'no-cache',
+  'Connection': 'keep-alive',
+})
+setInterval(() =&gt; {
+  res.write(`data: ${JSON.stringify({ time: Date.now() })}\n\n`)
+}, 1000)
+
+// Client (browser)
+const sse = new EventSource('/api/events')
+sse.onmessage = (e) =&gt; console.log(JSON.parse(e.data))
+sse.onerror = () =&gt; { /* auto-reconnects */ }
+
+// Used by ChatGPT/Claude streaming responses, GitHub notifications,
+// Vercel deployment logs, anywhere "server pushes, client listens".
+</pre>
+</div>
+
+<h3>4.7 Webhooks</h3>
+<p>"You don't call us; we'll call you." When something happens on your backend, you POST to a URL the customer registered. The opposite of polling. Standard for SaaS integrations: Stripe, GitHub, Slack, Twilio all use webhooks.</p>
+<div class="diagram">
+<pre>
+  ┌──────────────┐     event happens      ┌──────────────────┐
+  │   Stripe     │ ─────────────────────► │  Your server     │
+  │              │  POST /webhook/stripe  │  /webhook/stripe │
+  │              │  + HMAC signature      │                  │
+  └──────────────┘                        │  verify signature│
+                                          │  process event   │
+                                          │  return 200      │
+                                          └──────────────────┘
+                                                  │
+                                                  │ (if non-2xx)
+                                                  ▼
+                                          Stripe retries with backoff
+  
+  Patterns to get right:
+  • Verify HMAC signatures (prove sender)
+  • Return 200 fast; do work async (or it'll time out)
+  • Idempotency: same event may arrive 2x
+  • Replay protection: track event IDs
+</pre>
+<div class="diagram-label">Webhooks — outbound HTTP POSTs, inverted polling</div>
+</div>
+
+<h3>4.8 API Style Comparison</h3>
+<table>
+  <tr><th>Style</th><th>Format</th><th>Direction</th><th>Real-time</th><th>Type Safety</th><th>Browser</th><th>Best For</th></tr>
+  <tr><td><span class="badge badge-green">REST</span></td><td>JSON</td><td>req/res</td><td>No</td><td>OpenAPI optional</td><td>Native</td><td>Public APIs, CRUD</td></tr>
+  <tr><td><span class="badge badge-pink">GraphQL</span></td><td>JSON</td><td>req/res + subs</td><td>via subs</td><td>Schema-driven</td><td>Native</td><td>Diverse clients, BFF</td></tr>
+  <tr><td><span class="badge badge-cyan">gRPC</span></td><td>Protobuf binary</td><td>req/res + streams</td><td>Native streams</td><td>Excellent</td><td>Via gRPC-Web only</td><td>Service-to-service</td></tr>
+  <tr><td><span class="badge badge-yellow">tRPC</span></td><td>JSON</td><td>req/res + subs</td><td>via subs</td><td>Best-in-class (TS)</td><td>Native</td><td>TS monorepos</td></tr>
+  <tr><td><span class="badge badge-orange">WebSocket</span></td><td>Anything</td><td>bidirectional</td><td>Native</td><td>Custom</td><td>Native</td><td>Chat, games, live</td></tr>
+  <tr><td><span class="badge badge-orange">SSE</span></td><td>Text</td><td>server → client</td><td>Native push</td><td>Custom</td><td>Native</td><td>Server-push, AI streams</td></tr>
+  <tr><td><span class="badge badge-red">Webhook</span></td><td>JSON</td><td>server → server</td><td>Push notifications</td><td>Custom</td><td>N/A</td><td>SaaS integrations</td></tr>
+</table>
+
+<h3>4.9 API Versioning Strategies</h3>
+<div class="diagram">
+<pre>
+  ┌──────────────────────────────────────────────────────────────┐
+  │ 1. URL versioning (most common)                              │
+  │    GET /api/v1/orders   GET /api/v2/orders                   │
+  │    Pros: simple, cacheable. Cons: URL breaks REST purity.    │
+  │                                                              │
+  │ 2. Header versioning                                         │
+  │    Accept: application/vnd.myapi.v2+json                     │
+  │    Pros: cleaner URLs. Cons: harder to test in browser.      │
+  │                                                              │
+  │ 3. Query param                                               │
+  │    /api/orders?version=2                                     │
+  │    Pros: easy. Cons: messes with caching keys.               │
+  │                                                              │
+  │ 4. Date versioning (Stripe-style)                            │
+  │    Stripe-Version: 2024-04-10                                │
+  │    Pros: granular, predictable. Cons: needs adapter layer.   │
+  │                                                              │
+  │ 5. No versioning — additive only                             │
+  │    Never break clients; only add new fields/endpoints.       │
+  │    Pros: simplest. Cons: requires discipline.                │
+  └──────────────────────────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">Versioning — URL prefix is most popular; Stripe-style date headers are most elegant</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 5. DATA ACCESS PATTERNS -->
+<!-- ============================================================ -->
+<section id="data-access">
+<h2>5. Data Access Patterns</h2>
+<p>How your code talks to the database. The pattern you pick affects testability, swappability, and how clean your domain layer stays.</p>
+
+<h3>5.1 Repository Pattern</h3>
+<p>Define a domain interface (<code>OrderRepository</code>) that describes <em>what</em> you do with orders. Implement it once for the real DB and once for tests (in-memory). Domain code never touches SQL.</p>
+<div class="code">
+<div class="code-label">Repository — abstraction over data access</div>
+<pre>
+// Domain layer — pure
+interface OrderRepository {
+  findById(id: OrderId): Promise&lt;Order | null&gt;
+  save(order: Order): Promise&lt;void&gt;
+  findByCustomer(customerId: CustomerId): Promise&lt;Order[]&gt;
+}
+
+// Infrastructure layer
+class PostgresOrderRepository implements OrderRepository {
+  constructor(private db: Pool) {}
+  async findById(id: OrderId) {
+    const row = await this.db.query('SELECT * FROM orders WHERE id = $1', [id])
+    return row ? Order.fromRow(row) : null
+  }
+  // ...
+}
+
+// Test layer
+class InMemoryOrderRepository implements OrderRepository {
+  private orders = new Map&lt;string, Order&gt;()
+  async findById(id) { return this.orders.get(id) ?? null }
+  async save(order) { this.orders.set(order.id, order) }
+}
+
+// Use case never knows which one is plugged in.
+</pre>
+</div>
+
+<h3>5.2 Unit of Work</h3>
+<p>Group multiple repository operations into a single transaction. Think of it as a "shopping cart for DB changes" — collect all the changes, then commit them atomically (or roll them back if anything fails).</p>
+<div class="code">
+<div class="code-label">Unit of Work — transactional boundary</div>
+<pre>
+await uow.transaction(async (tx) =&gt; {
+  const order = await tx.orders.save(newOrder)
+  await tx.inventory.decrement(items)
+  await tx.payments.charge(customer, total)
+  // All committed atomically. Any throw → all rolled back.
+})
+
+// Implementations: TypeORM &amp; MikroORM "EntityManager", Prisma transactions,
+// Spring's @Transactional, .NET's IUnitOfWork.
+</pre>
+</div>
+
+<h3>5.3 Active Record vs Data Mapper</h3>
+<div class="diagram">
+<pre>
+  Active Record                          Data Mapper
+  ─────────────                          ────────────
+  The entity SAVES ITSELF.               The entity is dumb data.
+                                          A separate mapper handles persistence.
+  
+  const user = new User()
+  user.email = 'a@b.com'                  const user = new User('a@b.com')
+  user.save()      ← entity knows DB     await userRepository.save(user)
+  user.delete()                              ← repository knows DB
+  
+  Frameworks:                             Frameworks:
+  • Rails ActiveRecord                    • Prisma (most modern Node ORMs)
+  • Django ORM                            • TypeORM (DataMapper mode)
+  • Laravel Eloquent                      • MikroORM, Drizzle (kind of)
+  • Sequelize                             • Doctrine (PHP), Hibernate (Java)
+  
+  Pro: Fast to write, less ceremony.      Pro: Domain stays pure, easy to test.
+  Con: Domain coupled to ORM.             Con: More boilerplate (mappers).
+</pre>
+<div class="diagram-label">Active Record (entity = DB row) vs Data Mapper (entity is pure)</div>
+</div>
+
+<h3>5.4 CQRS — Command Query Responsibility Segregation</h3>
+<p>Use <strong>different models for reads and writes</strong>. Writes go through commands that mutate the write model (often normalized). Reads come from a read model optimized for the query (often denormalized, possibly in a different DB).</p>
+<div class="diagram">
+<pre>
+  Command (write side)                Query (read side)
+  ────────────────────                ───────────────────
+  PlaceOrderCommand                   GetOrderHistoryQuery
+       │                                       │
+       ▼                                       ▼
+  PlaceOrderHandler                   GetOrderHistoryHandler
+       │                                       │
+       ▼                                       ▼
+  Order aggregate (rich domain)       Read model (flat DTO)
+       │                                       ▲
+       ▼                                       │
+  Postgres (write store) ───── projector ─────►│
+                                          Read store
+                                          (Postgres view, Mongo,
+                                           Elasticsearch, Redis...)
+
+  Why: read patterns ≠ write patterns.
+  • Writes need invariants, validation, transactions
+  • Reads need speed, denormalization, aggregations
+  Optimize each side independently.
+</pre>
+<div class="diagram-label">CQRS — separate models, separate paths, optimized independently</div>
+</div>
+
+<h3>5.5 Event Sourcing</h3>
+<p>The <strong>source of truth is the log of events</strong>, not the current state. Each business action appends an event to an immutable log. Current state is derived by replaying events. Combined with CQRS, this enables audit trails, time travel, and adding new read models retroactively.</p>
+<div class="diagram">
+<pre>
+  Traditional state-based                 Event-sourced
+  ────────────────────                    ─────────────────
+  UPDATE accounts SET balance = 1500      append: AccountCredited { 1500 }
+  WHERE id = 42                            append: AccountDebited  { 200 }
+                                          append: AccountCredited { 50 }
+  Old balance is gone.                    
+  Why did it change? Unknown.             Replay events to compute current state.
+                                           Balance = 0 + 1500 - 200 + 50 = 1350
+  Account #42:                            Full history retained, queryable.
+  ┌──────┬─────────┐                       
+  │ id   │ balance │                      Event store:
+  ├──────┼─────────┤                       ┌────────────────────────────────┐
+  │  42  │  1350   │                       │  evt_001  AccountCredited 1500 │
+  └──────┴─────────┘                       │  evt_002  AccountDebited   200 │
+                                           │  evt_003  AccountCredited   50 │
+                                           └────────────────────────────────┘
+                                           Append-only. Never UPDATE or DELETE.
+</pre>
+<div class="diagram-label">Event Sourcing — events are truth, state is derived, full audit log</div>
+</div>
+
+<h3>5.6 ORM vs Query Builder vs Raw SQL</h3>
+<div class="diagram">
+<pre>
+  Abstraction ──────────────────────────────────────────────► Control
+  ←──────────────────────────────────────────────────────────
+  
+  ORM                Query Builder           Raw SQL
+  ────────────       ────────────────        ──────────
+  Prisma             Knex, Kysely            pg, mysql2,
+  TypeORM            Drizzle (also ORM)      better-sqlite3
+  MikroORM
+  Sequelize
+  Hibernate
+  
+  • Map objects     • Type-safe SQL DSL      • Just SQL
+    to/from DB        without auto-mapping     strings
+  • Relations,      • Builds queries         • Maximum
+    migrations,       compositionally          performance
+    auto-types
+                    • You control SQL shape
+                    
+  When you need:    When you need:           When you need:
+  Most CRUD,        Complex queries,         Hot paths,
+  rapid dev         partial control          DB-specific
+                                              features
+                                             (window funcs,
+                                              CTEs, etc.)
+
+  ⚠️ N+1 queries are the #1 ORM trap. Use eager loading or "include".
+</pre>
+<div class="diagram-label">DB access spectrum — pick the right level of abstraction per query</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 6. DATABASE ARCHITECTURE -->
+<!-- ============================================================ -->
+<section id="database">
+<h2>6. Database Architecture</h2>
+
+<h3>6.1 SQL vs NoSQL — Picking the Right Tool</h3>
+<table>
+  <tr><th>Type</th><th>Examples</th><th>Strengths</th><th>Use Cases</th></tr>
+  <tr><td>Relational (SQL)</td><td>Postgres, MySQL, SQL Server</td><td>ACID, joins, schemas, ecosystem</td><td>Most apps, financials, OLTP</td></tr>
+  <tr><td>Document</td><td>MongoDB, DynamoDB, Cosmos DB</td><td>Flexible schema, horizontal scale</td><td>Catalogs, user profiles, varied shapes</td></tr>
+  <tr><td>Key-Value</td><td>Redis, DynamoDB, Memcached</td><td>Sub-ms reads, simple model</td><td>Caches, sessions, queues, leaderboards</td></tr>
+  <tr><td>Wide-column</td><td>Cassandra, ScyllaDB, BigTable</td><td>Massive write throughput, linear scale</td><td>Time series, IoT, logs at scale</td></tr>
+  <tr><td>Graph</td><td>Neo4j, ArangoDB, AWS Neptune</td><td>Traversals, relationships</td><td>Social networks, fraud, recommendation</td></tr>
+  <tr><td>Time-Series</td><td>InfluxDB, TimescaleDB, ClickHouse</td><td>Compression, time-window queries</td><td>Metrics, monitoring, IoT sensors</td></tr>
+  <tr><td>Search</td><td>Elasticsearch, OpenSearch, Meilisearch</td><td>Full-text, fuzzy, ranking</td><td>Search bars, log analysis</td></tr>
+  <tr><td>Vector</td><td>pgvector, Pinecone, Weaviate, Qdrant</td><td>Similarity search on embeddings</td><td>RAG, semantic search, AI memory</td></tr>
+</table>
+
+<div class="callout"><strong>Reality check:</strong> Postgres now has plugins for vectors (pgvector), JSON (jsonb), full-text search (tsvector), time-series (TimescaleDB), and more. <strong>"Just use Postgres"</strong> is correct ~80% of the time.</div>
+
+<h3>6.2 ACID vs BASE — Consistency Trade-offs</h3>
+<div class="diagram">
+<pre>
+  ACID (traditional SQL)                 BASE (many NoSQL)
+  ──────────────────────                  ────────────────────
+  Atomicity    — all or nothing          Basically Available
+  Consistency  — invariants always hold  Soft state
+  Isolation    — concurrent txns isolated Eventual consistency
+  Durability   — committed = saved
+  
+  Example: bank transfer                  Example: social media feed
+  Either both accounts update             Posts may take seconds to
+  or neither. NEVER half.                 appear on followers' feeds.
+                                          
+  ┌─────────────────────────────────────────────────────────────┐
+  │ CAP Theorem (you can pick 2 of 3 in a network partition):   │
+  │  • Consistency  — all reads see latest write                │
+  │  • Availability — every request gets a response             │
+  │  • Partition tolerance — system survives network splits     │
+  │                                                             │
+  │ In practice: P is given. Choose CP (e.g., Mongo, HBase)    │
+  │ or AP (e.g., Cassandra, DynamoDB).                          │
+  └─────────────────────────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">ACID vs BASE — strict consistency vs availability trade-off</div>
+</div>
+
+<h3>6.3 Indexing</h3>
+<p>An index is a data structure (typically a B-tree) that lets the DB find rows without scanning every row. The cost: writes get slower (each insert updates the index too), and indexes take disk space. The benefit: reads can go from seconds to microseconds.</p>
+<div class="diagram">
+<pre>
+  Without index                           With index on (email)
+  ──────────────                          ──────────────────────
+  SELECT * FROM users                     SELECT * FROM users
+  WHERE email = 'a@b.com'                 WHERE email = 'a@b.com'
+  
+  → SCAN entire table                     → B-tree lookup (log n)
+    1M rows, ~500ms                          1M rows, &lt;1ms
+  
+  Index types:
+  ┌─────────────────────────────────────────────────────────────┐
+  │ B-tree    — default; great for =, &lt;, &gt;, BETWEEN, ORDER BY  │
+  │ Hash      — only =; faster but no range queries            │
+  │ GIN       — JSONB, arrays, full-text (Postgres)            │
+  │ GiST      — geo, ranges, custom types                      │
+  │ BRIN      — huge tables with natural ordering (time series)│
+  │ Composite — index on (col_a, col_b) — order matters!       │
+  │ Partial   — WHERE active = true                            │
+  │ Covering  — INCLUDE extra cols to satisfy query from index │
+  └─────────────────────────────────────────────────────────────┘
+
+  Rule of thumb: index columns used in WHERE, JOIN, ORDER BY.
+  Don't over-index — every index slows writes and uses disk.
+</pre>
+<div class="diagram-label">Indexes — trade write speed and disk for fast reads</div>
+</div>
+
+<h3>6.4 Replication</h3>
+<p>Maintain copies of your data on multiple machines. The most common pattern: one <strong>primary</strong> handles writes, multiple <strong>replicas</strong> handle reads. Reads scale horizontally; failover lets you survive primary loss.</p>
+<div class="diagram">
+<pre>
+  Primary-Replica (most common)
+  ─────────────────────────────────
+  
+       Writes                   Reads
+         │                        │
+         ▼                  ┌─────┼─────┐
+  ┌─────────────┐           ▼     ▼     ▼
+  │   PRIMARY   │ ── replication stream (WAL/binlog) ──►
+  │  (writeable)│ ──►  Replica 1   Replica 2   Replica 3
+  └─────────────┘                              (read-only)
+  
+  Replication modes:
+  • Sync     — primary waits for replicas to ACK. Safer, slower.
+  • Async    — primary doesn't wait. Faster, may lose recent writes.
+  • Semi-sync — wait for at least one replica.
+  
+  Multi-primary (writeable replicas):
+  • CockroachDB, Cassandra, Yugabyte — eventual or tunable consistency
+  • Powerful but conflicts must be resolved (last-write-wins, vector clocks, CRDTs)
+</pre>
+<div class="diagram-label">Replication — scale reads, survive failure, replication lag is the catch</div>
+</div>
+
+<h3>6.5 Sharding (Horizontal Partitioning)</h3>
+<p>Split data across multiple database servers, each holding a subset. Necessary when one server can't hold or serve all the data. Brings real complexity — cross-shard queries, rebalancing, hot shards.</p>
+<div class="diagram">
+<pre>
+  Single DB                              Sharded DB
+  ──────────                             ────────────
+  All users on one server                Shard 1: users with id % 4 == 0
+                                         Shard 2: users with id % 4 == 1
+  ┌────────────┐                         Shard 3: users with id % 4 == 2
+  │   100M     │                         Shard 4: users with id % 4 == 3
+  │   users    │                         
+  └────────────┘                         ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐
+  500GB, slow                            │ 25M  │ │ 25M  │ │ 25M  │ │ 25M  │
+                                         └──────┘ └──────┘ └──────┘ └──────┘
+                                         Each shard fast.
+  
+  Sharding strategies:
+  • Hash-based   — hash(key) % N. Even distribution. Hard to add shards.
+  • Range-based  — id 0-1M shard 1, id 1M-2M shard 2. Hot shards risk.
+  • Geo-based    — EU users in EU shard. Compliance + latency win.
+  • Consistent hashing — minimize re-shuffling when adding/removing nodes.
+  
+  Trade-offs: cross-shard joins are painful, rebalancing is hard.
+  Tools: Vitess (MySQL), Citus (Postgres), MongoDB sharding, CockroachDB (auto).
+</pre>
+<div class="diagram-label">Sharding — split data across servers when one can't hold it all</div>
+</div>
+
+<h3>6.6 The N+1 Query Problem</h3>
+<p>The most common ORM performance trap. Loading a list of N items, then triggering one extra query <em>per item</em> for related data. 1 query becomes N+1 queries.</p>
+<div class="code">
+<div class="code-label">N+1 — and how to fix it</div>
+<pre>
+// ❌ N+1: 1 query for users, N queries for each user's posts
+const users = await User.findAll()         // 1 query
+for (const u of users) {
+  const posts = await u.getPosts()         // 1 query EACH (N queries)
+}
+// 100 users? 101 queries.
+
+// ✅ Eager loading: 2 queries total (or 1 with JOIN)
+const users = await User.findAll({
+  include: [{ model: Post }]
+})
+// Or in Prisma:
+const users = await prisma.user.findMany({ include: { posts: true } })
+
+// For GraphQL: use DataLoader to batch &amp; cache within a request
+const userLoader = new DataLoader(ids =&gt; User.findAll({ where: { id: ids }}))
+</pre>
+</div>
+
+<h3>6.7 Connection Pooling</h3>
+<p>Opening a new DB connection per request is slow (~100ms TCP+auth). A connection pool keeps a set of warm connections ready to serve requests. <strong>Critical for serverless</strong> — without pooling (e.g., PgBouncer, Prisma Data Proxy, Supabase pooler), your DB will run out of connections fast.</p>
+
+<h3>6.8 Database Migrations</h3>
+<div class="diagram">
+<pre>
+  Migration files (versioned, in git):
+  ─────────────────────────────────────
+  migrations/
+  ├── 001_create_users.sql
+  ├── 002_add_email_index.sql
+  ├── 003_split_name_columns.sql
+  └── 004_drop_legacy_field.sql
+  
+  Tools: Prisma Migrate, Knex, Flyway, Alembic, Liquibase, Atlas, Sqitch
+  
+  Zero-downtime migration sequence:
+  ┌─────────────────────────────────────────────────────────┐
+  │ 1. Add new column (nullable, default null)              │
+  │ 2. Deploy app that writes BOTH old and new columns      │
+  │ 3. Backfill old data into new column                    │
+  │ 4. Deploy app that reads new column                     │
+  │ 5. Stop writing to old column                            │
+  │ 6. Drop old column (next deploy)                         │
+  └─────────────────────────────────────────────────────────┘
+  Never drop + add in one deploy. Never rename in one step.
+</pre>
+<div class="diagram-label">Migrations — versioned, reversible, deployed step-by-step for zero downtime</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 7. CACHING STRATEGIES -->
+<!-- ============================================================ -->
+<section id="caching">
+<h2>7. Caching Strategies</h2>
+<p>"There are only two hard things in computer science: cache invalidation and naming things." — Phil Karlton. Caching is the highest-leverage optimization in backends. Used right, it cuts database load by 95%. Used wrong, it serves stale data forever.</p>
+
+<h3>7.1 The Five Caching Patterns</h3>
+
+<h4>Cache-Aside (Lazy Loading)</h4>
+<div class="diagram">
+<pre>
+  App reads:
+  ──────────
+  1. Check cache for key
+  2. HIT  → return cached value
+  3. MISS → query DB → write to cache → return
+  
+  App writes:
+  ──────────
+  1. Write to DB
+  2. Invalidate (or update) cache
+  
+  Most common pattern. Used by Redis, Memcached at most companies.
+  Simple, but: cache misses are expensive (extra round trip).
+</pre>
+<div class="diagram-label">Cache-aside — app manages cache explicitly, lazy population</div>
+</div>
+
+<h4>Read-Through</h4>
+<p>The cache layer itself fetches from DB on miss. App talks only to the cache. Used by Redis with modules, DataLoader-style libraries.</p>
+
+<h4>Write-Through</h4>
+<p>Writes go through the cache <em>to</em> the DB synchronously. Cache and DB are always in sync. Slow writes, but cache is always fresh.</p>
+
+<h4>Write-Behind (Write-Back)</h4>
+<p>Writes go to the cache; cache flushes to DB asynchronously. Very fast writes, but risky — if the cache crashes before flushing, writes are lost. Used in low-stakes scenarios (analytics counters, etc.).</p>
+
+<h4>Refresh-Ahead</h4>
+<p>The cache predicts which keys are about to expire and proactively re-fetches them before they go stale. Useful for hot keys with predictable access patterns.</p>
+
+<h3>7.2 Cache Invalidation Strategies</h3>
+<div class="diagram">
+<pre>
+  TTL (Time-to-live)                  Event-based
+  ──────────────────                  ──────────────
+  SET user:42 {...} EX 300            On user update:
+  Auto-expires after 5 min.           DEL user:42
+  
+  Simple. Eventually consistent.       Complex. Strongly consistent.
+  Stale window = TTL.                  Must remember every key affected.
+  
+  Tagging                             Versioning
+  ──────────                          ──────────
+  Tag: "user:42"                      Cache key includes version:
+  SET user:42:profile  ...            user:42:v3 → updates create v4 key
+  SET user:42:settings ...            Old keys age out via TTL.
+  Invalidate all "user:42" tags.      No explicit deletes needed.
+                                      Used heavily by Vercel, Netlify.
+</pre>
+<div class="diagram-label">Invalidation — TTL is simple; events/tags are precise; versioning is bulletproof</div>
+</div>
+
+<h3>7.3 Multi-Level (L1/L2) Caching</h3>
+<div class="diagram">
+<pre>
+  Request flow:
+  ─────────────
+  Client → CDN (L1: edge cache, milliseconds)
+            └─ MISS → Application
+                       └─ In-memory cache (L2: same-process, microseconds)
+                          └─ MISS → Redis (L3: shared cache, ~1ms)
+                                     └─ MISS → Database (~10-100ms)
+  
+  Each layer absorbs different traffic patterns.
+  Static assets:  CDN handles 99.9%
+  API responses:  Redis handles 95%, DB sees 5%
+  Computed data:  In-process cache (LRU) handles repeats within seconds
+  
+  Tools:
+  L1 (edge):     Cloudflare, Fastly, CloudFront, Vercel
+  L2 (in-proc):  node-cache, lru-cache, Caffeine (Java)
+  L3 (shared):   Redis, Memcached, Hazelcast, AWS ElastiCache
+</pre>
+<div class="diagram-label">Multi-level caching — each layer absorbs traffic before reaching the DB</div>
+</div>
+
+<h3>7.4 Stale-While-Revalidate</h3>
+<p>Serve cached data immediately even if it's stale; refresh in the background. The user always gets a fast response; the cache stays warm.</p>
+<div class="diagram">
+<pre>
+  Time t=0     CACHE: fresh "Apple Watch $399"
+  Time t=300   CACHE: stale (TTL elapsed)
+  Time t=301   USER REQ → return stale value INSTANTLY ✅
+                          ↓
+                       trigger background refresh
+                          ↓
+                       UPDATE CACHE with fresh value
+  Time t=302   USER REQ → return now-fresh value
+</pre>
+<div class="diagram-label">SWR — instant response, freshness in background</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 8. ASYNC & MESSAGING -->
+<!-- ============================================================ -->
+<section id="async">
+<h2>8. Async &amp; Messaging</h2>
+<p>The full treatment lives in the dedicated <em>Async Architecture A→Z</em> guide (queues, jobs, DLQs, idempotency, events, sagas). Here's the executive summary.</p>
+
+<h3>8.1 Sync vs Async Calls</h3>
+<div class="diagram">
+<pre>
+  Synchronous                            Asynchronous (queue)
+  ──────────────                          ─────────────────────
+  Service A ──HTTP──► Service B          Service A ──msg──► Queue ──► Service B
+  
+  A waits for B's response.              A drops a message and moves on.
+  If B is down → A fails.                B picks it up when ready.
+  If B is slow → A is slow.              If B is down → messages buffer.
+  
+  Use when:                              Use when:
+  • You need the result NOW              • Result not needed immediately
+  • Simple request/response              • B might be slow or unreliable
+  • Latency matters                       • Many consumers (pub/sub)
+                                          • Burst smoothing
+</pre>
+<div class="diagram-label">Sync = "do it now and tell me"; Async = "fire and forget"</div>
+</div>
+
+<h3>8.2 Queues vs Pub/Sub</h3>
+<div class="diagram">
+<pre>
+  Queue (each msg → ONE consumer)           Pub/Sub (each msg → ALL consumers)
+  ──────────────────────────────           ───────────────────────────────────
+  Producer ──► [msg, msg, msg] ─►           Producer ──► Topic ──┬─► Consumer A
+                  Worker (one of many)                            ├─► Consumer B
+                                                                  └─► Consumer C
+  Used for: "do this work"                  Used for: "this happened"
+  E.g., send email, process video           E.g., OrderPlaced → email, analytics, fraud
+</pre>
+<div class="diagram-label">Queue (work) vs Pub/Sub (notification)</div>
+</div>
+
+<h3>8.3 Saga Pattern (Distributed Transactions)</h3>
+<p>You can't run a database transaction across services. The saga pattern coordinates a multi-step business process via events, with compensating actions for rollback. Two flavors: <strong>choreography</strong> (services react to events) and <strong>orchestration</strong> (a central coordinator drives the steps).</p>
+<div class="diagram">
+<pre>
+  Place order saga:
+  ─────────────────
+  Step 1: Reserve inventory   ✓
+  Step 2: Charge payment       ✓
+  Step 3: Create shipment      ✗  ← failure!
+  
+  Compensation (run in reverse):
+  ── refund payment      ✓
+  ── release inventory   ✓
+  
+  Each service publishes events; saga coordinator (or other services)
+  trigger compensations on failure. NEVER rely on distributed XA transactions.
+</pre>
+<div class="diagram-label">Saga — multi-step distributed flow with compensating actions on failure</div>
+</div>
+
+<h3>8.4 Outbox Pattern</h3>
+<p>Solves the "did the DB update <em>and</em> the event publish?" problem. Insert the event into an <code>outbox</code> table in the same DB transaction as your business write. A separate poller reads from the outbox and publishes events. Atomic, exactly-once semantics.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- 9. PERFORMANCE & SCALABILITY -->
+<!-- ============================================================ -->
+<section id="performance">
+<h2>9. Performance &amp; Scalability</h2>
+
+<h3>9.1 Vertical vs Horizontal Scaling</h3>
+<div class="diagram">
+<pre>
+  Vertical (scale up)                    Horizontal (scale out)
+  ────────────────────                    ──────────────────────
+  Bigger machine                         More machines
+  
+  ┌────┐         ┌──────────┐           ┌────┐ ┌────┐ ┌────┐ ┌────┐
+  │ 4   │  →     │  16      │           │    │ │    │ │    │ │    │
+  │ CPU │        │  CPU     │           │    │ │    │ │    │ │    │
+  │ 8GB │        │  64GB    │           └────┘ └────┘ └────┘ └────┘
+  └────┘         └──────────┘            (load balanced)
+  
+  Pros: simple, no app changes.          Pros: ∞ scale, fault tolerance.
+  Cons: ceiling exists, expensive,       Cons: app must be stateless,
+        single point of failure.               distributed concerns.
+</pre>
+<div class="diagram-label">Vertical = bigger box; Horizontal = more boxes</div>
+</div>
+
+<h3>9.2 Load Balancing</h3>
+<p>Distribute incoming requests across multiple instances. Algorithms:</p>
+<div class="diagram">
+<pre>
+  ┌──────────────────────────────────────────────────────────────────┐
+  │ Round Robin     — alternate between servers in order             │
+  │ Least Connections — pick server with fewest active connections   │
+  │ Least Response Time — pick fastest server                        │
+  │ IP Hash         — same client always goes to same server (sticky)│
+  │ Random          — uniform random pick                            │
+  │ Weighted        — bigger servers get more traffic                │
+  │ Power of Two Choices — pick 2 random, choose less loaded         │
+  └──────────────────────────────────────────────────────────────────┘
+  
+  Layer 4 LB (TCP):    HAProxy, AWS NLB, Envoy
+  Layer 7 LB (HTTP):   Nginx, AWS ALB, Envoy, Caddy, Traefik
+  Service mesh:        Istio, Linkerd (built-in LB per-service)
+</pre>
+<div class="diagram-label">Load balancing — picking the right algorithm matters at scale</div>
+</div>
+
+<h3>9.3 Rate Limiting</h3>
+<p>Cap how many requests a client can make in a window. Protects the service from abuse and runaway clients.</p>
+<div class="diagram">
+<pre>
+  ┌──────────────────────────────────────────────────────────────────┐
+  │ Algorithms                                                       │
+  │ ─────────                                                        │
+  │ Fixed Window    — count per minute window. Simple. Bursty.       │
+  │ Sliding Window  — smoother. More accurate.                       │
+  │ Token Bucket    — refill tokens at rate; each request costs one. │
+  │ Leaky Bucket    — fixed-rate processor; queue overflows = drop.  │
+  └──────────────────────────────────────────────────────────────────┘
+  
+  Where to apply:
+  • Edge (CDN/API Gateway)  — first line of defense
+  • App level (per user)    — fairness across customers
+  • DB connection pool      — prevent overload
+  
+  Tools: Cloudflare, Kong, NGINX limit_req, AWS WAF, express-rate-limit, 
+         Upstash, Redis (sliding window via sorted sets)
+</pre>
+<div class="diagram-label">Rate limiting — protect the service, isolate noisy neighbors</div>
+</div>
+
+<h3>9.4 Async I/O &amp; Event Loops</h3>
+<p>Non-blocking I/O lets a single thread handle thousands of concurrent connections. Each request doesn't get its own thread; it gets a slice of time. This is why Node.js (single-threaded event loop) can serve thousands of requests per second.</p>
+
+<h3>9.5 Connection Pooling</h3>
+<p>Already mentioned in §6.7 — but worth repeating: <strong>opening a DB connection per request is the #1 cause of slow APIs</strong>. Always pool. For serverless, use an external pooler (PgBouncer, Supabase Pooler, Neon, Prisma Accelerate).</p>
+
+<h3>9.6 CDN &amp; Edge Caching</h3>
+<p>Push static and cacheable dynamic content to edge locations near users. Cuts global latency from hundreds of ms to tens of ms. Modern CDNs (Cloudflare, Fastly, Vercel) cache HTML, JSON, and even render at the edge.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- 10. RESILIENCE PATTERNS -->
+<!-- ============================================================ -->
+<section id="resilience">
+<h2>10. Resilience Patterns</h2>
+<p>Networks fail. Services restart. Disks fill up. Resilience patterns let your system <em>degrade gracefully</em> instead of catastrophically.</p>
+
+<h3>10.1 Retry with Exponential Backoff</h3>
+<div class="diagram">
+<pre>
+  Naive retry                            Exponential backoff + jitter
+  ────────────                            ──────────────────────────────
+  on fail:                               on fail:
+    sleep 1s; retry                        attempt N: sleep (base * 2^N) + random
+    sleep 1s; retry                        attempt 1: sleep ~1s
+    sleep 1s; retry                        attempt 2: sleep ~2s
+                                          attempt 3: sleep ~4s
+  Problem: thundering herd —              attempt 4: sleep ~8s
+  many clients retry simultaneously       
+  and DOS the recovering service.        Jitter (randomization) spreads
+                                          retries so they don't pile up.
+                                          
+  Always set a max retry count + max total time.
+  Only retry idempotent operations or use idempotency keys.
+</pre>
+<div class="diagram-label">Exponential backoff with jitter — the right way to retry</div>
+</div>
+
+<h3>10.2 Circuit Breaker</h3>
+<p>If a downstream service is failing, stop calling it for a while. Like an electrical breaker — trip the circuit, save the system. Three states: <strong>Closed</strong> (calls pass through), <strong>Open</strong> (calls fail fast without trying), <strong>Half-Open</strong> (try a few requests to see if service recovered).</p>
+<div class="diagram">
+<pre>
+  Circuit Breaker State Machine:
+  ──────────────────────────────────────────────────────
+  
+                    failure rate &gt; threshold
+       CLOSED ─────────────────────────────────► OPEN
+         ▲                                          │
+         │ success                                  │ wait timeout
+         │                                          ▼
+         └──────────────────────── HALF-OPEN ───────┘
+                  failure
+  
+  CLOSED:    Normal. Requests go through. Track failure rate.
+  OPEN:      Don't even try. Return cached/default/error fast.
+             Skip the dead service entirely.
+  HALF-OPEN: Send a few "probe" requests. If they succeed → CLOSED.
+             If they fail → back to OPEN.
+  
+  Tools: Hystrix (Netflix, deprecated), Resilience4j (Java), 
+         Polly (.NET), opossum (Node), Istio (mesh-level)
+</pre>
+<div class="diagram-label">Circuit breaker — fail fast when downstream is dying</div>
+</div>
+
+<h3>10.3 Bulkhead</h3>
+<p>Like watertight compartments on a ship — if one compartment floods, others stay dry. Isolate resources (thread pools, connection pools) per dependency. If one downstream service is slow, it can't exhaust all your threads.</p>
+<div class="diagram">
+<pre>
+  Without bulkheads                       With bulkheads
+  ──────────────────                      ────────────────
+  ┌─────────────────────┐                 ┌─────────────────────┐
+  │  Thread pool: 100    │                 │ Pool A (auth):  20   │
+  │                      │                 │ Pool B (search): 30  │
+  │  Auth slow → all     │                 │ Pool C (search): 30  │
+  │  threads blocked     │                 │ Pool D (other):  20  │
+  │  → entire app frozen │                 │                      │
+  └─────────────────────┘                 │ Auth slow → only Pool│
+                                          │ A blocked. Search still│
+                                          │ works.                 │
+                                          └─────────────────────┘
+</pre>
+<div class="diagram-label">Bulkhead — isolate failures, prevent system-wide crashes</div>
+</div>
+
+<h3>10.4 Timeout</h3>
+<p>The single most important resilience pattern. Every external call must have a timeout. No exceptions. Without timeouts, a slow downstream blocks threads forever, then queue depth grows, then the whole app dies.</p>
+
+<h3>10.5 Fallback &amp; Graceful Degradation</h3>
+<div class="diagram">
+<pre>
+  Recommendation Service down?           Fallback chain:
+  ─────────────────────────              ─────────────────
+  ❌ Show error to user                  Try personalized recs from ML service
+                                          ↓ fail
+  ✅ Show "trending products"             Try recently viewed from cache
+     instead.                             ↓ fail
+                                          Try generic "popular this week"
+                                          ↓ fail
+                                          Show empty state ("Browse categories")
+  
+  Each fallback is cheaper and more reliable than the previous.
+  Users get something — never nothing.
+</pre>
+<div class="diagram-label">Graceful degradation — give users a worse experience instead of no experience</div>
+</div>
+
+<h3>10.6 Health Checks</h3>
+<div class="diagram">
+<pre>
+  Two kinds of health checks:
+  ────────────────────────────
+  
+  /health/live (Liveness)              /health/ready (Readiness)
+  ─────────────────────                ────────────────────────
+  "Am I alive?"                         "Am I ready to serve?"
+  
+  Returns 200 if process is running.   Returns 200 if dependencies (DB, cache,
+  Returns 5xx → orchestrator restarts. queues) are reachable AND I'm warmed up.
+                                        Returns 5xx → load balancer skips me.
+  
+  Used by:                              Used by:
+  Kubernetes liveness probe             Kubernetes readiness probe
+  ECS health check                      Load balancers
+                                        Service mesh
+  
+  Don't make liveness check too strict! "DB unreachable" should fail readiness,
+  not liveness — restarting won't help if DB is down.
+</pre>
+<div class="diagram-label">Liveness (am I alive) vs Readiness (can I serve traffic)</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 11. TESTING STRATEGIES -->
+<!-- ============================================================ -->
+<section id="testing">
+<h2>11. Testing Strategies</h2>
+
+<h3>11.1 The Testing Pyramid</h3>
+<div class="diagram">
+<pre>
+                       ┌────────┐
+                       │  E2E    │ ← few, slow, brittle
+                       │ Tests   │   real DB, real HTTP, real queues
+                       └────┬────┘   Cypress/Playwright + test envs
+                  ┌─────────┴────────┐
+                  │   Integration     │ ← moderate, useful
+                  │    Tests          │   real DB (testcontainers),
+                  │                   │   mock external APIs
+                  └─────────┬────────┘
+              ┌─────────────┴─────────────┐
+              │      Unit Tests           │ ← fast, many
+              │  (pure functions, domain) │   no DB, no network
+              │                           │   millisecond runtime
+              └───────────────────────────┘
+              ┌──────────┐
+              │  Static  │ ← TypeScript, ESLint
+              │ Analysis │   catches bugs at write time
+              └──────────┘
+
+  General rule: more unit tests, fewer E2E.
+  Each layer above is exponentially slower &amp; more brittle.
+</pre>
+<div class="diagram-label">Testing pyramid — more cheap, fast tests; fewer expensive, slow tests</div>
+</div>
+
+<h3>11.2 Contract Testing</h3>
+<p>How do you make sure services don't break each other when deploying independently? Contract testing — both producer and consumer agree on a schema and verify compatibility automatically.</p>
+<div class="diagram">
+<pre>
+  Without contracts                      With contracts (Pact, Schemathesis)
+  ──────────────────                      ──────────────────────────────────
+  Service A deploys.                     Both services share a contract:
+  Service A breaks Service B.            { "user": { "id": "string", "name": "string" } }
+  B's pager goes off.                    
+  Discover broken contract in prod.      Service A's CI:
+                                          • Runs against contract → must pass
+  ❌ Painful.                            
+                                         Service B's CI:
+                                          • Runs consumer tests against contract
+                                          
+                                         Either side breaks the contract → CI fails.
+                                         No deploy until both agree.
+  
+  Tools: Pact (multi-language), Spring Cloud Contract, Schemathesis (OpenAPI)
+</pre>
+<div class="diagram-label">Contract tests — verify producer-consumer compatibility before deploy</div>
+</div>
+
+<h3>11.3 Backend Testing Tools</h3>
+<table>
+  <tr><th>Layer</th><th>Tools</th><th>What to Test</th></tr>
+  <tr><td>Static</td><td>TypeScript, ESLint, mypy, golangci-lint, Biome</td><td>Types, code quality</td></tr>
+  <tr><td>Unit</td><td>Vitest, Jest, pytest, JUnit, xUnit, Go test</td><td>Pure functions, domain logic, reducers</td></tr>
+  <tr><td>Integration</td><td>Testcontainers, supertest, requests, RestAssured</td><td>Repos with real DB, services with mocked deps</td></tr>
+  <tr><td>Contract</td><td>Pact, Spring Cloud Contract, Schemathesis</td><td>Service-to-service compatibility</td></tr>
+  <tr><td>E2E</td><td>Playwright (API mode), Postman/Newman, Cypress</td><td>Critical user flows end-to-end</td></tr>
+  <tr><td>Load</td><td>k6, Locust, Gatling, Artillery, JMeter</td><td>Throughput, p99 latency, breaking point</td></tr>
+  <tr><td>Chaos</td><td>Chaos Monkey, Toxiproxy, Gremlin, LitmusChaos</td><td>Failure injection — does the system survive?</td></tr>
+</table>
+
+<h3>11.4 Load Testing</h3>
+<div class="diagram">
+<pre>
+  Find your system's limits BEFORE production does.
+  
+  Smoke test     — does the system respond at all?
+  Load test      — handle expected traffic? (e.g., 1k req/s)
+  Stress test    — push past expected. Where does it break?
+  Spike test     — sudden 10x traffic. Recover gracefully?
+  Soak test      — sustained load for hours. Memory leaks?
+  
+  Always measure:
+  • RPS / throughput
+  • Latency percentiles (p50, p95, p99, p99.9)
+  • Error rate
+  • Resource usage (CPU, RAM, DB connections)
+</pre>
+<div class="diagram-label">Load testing — know your limits before users find them</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 12. OBSERVABILITY -->
+<!-- ============================================================ -->
+<section id="observability">
+<h2>12. Observability</h2>
+<p>"Monitoring tells you when something is wrong. Observability lets you ask why." Three pillars: logs, metrics, and traces.</p>
+
+<h3>12.1 The Three Pillars</h3>
+<div class="diagram">
+<pre>
+  ┌──────────────────────────────────────────────────────────────────┐
+  │                                                                  │
+  │  📜 LOGS              📊 METRICS         🔗 TRACES              │
+  │  ────────             ──────────         ──────────              │
+  │  Discrete events      Aggregated         End-to-end request flow │
+  │  with timestamps      numbers over time   across services         │
+  │                                                                  │
+  │  "Order 42 placed"    "200 req/s"         "Request abc123:        │
+  │  "DB query 50ms"      "p99 200ms"           gateway 5ms →         │
+  │  "Auth failed: ..."   "errors 0.1%"          orders-svc 30ms →    │
+  │                                              payment-svc 80ms →   │
+  │  When?  Always        When? Always           inventory-svc 20ms"  │
+  │                                                                  │
+  │  Tools: ELK,          Tools: Prometheus,  Tools: Jaeger, Tempo,  │
+  │  Loki, Datadog        Grafana, Datadog,   Honeycomb, Datadog APM │
+  │                       VictoriaMetrics                            │
+  └──────────────────────────────────────────────────────────────────┘
+  
+  Modern stack: OpenTelemetry (OTel) — vendor-neutral standard for
+                 emitting all three. SDKs for every language.
+                 → forward to whatever backend (Datadog, Honeycomb, ...)
+</pre>
+<div class="diagram-label">Three pillars + OpenTelemetry as the unified emission standard</div>
+</div>
+
+<h3>12.2 Structured Logging</h3>
+<div class="code">
+<div class="code-label">Structured logs — searchable, filterable, machine-readable</div>
+<pre>
+// ❌ Plain text — hard to query
+console.log(`User ${userId} placed order ${orderId} for $${amount}`)
+
+// ✅ Structured JSON — queryable, filterable
+logger.info('order_placed', {
+  userId,
+  orderId,
+  amount,
+  currency: 'USD',
+  requestId,
+  traceId,
+})
+
+// In production, every log line should have:
+// • timestamp, level, message
+// • requestId / traceId (for correlation)
+// • userId, tenantId (for filtering)
+// • service name, version, env
+
+// Tools: pino, winston (Node), zap (Go), structlog (Python), 
+//        zerolog (Go), tracing (Rust)
+</pre>
+</div>
+
+<h3>12.3 Key Metrics — RED &amp; USE</h3>
+<div class="diagram">
+<pre>
+  RED method (for services)              USE method (for resources)
+  ─────────────────────────              ──────────────────────────
+  Rate     — requests per second          Utilization — % time busy
+  Errors   — failed request rate          Saturation  — queue depth / waiting
+  Duration — latency distribution         Errors      — error rate
+  
+  Track for every endpoint.               Track for every resource (CPU, disk,
+                                          network, connections, threads).
+  
+  ┌────────────────────────────────────────────────────────────┐
+  │ Critical metrics every backend should track:               │
+  │                                                            │
+  │  Latency:    p50, p95, p99, p99.9 (NOT just averages!)    │
+  │  Throughput: req/s, jobs/s                                 │
+  │  Errors:     by status code, by endpoint                   │
+  │  Saturation: CPU, memory, DB connections, queue depth      │
+  │  Business:   signups/min, orders/min, revenue/hour         │
+  └────────────────────────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">RED for services, USE for resources, never just averages</div>
+</div>
+
+<h3>12.4 SLI / SLO / SLA + Error Budgets</h3>
+<div class="diagram">
+<pre>
+  SLI — Service Level INDICATOR
+  ──────────────────────────────
+  A measurable quality of service.
+  E.g., "99% of requests &lt; 200ms" or "successful request rate".
+  
+  SLO — Service Level OBJECTIVE
+  ──────────────────────────────
+  Target value for an SLI you commit to internally.
+  E.g., "99.9% of requests successful in any 30-day window."
+  
+  SLA — Service Level AGREEMENT
+  ──────────────────────────────
+  Contractual SLO with consequences (refunds, credits) if missed.
+  Always set SLA &lt; SLO (give yourself buffer).
+  
+  Error Budget
+  ────────────
+  100% - SLO = your error budget.
+  E.g., 99.9% SLO → 0.1% error budget = ~43 minutes of downtime per month.
+  
+  ┌──────────────────────────────────────────────────────────┐
+  │ Use error budget as a circuit breaker for releases:      │
+  │ • Budget left? Ship aggressively.                        │
+  │ • Budget burned? Freeze risky deploys, focus on SRE work.│
+  └──────────────────────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">SLI → SLO → SLA pyramid; error budget governs release pace</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 13. SECURITY PATTERNS -->
+<!-- ============================================================ -->
+<section id="security">
+<h2>13. Security Patterns</h2>
+<p>Security is architectural, not bolt-on. The bigger the bolt-ons, the bigger the holes.</p>
+
+<h3>13.1 Authentication Patterns</h3>
+<div class="diagram">
+<pre>
+  ┌──────────────────────────────────────────────────────────────────┐
+  │ Sessions (server-stateful)                                       │
+  │ ────────                                                         │
+  │ Server creates session, stores in DB/Redis, returns cookie.      │
+  │ Pros: revocable, simple, secure (HTTP-only cookies).             │
+  │ Cons: state on server (Redis dependency), CSRF protection needed.│
+  │ Best for: traditional web apps.                                  │
+  ├──────────────────────────────────────────────────────────────────┤
+  │ JWT (stateless tokens)                                           │
+  │ ───                                                              │
+  │ Server signs a payload, gives it to client.                      │
+  │ Client sends it back; server verifies signature.                 │
+  │ Pros: stateless, easy across services, no DB lookup.             │
+  │ Cons: hard to revoke, payload visible (don't put secrets!),      │
+  │       refresh token logic needed.                                │
+  │ Best for: APIs, microservices, mobile.                           │
+  ├──────────────────────────────────────────────────────────────────┤
+  │ OAuth 2.0 / OIDC                                                 │
+  │ ──────────                                                       │
+  │ Delegated authentication via third party (Google, GitHub, etc.). │
+  │ "Sign in with Google" → Google issues a token → your app trusts  │
+  │ the token (after verifying it).                                  │
+  │ OIDC adds identity (who) on top of OAuth (what they can do).     │
+  │ Best for: anything user-facing.                                  │
+  ├──────────────────────────────────────────────────────────────────┤
+  │ Passkeys (WebAuthn)                                              │
+  │ ────────                                                         │
+  │ Cryptographic key pairs stored in device secure enclaves.        │
+  │ No password ever transmitted. Phishing-proof. Biometrics or PIN. │
+  │ Becoming the default for new auth flows in 2025-2026.            │
+  ├──────────────────────────────────────────────────────────────────┤
+  │ API keys / Tokens                                                │
+  │ ────────                                                         │
+  │ Static long-lived secret. For server-to-server or developer use. │
+  │ Always scope (read-only vs write), rotate, store hashed.         │
+  └──────────────────────────────────────────────────────────────────┘
+</pre>
+<div class="diagram-label">Auth options — pick by trust model and threat profile</div>
+</div>
+
+<h3>13.2 Authorization Models</h3>
+<div class="diagram">
+<pre>
+  RBAC — Role-Based Access Control
+  ─────────────────────────────────
+  User has roles. Roles have permissions.
+    User Alice → role "editor" → can [edit, publish, view]
+  Simple. Coarse.
+  
+  ABAC — Attribute-Based Access Control
+  ─────────────────────────────────────
+  Decision based on attributes of user, resource, action, context.
+    "Alice can edit Document 42 IF Alice.dept == Document.dept
+     AND now() between 9am-5pm AND Alice.location == 'office'"
+  Powerful. Complex.
+  
+  ReBAC — Relationship-Based Access Control
+  ─────────────────────────────────────────
+  Decisions based on relationships in a graph.
+    Alice owns Folder X. X contains Doc Y. Therefore Alice can edit Y.
+  Models permissions like Google Drive, GitHub, Notion.
+  Tools: SpiceDB, OpenFGA (Auth0), Cerbos.
+  
+  ACL — Access Control List
+  ─────────────────────────
+  Per-resource list of who can do what. Old-school. Doesn't scale.
+</pre>
+<div class="diagram-label">RBAC vs ABAC vs ReBAC — pick based on permission complexity</div>
+</div>
+
+<h3>13.3 OWASP Top 10 — Backend Defenses</h3>
+<table>
+  <tr><th>Vulnerability</th><th>Defense</th></tr>
+  <tr><td>Broken Access Control</td><td>Check authorization on EVERY endpoint, server-side. Never trust client.</td></tr>
+  <tr><td>SQL Injection</td><td>Parameterized queries. Never concatenate SQL strings.</td></tr>
+  <tr><td>Cryptographic Failures</td><td>TLS everywhere; bcrypt/argon2 for passwords; no MD5/SHA1.</td></tr>
+  <tr><td>Insecure Design</td><td>Threat model. Defense in depth. Principle of least privilege.</td></tr>
+  <tr><td>Security Misconfiguration</td><td>Disable defaults. Secure headers (CSP, HSTS). No verbose error messages.</td></tr>
+  <tr><td>Vulnerable Dependencies</td><td>npm audit, Snyk, Dependabot. Pin versions. Watch CVEs.</td></tr>
+  <tr><td>Identification Failures</td><td>Strong session mgmt. Account lockout. MFA. Secure password reset.</td></tr>
+  <tr><td>Software/Data Integrity</td><td>Verify package integrity (lockfiles, SRI). Sign code/containers.</td></tr>
+  <tr><td>Logging &amp; Monitoring</td><td>Audit auth events. Alert on anomalies. Don't log secrets.</td></tr>
+  <tr><td>SSRF</td><td>Block requests to internal IPs (169.254.169.254 etc). Allowlist URLs.</td></tr>
+</table>
+
+<h3>13.4 Secrets Management</h3>
+<div class="diagram">
+<pre>
+  Bad                                    Good
+  ───                                    ────
+  Hardcoded in source                    Environment variables
+  Committed to git                        Secret manager (Vault, AWS Secrets Manager,
+  Plaintext in env files                  Azure Key Vault, GCP Secret Manager,
+                                          Doppler, 1Password Secrets Automation)
+  
+  Better still:
+  • Short-lived credentials (rotate every hour)
+  • Workload identity (no static creds — IAM roles, Workload Identity)
+  • mTLS between services (no shared secrets)
+  • Sealed Secrets / SOPS for git-stored encrypted configs
+</pre>
+<div class="diagram-label">Secrets — never in code, never in git, ideally short-lived</div>
+</div>
+
+<h3>13.5 Rate Limiting &amp; DDoS</h3>
+<p>Layers of defense: CDN/edge (block volumetric attacks before they reach you), API gateway (per-API-key limits), application (per-user limits), DB (connection limits). Cloudflare, AWS Shield, Akamai handle volumetric DDoS at the edge for ~free.</p>
+
+<h3>13.6 Input Validation</h3>
+<p>Validate at the boundary. Schema-based validation (Zod, Yup, class-validator, Pydantic, Joi) is now the norm. <strong>Reject early, reject hard</strong> — the deeper bad data flows, the harder it is to undo damage.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- 14. DEPLOYMENT PATTERNS -->
+<!-- ============================================================ -->
+<section id="deployment">
+<h2>14. Deployment Patterns</h2>
+
+<h3>14.1 Blue-Green Deployment</h3>
+<div class="diagram">
+<pre>
+  Two identical environments. Switch traffic atomically.
+  
+  Time t=0          Blue (LIVE)  ◄── 100% traffic
+                    Green        ◄── 0% (idle)
+  
+  Deploy v2          Blue         ◄── 100% traffic
+                    Green        ── deploy v2 here
+                    Smoke test   ── verify Green
+  
+  Switch traffic    Blue         ── 0% (now standby for rollback)
+                    Green (LIVE) ◄── 100% traffic
+  
+  Rollback?         Switch back to Blue. Instant.
+  
+  Pros: zero downtime, instant rollback.
+  Cons: 2x infrastructure cost during deploys, DB migrations tricky.
+</pre>
+<div class="diagram-label">Blue-green — full duplicate environment, atomic switch, instant rollback</div>
+</div>
+
+<h3>14.2 Canary Deployment</h3>
+<div class="diagram">
+<pre>
+  Gradually shift traffic to new version. Monitor at each step.
+  
+  ──────────────────────────────────────────────────────────────────
+  Step 1:  v1 ████████████████████████████████████████████ 99%
+           v2 █                                              1%
+           Watch: errors? latency? business metrics?
+  ──────────────────────────────────────────────────────────────────
+  Step 2:  v1 ███████████████████████████████████████ 90%
+           v2 ████                                     10%
+  ──────────────────────────────────────────────────────────────────
+  Step 3:  v1 █████████████████ 50%
+           v2 █████████████████ 50%
+  ──────────────────────────────────────────────────────────────────
+  Step 4:  v2 100% (full rollout)
+  
+  Tools: Argo Rollouts, Flagger, Spinnaker, manual via service mesh.
+  Auto-rollback if error rate spikes.
+</pre>
+<div class="diagram-label">Canary — gradual traffic shift, automated rollback if metrics degrade</div>
+</div>
+
+<h3>14.3 Rolling Deployment</h3>
+<p>Replace instances one at a time (or in small batches) until all run the new version. The Kubernetes default. Slower than blue-green, less infrastructure cost.</p>
+
+<h3>14.4 Feature Flags</h3>
+<div class="diagram">
+<pre>
+  Deploy ≠ Release.
+  
+  Code is deployed → behind a flag → flag controls who sees it.
+  
+  if (flags.isEnabled('new-checkout', { userId, plan })) {
+    return newCheckoutFlow()
+  }
+  return oldCheckoutFlow()
+  
+  Use cases:
+  ┌──────────────────────────────────────────────────────────────┐
+  │ Trunk-based development — merge to main, hide behind flag    │
+  │ Kill switch — disable features instantly without deploy      │
+  │ A/B testing — % rollout, measure impact                      │
+  │ Gradual rollout — 1% → 10% → 50% → 100%                      │
+  │ Permission tier — feature only for paid users                │
+  │ Beta program — opt-in users only                             │
+  └──────────────────────────────────────────────────────────────┘
+  
+  Tools: LaunchDarkly, Unleash, Flagsmith, ConfigCat, GrowthBook,
+         Vercel Edge Config, OpenFeature (open standard)
+</pre>
+<div class="diagram-label">Feature flags — decouple deploy from release</div>
+</div>
+
+<h3>14.5 Zero-Downtime Database Migrations</h3>
+<p>Already covered in §6.8 — but the pattern bears repeating because it's the #1 cause of deployment outages: <strong>never make a breaking schema change in one deploy</strong>. Always: add nullable → backfill → switch reads → stop writes to old → drop, across multiple deploys.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- 15. DECISION MATRIX -->
+<!-- ============================================================ -->
+<section id="decision">
+<h2>15. Decision Matrix — Choosing Your Stack</h2>
+
+<h3>By Application Type</h3>
+<table>
+  <tr><th>App Type</th><th>Architecture</th><th>API</th><th>Database</th><th>Stack Example</th></tr>
+  <tr><td>MVP / startup</td><td>Modular monolith</td><td>REST or tRPC</td><td>Postgres</td><td>NestJS + Prisma + Postgres</td></tr>
+  <tr><td>SaaS (early)</td><td>Modular monolith</td><td>REST + webhooks</td><td>Postgres + Redis</td><td>Rails or NestJS</td></tr>
+  <tr><td>SaaS (scaled)</td><td>Microservices (selectively)</td><td>REST + gRPC + events</td><td>Postgres per svc + Redis + Kafka</td><td>Mixed (Go, Node, Java)</td></tr>
+  <tr><td>E-commerce</td><td>Modular → microservices</td><td>REST + GraphQL BFF</td><td>Postgres + ES + Redis</td><td>Spring Boot, Shopify-style Ruby</td></tr>
+  <tr><td>Real-time chat/games</td><td>Stateful services + queues</td><td>WebSockets / SSE</td><td>Redis + Postgres</td><td>Phoenix (Elixir), Go, Node</td></tr>
+  <tr><td>Analytics / OLAP</td><td>Streaming + columnar DB</td><td>REST</td><td>ClickHouse / Druid / BigQuery</td><td>Kafka + Flink + ClickHouse</td></tr>
+  <tr><td>API for third parties</td><td>Stateless services</td><td>REST + webhooks</td><td>Postgres</td><td>Stripe-like: Ruby/Go + sharded Postgres</td></tr>
+  <tr><td>Internal tools</td><td>Modular monolith</td><td>tRPC or REST</td><td>Postgres</td><td>Next.js fullstack + Prisma</td></tr>
+  <tr><td>Spiky / event-driven</td><td>Serverless</td><td>HTTP triggers</td><td>DynamoDB / Cosmos DB</td><td>AWS Lambda + SQS + DynamoDB</td></tr>
+  <tr><td>Global low-latency</td><td>Edge + replicated DB</td><td>REST/SSE</td><td>D1 / Turso / Neon</td><td>Cloudflare Workers + Hono + D1</td></tr>
+  <tr><td>Audit-heavy / financial</td><td>CQRS + Event Sourcing</td><td>REST + events</td><td>EventStore + Postgres views</td><td>Axon, Marten, custom JVM</td></tr>
+</table>
+
+<h3>Decision Flowchart</h3>
+<div class="diagram">
+<pre>
+  START: What are you building?
+  │
+  ├─ MVP / small team? ──► Modular Monolith + Postgres + REST
+  │                          (NestJS / Rails / Django / Spring Boot)
+  │                          90% of apps live here happily.
+  │
+  ├─ Spiky/scheduled workload? ──► Serverless (Lambda / Workers)
+  │                                 + DynamoDB or Postgres+pooler
+  │
+  ├─ Multiple teams (>30 engs)? ──► Microservices
+  │                                  + K8s + service mesh + Kafka
+  │                                  + per-service DB
+  │                                  Only if monolith truly hurts.
+  │
+  ├─ Multi-region / global users? ──► Edge backend (Cloudflare/Vercel)
+  │                                    + replicated DB (D1/Turso/Neon)
+  │                                    + cache at edge
+  │
+  ├─ Need full audit history? ──► Event Sourcing + CQRS
+  │                                (only if business demands it)
+  │
+  ├─ Many client types (web/mobile/TV)? ──► BFF per client
+  │                                          + GraphQL or tRPC
+  │
+  └─ Real-time / collaborative? ──► WebSocket service + Redis pub/sub
+                                     (Phoenix, Socket.IO, Centrifugo)
+</pre>
+<div class="diagram-label">Quick decision guide — start simple, add complexity when evidence demands</div>
+</div>
+
+<h3>The Universal Backend Checklist</h3>
+<div class="diagram">
+<pre>
+  Before going to production, verify:
+  ─────────────────────────────────────
+  
+  ☐ Every external call has a timeout
+  ☐ Every external call has retry logic (idempotent + backoff)
+  ☐ Every endpoint has authentication
+  ☐ Every endpoint has authorization
+  ☐ Every endpoint has input validation
+  ☐ Every endpoint has rate limiting
+  ☐ Every DB query is indexed appropriately
+  ☐ Every DB write is in a transaction (where it matters)
+  ☐ Every secret is in a secret manager (not env vars on disk)
+  ☐ Every log is structured (JSON)
+  ☐ Every log line has requestId / traceId
+  ☐ Liveness + readiness health checks exist
+  ☐ Graceful shutdown (SIGTERM → drain → exit)
+  ☐ Connection pooling configured
+  ☐ Backups + restore procedure tested
+  ☐ Monitoring alerts on errors, latency, saturation
+  ☐ Migrations are zero-downtime (additive)
+  ☐ Idempotency keys on critical mutations
+  ☐ DLQ / poison queue monitored
+  ☐ Disaster recovery plan documented
+</pre>
+<div class="diagram-label">The pre-production checklist — non-negotiables before real traffic</div>
+</div>
+
+<div class="callout">
+  <strong>Final Principle:</strong> Backend architecture is about trade-offs, not best practices. The "best" architecture is the simplest one that handles your current requirements while leaving room to evolve. Start with a modular monolith on Postgres. Introduce microservices, event sourcing, sharding, edge compute, and service meshes <em>only when you have evidence you need them</em>. Premature architecture will sink a startup faster than premature optimization.
+</div>
+</section>
+
+<footer style="text-align:center; padding: 3rem 0 2rem; color: var(--text2); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 3rem;">
+  Modern Backend Architecture — Complete Reference Guide<br>
+  11 architecture styles · 15 sections · Languages-agnostic · 2025–2026
+</footer>
+
+</div>
+</body>
+</html>
