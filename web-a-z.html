@@ -16,6 +16,7 @@
   a{color:var(--c);text-decoration:none}a:hover{text-decoration:underline}
   code{background:var(--s2);padding:2px 7px;border-radius:5px;font-size:.88em;color:var(--g);font-family:'SF Mono','Cascadia Code','Fira Code',monospace}
   em{color:var(--a2);font-style:normal}
+  strong{color:var(--t)}
 
   /* NAV */
   .top-nav{position:sticky;top:0;z-index:100;background:rgba(10,14,26,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--b);padding:10px 1.5rem;display:flex;align-items:center;gap:12px}
@@ -29,7 +30,7 @@
   .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(244,114,182,.08),transparent 55%),radial-gradient(ellipse at 70% 50%,rgba(251,146,60,.07),transparent 55%);pointer-events:none}
   .hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1.1;margin-bottom:.6rem;position:relative}
   .hero h1 .gr{background:linear-gradient(135deg,var(--p),var(--o));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .hero .sub{font-size:clamp(.9rem,1.6vw,1.05rem);color:var(--t2);max-width:600px;margin:0 auto;position:relative}
+  .hero .sub{font-size:clamp(.9rem,1.6vw,1.05rem);color:var(--t2);max-width:620px;margin:0 auto;position:relative}
 
   .wrap{max-width:900px;margin:0 auto;padding:0 1.5rem 4rem}
 
@@ -88,12 +89,12 @@
   /* LAYER VIS */
   .layers{display:flex;flex-direction:column;gap:4px;margin:14px 0}
   .layer{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;font-size:.84rem}
-  .layer .name{font-weight:600;min-width:110px}
+  .layer .name{font-weight:600;min-width:130px}
   .layer .desc{color:var(--t2);font-size:.78rem}
 
   /* TIMELINE */
   .timeline{position:relative;padding-left:22px;margin:14px 0}
-  .timeline::before{content:'';position:absolute;left:7px;top:4px;bottom:4px;width:2px;border-radius:1px}
+  .timeline::before{content:'';position:absolute;left:7px;top:4px;bottom:4px;width:2px;border-radius:1px;background:var(--s3)}
   .tl-item{position:relative;padding:0 0 14px;font-size:.84rem}
   .tl-item::before{content:'';position:absolute;left:-19px;top:5px;width:9px;height:9px;border-radius:50%;border:2px solid var(--a);background:var(--bg)}
   .tl-item .time{font-weight:700;display:block}
@@ -104,6 +105,14 @@
 
   /* ARROW BOX */
   .arrow-box{text-align:center;padding:10px 0;color:var(--t3);font-size:1.2rem}
+
+  /* TAB SWITCHER (for showing alternatives like Express vs NestJS) */
+  .tabs{display:flex;gap:4px;margin:14px 0 0;border-bottom:1px solid var(--b)}
+  .tab{padding:8px 14px;font-size:.8rem;font-weight:600;cursor:pointer;color:var(--t2);border-bottom:2px solid transparent;transition:.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit}
+  .tab:hover{color:var(--t)}
+  .tab.active{color:#fff}
+  .tab-panel{display:none}
+  .tab-panel.active{display:block}
 
   /* FOOTER */
   footer{text-align:center;padding:2rem;color:var(--t3);font-size:.8rem;border-top:1px solid var(--b);margin-top:2rem}
@@ -127,33 +136,34 @@
 <!-- HERO -->
 <div class="hero">
   <h1><span class="gr">Web Dev A → Z</span></h1>
-  <p class="sub">The complete journey of code — from the developer's keyboard to pixels on the user's screen. Every layer, every transformation, every component explained with real code.</p>
+  <p class="sub">The complete journey of code — from the developer's keyboard, through frontend and backend, into the cloud, and back to pixels on the user's screen. Every layer, every transformation, every component explained with real code.</p>
 </div>
 
 <div class="wrap">
 
 <!-- TABLE OF CONTENTS -->
 <div class="toc">
-  <a href="#s1"><span class="num" style="color:var(--a2)">01</span><span class="label">Developer writes code</span></a>
-  <a href="#s2"><span class="num" style="color:var(--g)">02</span><span class="label">Build tools transform</span></a>
-  <a href="#s3"><span class="num" style="color:var(--bl)">03</span><span class="label">Deploy to cloud</span></a>
-  <a href="#s4"><span class="num" style="color:var(--o)">04</span><span class="label">User makes request</span></a>
-  <a href="#s5"><span class="num" style="color:var(--y)">05</span><span class="label">Server responds</span></a>
-  <a href="#s6"><span class="num" style="color:var(--p)">06</span><span class="label">Browser renders</span></a>
-  <a href="#s7"><span class="num" style="color:var(--g)">07</span><span class="label">JS event loop</span></a>
-  <a href="#s8"><span class="num" style="color:var(--r)">08</span><span class="label">User sees &amp; interacts</span></a>
+  <a href="#s1"><span class="num" style="color:var(--a2)">01</span><span class="label">Frontend source code</span></a>
+  <a href="#s2"><span class="num" style="color:var(--c)">02</span><span class="label">Backend source code</span></a>
+  <a href="#s3"><span class="num" style="color:var(--g)">03</span><span class="label">Build &amp; compile</span></a>
+  <a href="#s4"><span class="num" style="color:var(--bl)">04</span><span class="label">Deploy to cloud</span></a>
+  <a href="#s5"><span class="num" style="color:var(--o)">05</span><span class="label">User makes request</span></a>
+  <a href="#s6"><span class="num" style="color:var(--y)">06</span><span class="label">Server processes it</span></a>
+  <a href="#s7"><span class="num" style="color:var(--p)">07</span><span class="label">Browser renders</span></a>
+  <a href="#s8"><span class="num" style="color:var(--g)">08</span><span class="label">JS event loop</span></a>
+  <a href="#s9"><span class="num" style="color:var(--r)">09</span><span class="label">User sees &amp; interacts</span></a>
 </div>
 
 
 <!-- ============================================ -->
-<!-- SECTION 1 -->
+<!-- SECTION 1 — FRONTEND SOURCE -->
 <!-- ============================================ -->
 <div class="section" id="s1">
 <div class="section-head">
 <span class="section-num" style="background:rgba(99,102,241,.15);color:var(--a2)">01</span>
-<h2 class="section-title">Developer writes code</h2>
+<h2 class="section-title">Frontend source code</h2>
 </div>
-<p class="section-sub">You open your editor and write in languages the browser <em>cannot</em> understand natively — TypeScript, JSX, SCSS. These are higher-level abstractions that make development faster and safer.</p>
+<p class="section-sub">You open your editor and write in languages the browser <em>cannot</em> understand natively — TypeScript, JSX, SCSS. These are higher-level abstractions that make development faster, safer, and more maintainable than raw HTML/CSS/JS.</p>
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
@@ -162,7 +172,7 @@
 <span class="step-arrow">▼</span>
 </div>
 <div class="step-body">
-<p class="step-desc">A modern web project has these source files. None can run directly in a browser.</p>
+<p class="step-desc">A modern web project has these source files. None can run directly in a browser — they all need to be transformed first.</p>
 
 <span class="code-label" style="background:rgba(99,102,241,.15);color:var(--a2)">App.tsx — React component in TypeScript + JSX</span>
 <pre>// TypeScript + JSX — browsers don't understand this!
@@ -262,9 +272,9 @@ $shadow: 0 2px 8px rgba(0,0,0,0.1);
 <pre>{
   "name": "user-dashboard",
   "scripts": {
-    "dev": "vite",              // Local dev server with HMR
-    "build": "tsc &amp;&amp; vite build", // Type-check, then bundle
-    "preview": "vite preview"   // Preview production build
+    "dev": "vite",                // Local dev server with HMR
+    "build": "tsc &amp;&amp; vite build",  // Type-check, then bundle
+    "preview": "vite preview"     // Preview production build
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -280,7 +290,7 @@ $shadow: 0 2px 8px rgba(0,0,0,0.1);
 
 <div class="hbox" style="background:rgba(99,102,241,.06);border-color:var(--a)">
 <p class="htitle" style="color:var(--a2)">Why can't browsers just run this directly?</p>
-<p style="color:var(--t2)">Browsers only understand 3 languages: <strong style="color:var(--t)">HTML</strong>, <strong style="color:var(--t)">CSS</strong>, and <strong style="color:var(--t)">JavaScript</strong>. TypeScript adds types JS doesn't have. JSX mixes HTML into JS. SCSS adds variables and nesting. Module imports like <code>import React from 'react'</code> don't resolve to real file paths. All must be transformed.</p>
+<p style="color:var(--t2)">Browsers only understand 3 languages: <strong>HTML</strong>, <strong>CSS</strong>, and <strong>JavaScript</strong>. TypeScript adds types JS doesn't have. JSX mixes HTML into JS. SCSS adds variables and nesting. Module imports like <code>import React from 'react'</code> don't resolve to real file paths. All must be transformed by a build tool before the browser ever sees them.</p>
 </div>
 </div>
 </div>
@@ -302,7 +312,7 @@ $shadow: 0 2px 8px rgba(0,0,0,0.1);
 │   ├── App.module.scss    # Styles
 │   ├── main.tsx           # Entry point
 │   ├── api/
-│   │   └── users.ts       # API functions
+│   │   └── users.ts       # API functions (calls backend)
 │   ├── components/
 │   │   ├── Header.tsx
 │   │   └── UserCard.tsx
@@ -314,7 +324,39 @@ $shadow: 0 2px 8px rgba(0,0,0,0.1);
 ├── package.json           # Dependencies + scripts
 ├── tsconfig.json          # TypeScript config
 └── vite.config.ts         # Build tool config</pre>
-<p class="step-desc">The <code>node_modules</code> folder alone can contain <strong>hundreds of megabytes</strong>. The browser never sees any of it. The build tool extracts only what's needed.</p>
+<p class="step-desc">The <code>node_modules</code> folder alone can contain <strong>hundreds of megabytes</strong>. The browser never sees any of it — the build tool extracts only the code that's actually used.</p>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(99,102,241,.15);color:var(--a2)">1.3</span>
+<span class="step-title">The frontend talks to a backend</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc">Notice the <code>fetchUsers()</code> call in <code>App.tsx</code>. That function lives in <code>src/api/users.ts</code> and makes an HTTP request to a server you don't see in this folder — the <strong>backend</strong>. The frontend can only render data; the backend owns the data, the database, the auth, and the business rules.</p>
+
+<span class="code-label" style="background:rgba(34,211,238,.15);color:var(--c)">src/api/users.ts — the bridge to the backend</span>
+<pre>// This file is part of the FRONTEND but its only job is to
+// talk to the BACKEND over HTTP.
+
+const API_BASE = import.meta.env.VITE_API_URL; // e.g. https://api.example.com
+
+export async function fetchUsers(): Promise&lt;User[]&gt; {
+  const res = await fetch(`${API_BASE}/users`, {
+    headers: { 'Authorization': `Bearer ${getToken()}` },
+    credentials: 'include',  // send cookies
+  });
+
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}</pre>
+
+<div class="hbox" style="background:rgba(34,211,238,.06);border-color:var(--c)">
+<p class="htitle" style="color:var(--c)">Frontend &amp; backend are separate programs</p>
+<p style="color:var(--t2)">They run on different machines, are written by potentially different people, and communicate <em>only</em> through a contract — typically a REST or GraphQL API. The frontend trusts nothing the user types; the backend trusts nothing the frontend sends. Both validate. <strong>That contract is what the next section is about.</strong></p>
+</div>
 </div>
 </div>
 </div>
@@ -322,17 +364,526 @@ $shadow: 0 2px 8px rgba(0,0,0,0.1);
 <div class="connector">⬇</div>
 
 <!-- ============================================ -->
-<!-- SECTION 2 -->
+<!-- SECTION 2 — BACKEND SOURCE (NEW) -->
 <!-- ============================================ -->
 <div class="section" id="s2">
 <div class="section-head">
-<span class="section-num" style="background:rgba(52,211,153,.15);color:var(--g)">02</span>
-<h2 class="section-title">Build tools transform it</h2>
+<span class="section-num" style="background:rgba(34,211,238,.15);color:var(--c)">02</span>
+<h2 class="section-title">Backend source code</h2>
 </div>
-<p class="section-sub">When you run <code>npm run build</code>, a pipeline of transformations kicks off. Each step takes the code closer to something the browser can understand — like a factory assembly line.</p>
+<p class="section-sub">The backend is a separate program that runs on a server. It owns the database, enforces business rules, handles authentication, and exposes an API the frontend calls. In the JS/TS world it usually runs on the <strong>Node.js</strong> runtime (or Bun/Deno) — Java, Go, Python, C#, Rust, PHP and Ruby are all common alternatives.</p>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(34,211,238,.15);color:var(--c)">2.1</span>
+<span class="step-title">What is Node.js? (the runtime, not a language)</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc"><strong>JavaScript</strong> is a language. <strong>Node.js</strong> is a program that runs JavaScript outside the browser. It bundles Google's V8 engine (the same one Chrome uses) with a set of system APIs the browser doesn't have — file system, networking, child processes, OS info.</p>
+
+<pre>┌─────────────────────────────────────────────────────────┐
+│  Node.js runtime                                        │
+│                                                         │
+│  ┌────────────┐   ┌──────────────────────────────────┐ │
+│  │  V8 engine │   │  Node-specific APIs              │ │
+│  │  (runs JS) │   │   • fs    (file system)          │ │
+│  │            │   │   • http  (web server)           │ │
+│  │            │   │   • crypto, os, child_process... │ │
+│  └────────────┘   └──────────────────────────────────┘ │
+│                                                         │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │  libuv — event loop &amp; thread pool                  │ │
+│  │  (handles async I/O so JS stays single-threaded)   │ │
+│  └────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────┘
+
+In the BROWSER:  V8 + DOM + fetch + setTimeout + ...
+In NODE.js:      V8 + fs  + http  + setTimeout + ...
+                       ↑
+                    different APIs, same JS</pre>
+
+<div class="layers">
+<div class="layer" style="background:rgba(52,211,153,.1)"><span class="name" style="color:var(--g)">Node.js</span><span class="desc">The default. Huge ecosystem (npm), mature, runs anywhere. ~16+ years old.</span></div>
+<div class="layer" style="background:rgba(251,146,60,.1)"><span class="name" style="color:var(--o)">Bun</span><span class="desc">Drop-in faster Node alternative. Built-in TS, bundler, test runner. Newer.</span></div>
+<div class="layer" style="background:rgba(244,114,182,.1)"><span class="name" style="color:var(--p)">Deno</span><span class="desc">By Node's original creator. Secure-by-default, native TS, web-standard APIs.</span></div>
+<div class="layer" style="background:rgba(99,102,241,.1)"><span class="name" style="color:var(--a2)">Other languages</span><span class="desc">Go (fast, simple), Python (Django/FastAPI), Java (Spring), C# (.NET), Rust (Actix), Ruby (Rails), PHP (Laravel) — same job, different ergonomics.</span></div>
+</div>
+
+<div class="hbox" style="background:rgba(34,211,238,.06);border-color:var(--c)">
+<p class="htitle" style="color:var(--c)">Why use Node.js for the backend?</p>
+<p style="color:var(--t2)">One language end-to-end, shared types between client and server (huge productivity win with TypeScript), an enormous package ecosystem, and a non-blocking I/O model that handles thousands of concurrent connections cheaply. The downside: CPU-heavy work (image processing, ML) blocks the single thread — for that, reach for Go, Rust, or worker threads.</p>
+</div>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(34,211,238,.15);color:var(--c)">2.2</span>
+<span class="step-title">Raw Node.js — the absolute minimum HTTP server</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc">Before frameworks, this is what a server looks like. Useful to understand what frameworks are abstracting away.</p>
+
+<span class="code-label" style="background:rgba(34,211,238,.15);color:var(--c)">server.js — pure Node, zero dependencies</span>
+<pre>import http from 'node:http';
+
+const server = http.createServer((req, res) =&gt; {
+  // req  = IncomingMessage  (URL, headers, method, body stream)
+  // res  = ServerResponse   (write status, headers, body)
+
+  if (req.url === '/users' &amp;&amp; req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify([{ id: 1, name: 'Jane' }]));
+    return;
+  }
+
+  res.writeHead(404);
+  res.end('Not found');
+});
+
+server.listen(3000, () =&gt; console.log('http://localhost:3000'));</pre>
+
+<p class="step-desc">This works — but you'd have to hand-roll routing, body parsing, validation, error handling, CORS, auth, logging, etc. for every endpoint. That's why frameworks exist.</p>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(34,211,238,.15);color:var(--c)">2.3</span>
+<span class="step-title">Two philosophies: Express vs NestJS</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc">Node has dozens of frameworks, but they fall into two camps: <strong>minimal &amp; flexible</strong> (Express, Fastify, Koa, Hono) where you wire everything yourself, and <strong>opinionated &amp; structured</strong> (NestJS, AdonisJS) where the framework dictates the architecture. Click the tabs to compare the same endpoint in each.</p>
+
+<div class="tabs">
+<button class="tab active" onclick="switchTab(this,'express')">Express (minimal)</button>
+<button class="tab" onclick="switchTab(this,'nest')">NestJS (structured)</button>
+<button class="tab" onclick="switchTab(this,'fastify')">Fastify</button>
+</div>
+
+<div class="tab-panel active" data-panel="express">
+<span class="code-label" style="background:rgba(52,211,153,.15);color:var(--g)">Express — explicit, procedural, you compose everything</span>
+<pre>import express from 'express';
+import { z } from 'zod';
+import { db } from './db';
+import { requireAuth } from './middleware/auth';
+
+const app = express();
+
+// Global middleware — runs on every request, in order
+app.use(express.json());           // parse JSON bodies
+app.use(cors({ origin: '...' }));  // allow frontend domain
+app.use(requestLogger);            // your custom logger
+
+// Validation schema (runtime + types from one source)
+const CreateUser = z.object({
+  name:  z.string().min(1).max(100),
+  email: z.string().email(),
+});
+
+// A route = method + path + handler chain
+app.post('/users',
+  requireAuth,                          // middleware
+  async (req, res, next) =&gt; {           // handler
+    try {
+      const data = CreateUser.parse(req.body);   // throws if invalid
+      const user = await db.user.create({ data });
+      res.status(201).json(user);
+    } catch (err) { next(err); }        // forward to error handler
+  }
+);
+
+// Centralised error handler (4 args = error middleware)
+app.use((err, req, res, next) =&gt; {
+  console.error(err);
+  res.status(err.status ?? 500).json({ error: err.message });
+});
+
+app.listen(3000);</pre>
+<p class="step-desc"><strong>Pros:</strong> tiny API surface, easy to learn, total control. <strong>Cons:</strong> on a large team, every project ends up structured differently, and forgetting <code>next(err)</code> silently breaks things.</p>
+</div>
+
+<div class="tab-panel" data-panel="nest">
+<span class="code-label" style="background:rgba(244,114,182,.15);color:var(--p)">NestJS — decorators, DI, modules. Angular-flavoured.</span>
+<pre>// users.controller.ts — declares the HTTP surface
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard';
+import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
+
+@Controller('users')               // → mounts at /users
+export class UsersController {
+  constructor(private users: UsersService) {} // ← injected, not imported
+
+  @Post()                          // → POST /users
+  @UseGuards(AuthGuard)            // → middleware-equivalent
+  create(@Body() dto: CreateUserDto) {
+    return this.users.create(dto); // validation handled by ValidationPipe
+  }
+}
+
+// users.service.ts — business logic, no HTTP awareness
+@Injectable()
+export class UsersService {
+  constructor(private prisma: PrismaService) {}
+
+  create(data: CreateUserDto) {
+    return this.prisma.user.create({ data });
+  }
+}
+
+// create-user.dto.ts — DTO doubles as validation schema
+import { IsEmail, IsString, Length } from 'class-validator';
+export class CreateUserDto {
+  @IsString() @Length(1, 100) name!: string;
+  @IsEmail()                   email!: string;
+}
+
+// users.module.ts — wiring
+@Module({
+  controllers: [UsersController],
+  providers:   [UsersService],
+})
+export class UsersModule {}</pre>
+<p class="step-desc"><strong>Pros:</strong> consistent structure across teams, dependency injection makes testing easy, batteries-included (validation, OpenAPI, WebSockets, microservices). <strong>Cons:</strong> heavy, lots of magic, steep learning curve if you've never seen Angular/Spring patterns.</p>
+</div>
+
+<div class="tab-panel" data-panel="fastify">
+<span class="code-label" style="background:rgba(251,191,36,.15);color:var(--y)">Fastify — Express-style speed-focused, schema-first</span>
+<pre>import Fastify from 'fastify';
+const app = Fastify({ logger: true });
+
+// JSON Schema → runtime validation + auto-OpenAPI docs + speed
+app.post('/users', {
+  schema: {
+    body: {
+      type: 'object',
+      required: ['name', 'email'],
+      properties: {
+        name:  { type: 'string', minLength: 1, maxLength: 100 },
+        email: { type: 'string', format: 'email' },
+      },
+    },
+  },
+  preHandler: [requireAuth],
+  handler: async (req, reply) =&gt; {
+    const user = await db.user.create({ data: req.body });
+    reply.code(201).send(user);
+  },
+});
+
+await app.listen({ port: 3000 });</pre>
+<p class="step-desc">Fastify compiles JSON schemas into hyper-optimised validation functions and routes. Often 2–3× faster than Express. Same minimal philosophy, modern API.</p>
+</div>
+
+<div class="hbox" style="background:rgba(34,211,238,.06);border-color:var(--c)">
+<p class="htitle" style="color:var(--c)">Which to pick?</p>
+<p style="color:var(--t2)"><strong>Solo / startup / prototype:</strong> Express or Fastify. Ship fast, refactor later. <strong>Large team / long-lived enterprise app:</strong> NestJS — the rigid structure is the feature; new hires find their way faster. <strong>Performance-critical:</strong> Fastify, or move that one hot endpoint to Go/Rust.</p>
+</div>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(34,211,238,.15);color:var(--c)">2.4</span>
+<span class="step-title">The middleware chain — every request's journey</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc">A request never goes straight from "incoming" to "your handler". It walks through a pipeline of <strong>middleware</strong> — small functions that can read the request, modify it, short-circuit it, or pass it along.</p>
+
+<pre>incoming HTTP request
+        │
+        ▼
+┌───────────────────┐  Adds req.id, logs method+url+timing
+│  Request logger   │
+└────────┬──────────┘
+         ▼
+┌───────────────────┐  Sets Access-Control-* headers,
+│  CORS             │  responds to OPTIONS preflight
+└────────┬──────────┘
+         ▼
+┌───────────────────┐  Reject if &gt; N requests/min from IP
+│  Rate limiter     │
+└────────┬──────────┘
+         ▼
+┌───────────────────┐  Parse JSON / multipart bodies
+│  Body parser      │  → req.body
+└────────┬──────────┘
+         ▼
+┌───────────────────┐  Verify JWT / session cookie
+│  Authentication   │  → req.user, or 401
+└────────┬──────────┘
+         ▼
+┌───────────────────┐  Check role/permissions
+│  Authorization    │  → continue, or 403
+└────────┬──────────┘
+         ▼
+┌───────────────────┐  Validate body against schema
+│  Validation       │  → 400 with field errors if invalid
+└────────┬──────────┘
+         ▼
+┌───────────────────┐  ★ YOUR CODE ★
+│  Route handler    │  Call services, return data
+└────────┬──────────┘
+         ▼
+┌───────────────────┐  Format error nicely if anything threw
+│  Error handler    │  → 500 / 4xx with safe message
+└────────┬──────────┘
+         ▼
+       response</pre>
+
+<div class="hbox" style="background:rgba(34,211,238,.06);border-color:var(--c)">
+<p class="htitle" style="color:var(--c)">Order matters!</p>
+<p style="color:var(--t2)">If you put rate-limiting <em>after</em> auth, an attacker can hammer your auth endpoint forever. If you put body-parsing after the route, <code>req.body</code> is undefined. The chain is cumulative — each middleware adds context the next ones rely on.</p>
+</div>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(34,211,238,.15);color:var(--c)">2.5</span>
+<span class="step-title">Layered architecture — controller, service, repository</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc">A real backend isn't one big handler function. It's split into layers, each with one responsibility. The same pattern appears in NestJS, Spring (Java), .NET, and Rails — only the syntax differs.</p>
+
+<div class="layers">
+<div class="layer" style="background:rgba(99,102,241,.1)"><span class="name" style="color:var(--a2)">Controller</span><span class="desc">HTTP-aware. Parses request, validates input, calls service, formats response. Knows nothing about DB.</span></div>
+<div class="layer" style="background:rgba(52,211,153,.1)"><span class="name" style="color:var(--g)">Service</span><span class="desc">Business logic. "Charge the card, send confirmation email, update inventory." Doesn't know about HTTP <em>or</em> SQL.</span></div>
+<div class="layer" style="background:rgba(251,191,36,.1)"><span class="name" style="color:var(--y)">Repository / ORM</span><span class="desc">Data access. Translates "find users with active subscription" into SQL. Knows the database, nothing else.</span></div>
+<div class="layer" style="background:rgba(248,113,113,.1)"><span class="name" style="color:var(--r)">Database</span><span class="desc">PostgreSQL, MySQL, MongoDB, Redis. The persistent source of truth.</span></div>
+</div>
+
+<span class="code-label" style="background:rgba(34,211,238,.15);color:var(--c)">A real flow — POST /orders walked through every layer</span>
+<pre>// 1. CONTROLLER (HTTP layer)
+@Post('/orders')
+async create(@Body() dto: CreateOrderDto, @CurrentUser() user: User) {
+  const order = await this.orders.placeOrder(user.id, dto.items);
+  return { id: order.id, total: order.total };  // ← shape for API
+}
+
+// 2. SERVICE (business logic — the brains)
+async placeOrder(userId: string, items: OrderItem[]) {
+  return this.db.$transaction(async (tx) =&gt; {
+    const stock  = await this.inventory.reserve(items, tx);  // may throw
+    const total  = this.pricing.calculate(items);
+    const order  = await this.orderRepo.create(
+                     { userId, items, total }, tx);
+    await this.payments.charge(userId, total);               // may throw
+    await this.email.queueConfirmation(order);               // async job
+    return order;
+  });
+}
+
+// 3. REPOSITORY (data access — Prisma here)
+async create(data: NewOrder, tx?: PrismaTx) {
+  const client = tx ?? this.prisma;
+  return client.order.create({
+    data,
+    include: { items: true, user: true },
+  });
+}
+
+// 4. DATABASE — Prisma generates SQL:
+// INSERT INTO orders (user_id, total, ...) VALUES (...);
+// INSERT INTO order_items (order_id, ...) VALUES (...);
+// (all inside a single transaction so it's atomic)</pre>
+
+<div class="hbox" style="background:rgba(34,211,238,.06);border-color:var(--c)">
+<p class="htitle" style="color:var(--c)">Why bother with layers?</p>
+<p style="color:var(--t2)">You can swap the database without touching business logic. You can call <code>placeOrder</code> from a CLI, a cron job, or a GraphQL resolver — not just HTTP. You can unit-test the service with a mocked repository. The layers also force you to think clearly about what each chunk of code is <em>actually for</em>.</p>
+</div>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(34,211,238,.15);color:var(--c)">2.6</span>
+<span class="step-title">The database layer — raw SQL, query builders, ORMs</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc">Three ways to talk to your database, from lowest- to highest-level abstraction. They're not mutually exclusive — most teams use an ORM for 95% of queries and drop to SQL for the gnarly 5%.</p>
+
+<div class="comparison">
+<div>
+<span class="code-label" style="background:rgba(248,113,113,.15);color:var(--r)">Raw SQL (pg driver)</span>
+<pre>const { rows } = await pool.query(
+  `SELECT u.id, u.name,
+          COUNT(o.id) AS orders
+   FROM users u
+   LEFT JOIN orders o
+     ON o.user_id = u.id
+   WHERE u.active = $1
+   GROUP BY u.id
+   LIMIT $2`,
+  [true, 50]
+);</pre>
+<p class="step-desc"><strong>Pro:</strong> max performance &amp; flexibility. <strong>Con:</strong> no type safety, easy to introduce SQL injection if you forget parameters.</p>
+</div>
+<div class="vs">→</div>
+<div>
+<span class="code-label" style="background:rgba(52,211,153,.15);color:var(--g)">Prisma ORM (typed)</span>
+<pre>const users = await prisma.user.findMany({
+  where: { active: true },
+  include: {
+    _count: { select: { orders: true } }
+  },
+  take: 50,
+});
+
+// `users` is fully typed:
+// { id, name, _count: { orders: number } }[]
+// Auto-completion, refactor-safe.</pre>
+<p class="step-desc"><strong>Pro:</strong> type-safe, schema migrations, no SQL injection. <strong>Con:</strong> abstraction leaks at scale; complex joins can produce bad SQL.</p>
+</div>
+</div>
+
+<span class="code-label" style="background:rgba(34,211,238,.15);color:var(--c)">prisma/schema.prisma — single source of truth</span>
+<pre>// You declare your data model HERE. Prisma generates:
+//   • TypeScript types for every model
+//   • A typed client (db.user.findMany etc.)
+//   • SQL migration files
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  active    Boolean  @default(true)
+  orders    Order[]                       // 1-to-many relation
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id      String   @id @default(uuid())
+  user    User     @relation(fields: [userId], references: [id])
+  userId  String
+  total   Decimal
+  items   Json
+  status  OrderStatus @default(PENDING)
+}
+
+enum OrderStatus { PENDING PAID SHIPPED CANCELLED }</pre>
+
+<div class="layers">
+<div class="layer" style="background:rgba(59,130,246,.1)"><span class="name" style="color:var(--bl)">PostgreSQL</span><span class="desc">Default choice. Relational, ACID, JSON support, extensions galore. Hard to outgrow.</span></div>
+<div class="layer" style="background:rgba(251,146,60,.1)"><span class="name" style="color:var(--o)">MySQL / MariaDB</span><span class="desc">Also great. Slightly different feature set. Often cheaper at managed-DB scale.</span></div>
+<div class="layer" style="background:rgba(52,211,153,.1)"><span class="name" style="color:var(--g)">MongoDB</span><span class="desc">Document-oriented (NoSQL). Good for flexible/nested schemas. Weak on relations.</span></div>
+<div class="layer" style="background:rgba(248,113,113,.1)"><span class="name" style="color:var(--r)">Redis</span><span class="desc">In-memory key-value. Cache layer, session store, queues, rate-limit counters.</span></div>
+<div class="layer" style="background:rgba(244,114,182,.1)"><span class="name" style="color:var(--p)">Elasticsearch / OpenSearch</span><span class="desc">Full-text search, log aggregation, analytics over huge volumes.</span></div>
+</div>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(34,211,238,.15);color:var(--c)">2.7</span>
+<span class="step-title">API styles — REST vs GraphQL vs tRPC vs WebSockets</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc">The API is the contract between frontend and backend. The shape of that contract is one of the most consequential decisions in a project.</p>
+
+<div class="layers">
+<div class="layer" style="background:rgba(52,211,153,.1)"><span class="name" style="color:var(--g)">REST</span><span class="desc">Resources as URLs (<code>GET /users/42</code>, <code>POST /orders</code>). Simple, cacheable, universal. The default for 90% of public APIs.</span></div>
+<div class="layer" style="background:rgba(244,114,182,.1)"><span class="name" style="color:var(--p)">GraphQL</span><span class="desc">Single endpoint. Client picks fields, joins relations in one query. Solves over/under-fetching. Heavier infra, harder to cache.</span></div>
+<div class="layer" style="background:rgba(34,211,238,.1)"><span class="name" style="color:var(--c)">tRPC</span><span class="desc">TS-only. Call your server functions from the client like local functions, with full types. Zero schema duplication. Only when both ends are TS.</span></div>
+<div class="layer" style="background:rgba(99,102,241,.1)"><span class="name" style="color:var(--a2)">WebSockets / SSE</span><span class="desc">Persistent connection, server can push to client. Chat, live dashboards, multiplayer, notifications.</span></div>
+<div class="layer" style="background:rgba(251,191,36,.1)"><span class="name" style="color:var(--y)">gRPC</span><span class="desc">Binary protocol over HTTP/2. Schema in <code>.proto</code> files. Common for service-to-service inside a backend, not browser-facing.</span></div>
+</div>
+
+<div class="comparison">
+<div>
+<span class="code-label" style="background:rgba(52,211,153,.15);color:var(--g)">REST — multiple endpoints</span>
+<pre>GET  /users/42
+GET  /users/42/orders
+GET  /users/42/orders/99/items
+
+→ 3 round-trips, each
+  returns a fixed shape.</pre>
+</div>
+<div class="vs">→</div>
+<div>
+<span class="code-label" style="background:rgba(244,114,182,.15);color:var(--p)">GraphQL — one query</span>
+<pre>query {
+  user(id: 42) {
+    name
+    orders {
+      id
+      items { name price }
+    }
+  }
+}
+→ 1 round-trip, exact
+  shape, only chosen fields.</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(34,211,238,.15);color:var(--c)">2.8</span>
+<span class="step-title">TypeScript on the backend — types end-to-end</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc">TS on the backend gives you the same safety the frontend gets — but the killer move is <strong>sharing types across the network boundary</strong>. The same <code>User</code> interface that types the React component types the Express handler.</p>
+
+<pre>monorepo/
+├── packages/
+│   ├── shared/         ← shared types &amp; validators (Zod)
+│   │   └── types.ts    →  export interface User { ... }
+│   ├── api/            ← Express / NestJS backend
+│   │   └── routes.ts   →  import { User } from '@app/shared'
+│   └── web/            ← React frontend
+│       └── App.tsx     →  import { User } from '@app/shared'
+└── package.json
+
+→ Rename a field in shared/types.ts
+→ TypeScript instantly errors in BOTH api and web
+→ You can't ship a backend change that breaks the frontend silently</pre>
+
+<span class="code-label" style="background:rgba(34,211,238,.15);color:var(--c)">tsconfig.json — common backend settings</span>
+<pre>{
+  "compilerOptions": {
+    "target": "ES2022",          // Node 18+ supports this natively
+    "module": "NodeNext",        // Node-style ESM resolution
+    "strict": true,              // ALL strict checks on
+    "noUncheckedIndexedAccess": true,  // arr[0] is T | undefined
+    "outDir": "./dist",
+    "sourceMap": true,           // for stack traces in production
+    "declaration": true          // emit .d.ts (for monorepo libs)
+  }
+}</pre>
+
+<div class="hbox" style="background:rgba(34,211,238,.06);border-color:var(--c)">
+<p class="htitle" style="color:var(--c)">Run TS in production: compile, or runtime?</p>
+<p style="color:var(--t2)"><strong>Compile first (recommended for prod):</strong> <code>tsc</code> outputs <code>dist/</code>, you run <code>node dist/server.js</code>. Fast startup, no surprises. <strong>Run TS directly (dev):</strong> <code>tsx</code>, <code>ts-node</code>, or Bun/Deno transpile on-the-fly. Slower start, more memory, but no build step. Most teams use <code>tsx</code> in dev and <code>tsc</code> in CI.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="connector">⬇</div>
+
+<!-- ============================================ -->
+<!-- SECTION 3 — BUILD & COMPILE -->
+<!-- ============================================ -->
+<div class="section" id="s3">
+<div class="section-head">
+<span class="section-num" style="background:rgba(52,211,153,.15);color:var(--g)">03</span>
+<h2 class="section-title">Build &amp; compile</h2>
+</div>
+<p class="section-sub">When you run <code>npm run build</code>, a pipeline of transformations kicks off. Each step takes the code closer to something the runtime — browser <em>or</em> Node — can execute. Frontend and backend follow the same conceptual pipeline; the outputs differ.</p>
 
 <div class="flow">
-<span class="item" style="background:rgba(99,102,241,.15);color:var(--a2)">Source (TSX)</span>
+<span class="item" style="background:rgba(99,102,241,.15);color:var(--a2)">Source</span>
 <span class="arr">→</span>
 <span class="item" style="background:rgba(52,211,153,.15);color:var(--g)">Transpile</span>
 <span class="arr">→</span>
@@ -340,18 +891,18 @@ $shadow: 0 2px 8px rgba(0,0,0,0.1);
 <span class="arr">→</span>
 <span class="item" style="background:rgba(251,191,36,.15);color:var(--y)">Optimize</span>
 <span class="arr">→</span>
-<span class="item" style="background:rgba(251,146,60,.15);color:var(--o)">dist/ output</span>
+<span class="item" style="background:rgba(251,146,60,.15);color:var(--o)">Output</span>
 </div>
 
-<!-- 2.1 TRANSPILE -->
+<!-- 3.1 TRANSPILE -->
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(52,211,153,.15);color:var(--g)">2.1</span>
-<span class="step-title">Step 1: Transpile — convert syntax the browser doesn't know</span>
+<span class="step-badge" style="background:rgba(52,211,153,.15);color:var(--g)">3.1</span>
+<span class="step-title">Step 1: Transpile — convert syntax the runtime doesn't know</span>
 <span class="step-arrow">▼</span>
 </div>
 <div class="step-body">
-<p class="step-desc"><strong>Transpilation</strong> converts one language into another at roughly the same level. TypeScript → JavaScript. JSX → function calls. SCSS → CSS. Tools: <em>Babel</em>, <em>SWC</em> (Rust, faster), <em>tsc</em>, <em>Sass</em>.</p>
+<p class="step-desc"><strong>Transpilation</strong> converts one language into another at roughly the same level. TypeScript → JavaScript. JSX → function calls. SCSS → CSS. Tools: <em>Babel</em> (JS, plugin-rich), <em>SWC</em> (Rust, faster), <em>esbuild</em> (Go, fastest), <em>tsc</em> (official TS compiler), <em>Sass</em>.</p>
 
 <div class="comparison">
 <div>
@@ -427,20 +978,20 @@ const UserCard = ({ user }) =&gt; (
 
 <div class="hbox" style="background:rgba(52,211,153,.06);border-color:var(--g)">
 <p class="htitle" style="color:var(--g)">What happens to types?</p>
-<p style="color:var(--t2)">TypeScript types (<code>interface</code>, <code>type</code>, generics like <code>User[]</code>) are <strong style="color:var(--t)">completely erased</strong>. They exist only at dev time for error checking. Zero bytes of type info reach the browser. That's why TS is a "compile-time" type system.</p>
+<p style="color:var(--t2)">TypeScript types (<code>interface</code>, <code>type</code>, generics like <code>User[]</code>) are <strong>completely erased</strong>. They exist only at dev time for error checking. Zero bytes of type info reach the runtime. That's why TS is a "compile-time" type system — you get no runtime guarantees from it. For runtime checks at API boundaries, pair TS with <em>Zod</em>, <em>Valibot</em>, or <em>class-validator</em>.</p>
 </div>
 </div>
 </div>
 
-<!-- 2.2 BUNDLE -->
+<!-- 3.2 BUNDLE -->
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">2.2</span>
+<span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">3.2</span>
 <span class="step-title">Step 2: Bundle — merge hundreds of files into a few</span>
 <span class="step-arrow">▼</span>
 </div>
 <div class="step-body">
-<p class="step-desc">Your project has 50 source files and 500 node_modules packages. The bundler (Webpack, Vite/Rollup, esbuild) traces every <code>import</code> from your entry point and merges everything into a small number of output files.</p>
+<p class="step-desc">Your project has 50 source files and 500 node_modules packages. The bundler (Webpack, Vite/Rollup, esbuild, Turbopack) traces every <code>import</code> from your entry point and merges everything into a small number of output files.</p>
 
 <span class="code-label" style="background:rgba(59,130,246,.15);color:var(--bl)">What the bundler does — import resolution</span>
 <pre>// Your code says:
@@ -486,20 +1037,20 @@ dist/
 
 <div class="hbox" style="background:rgba(59,130,246,.06);border-color:var(--bl)">
 <p class="htitle" style="color:var(--bl)">Why bundle at all?</p>
-<p style="color:var(--t2)"><strong style="color:var(--t)">HTTP/1.1</strong>: browsers could only make ~6 parallel requests per domain. 500 files = 83 round trips. One bundle = 1 request. Even with <strong style="color:var(--t)">HTTP/2</strong> (multiplexed), fewer files means less overhead. Bundling also enables tree-shaking and code-splitting.</p>
+<p style="color:var(--t2)"><strong>HTTP/1.1</strong>: browsers could only make ~6 parallel requests per domain. 500 files = 83 round trips. One bundle = 1 request. Even with <strong>HTTP/2</strong> (multiplexed), fewer files means less overhead. Bundling also enables tree-shaking and code-splitting.</p>
 </div>
 </div>
 </div>
 
-<!-- 2.3 OPTIMIZE -->
+<!-- 3.3 OPTIMIZE -->
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(251,191,36,.15);color:var(--y)">2.3</span>
+<span class="step-badge" style="background:rgba(251,191,36,.15);color:var(--y)">3.3</span>
 <span class="step-title">Step 3: Optimize — shrink everything to minimum size</span>
 <span class="step-arrow">▼</span>
 </div>
 <div class="step-body">
-<p class="step-desc">Three optimizations: <strong>Minification</strong> (shrink code), <strong>Tree-shaking</strong> (remove unused code), <strong>Compression</strong> (gzip/brotli). Tools: Terser, cssnano, SWC minifier.</p>
+<p class="step-desc">Three optimizations: <strong>Minification</strong> (shrink code), <strong>Tree-shaking</strong> (remove unused code), <strong>Compression</strong> (gzip/brotli, applied at the server). Tools: Terser, cssnano, SWC minifier, esbuild minifier.</p>
 
 <div class="comparison">
 <div>
@@ -556,7 +1107,8 @@ export function debounce(fn, ms) { ... }  // ❌ NOT imported anywhere
 export function throttle(fn, ms) { ... }  // ❌ NOT imported anywhere
 
 // After tree-shaking: slugify, debounce, throttle REMOVED
-// Zero bytes shipped for unused functions</pre>
+// Zero bytes shipped for unused functions
+// Requires ESM (import/export) — CommonJS (require) can't be tree-shaken</pre>
 
 <div class="metrics">
 <div class="metric"><span class="val" style="color:var(--r)">2.4 MB</span><span class="lbl">Before optimization</span></div>
@@ -567,25 +1119,69 @@ export function throttle(fn, ms) { ... }  // ❌ NOT imported anywhere
 </div>
 </div>
 
-<!-- 2.4 OUTPUT -->
+<!-- 3.4 BACKEND BUILD -->
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">2.4</span>
-<span class="step-title">The final output: dist/ folder — ready to deploy</span>
+<span class="step-badge" style="background:rgba(34,211,238,.15);color:var(--c)">3.4</span>
+<span class="step-title">Backend builds: tsc, esbuild, or container-only</span>
 <span class="step-arrow">▼</span>
 </div>
 <div class="step-body">
-<pre>dist/                              # THIS is what gets deployed
-├── index.html                     # Entry HTML (~1KB)
-├── assets/
-│   ├── index-Da3x8kQ1.js         # App bundle (minified)
-│   ├── vendor-Bk9mWe7R.js        # Vendor chunk (React etc.)
-│   ├── index-pQ8sW2e1.css        # All CSS merged + minified
-│   ├── logo-kM2xW9.svg           # Assets with content hashes
-│   └── inter-latin-wght-x92k.woff2
-└── favicon.ico</pre>
+<p class="step-desc">Backends don't need to ship to the user, so the goals are different: fast startup, useful stack traces, no surprises. Three common approaches:</p>
 
-<span class="code-label" style="background:rgba(251,146,60,.15);color:var(--o)">index.html — the tiny entry point</span>
+<div class="layers">
+<div class="layer" style="background:rgba(52,211,153,.1)"><span class="name" style="color:var(--g)">tsc → JS</span><span class="desc">Plain TypeScript compile. <code>src/*.ts → dist/*.js</code>, one-to-one. Source maps for stack traces. Most common.</span></div>
+<div class="layer" style="background:rgba(59,130,246,.1)"><span class="name" style="color:var(--bl)">esbuild bundle</span><span class="desc">Bundle backend into one file. Faster cold start (great for serverless / Lambda). Externalize <code>node_modules</code> or inline them.</span></div>
+<div class="layer" style="background:rgba(244,114,182,.1)"><span class="name" style="color:var(--p)">tsx in container</span><span class="desc">Skip the build step. <code>tsx</code> transpiles on-the-fly inside Docker. Slower startup, simpler pipeline.</span></div>
+</div>
+
+<span class="code-label" style="background:rgba(52,211,153,.15);color:var(--g)">Typical backend build script</span>
+<pre>{
+  "scripts": {
+    "dev":   "tsx watch src/server.ts",            // hot-reload
+    "build": "tsc -p tsconfig.build.json",         // emit dist/
+    "start": "node dist/server.js",                // run compiled JS
+    "test":  "vitest"
+  }
+}
+
+// dist/ output structure
+dist/
+├── server.js
+├── server.js.map         ← source map → real .ts line in stack traces
+├── controllers/
+├── services/
+├── repositories/
+└── prisma/               ← generated Prisma client</pre>
+
+<div class="hbox" style="background:rgba(34,211,238,.06);border-color:var(--c)">
+<p class="htitle" style="color:var(--c)">The "build artifact" you actually deploy</p>
+<p style="color:var(--t2)">Frontend ships <code>dist/</code> as static files to a CDN. Backend ships either: a <code>dist/</code> folder + <code>node_modules</code> + a Dockerfile, OR (for serverless) a single bundled <code>handler.js</code>. Either way, what runs in production is <em>not</em> what you wrote — it's what the build produced.</p>
+</div>
+</div>
+</div>
+
+<!-- 3.5 OUTPUT -->
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">3.5</span>
+<span class="step-title">The final outputs — ready to deploy</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<pre>FRONTEND: dist/                    BACKEND: dist/
+├── index.html                     ├── server.js
+├── assets/                        ├── server.js.map
+│   ├── index-Da3x8kQ1.js         ├── controllers/...
+│   ├── vendor-Bk9mWe7R.js        └── services/...
+│   ├── index-pQ8sW2e1.css        + node_modules/ (or bundled)
+│   └── logo-kM2xW9.svg           + Dockerfile
+└── favicon.ico                   + .env (NOT committed!)
+
+   Goes to a CDN                      Goes to a server / container
+   Served as static files             Runs as a process</pre>
+
+<span class="code-label" style="background:rgba(251,146,60,.15);color:var(--o)">index.html — the tiny frontend entry point</span>
 <pre>&lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
 &lt;head&gt;
@@ -607,11 +1203,6 @@ export function throttle(fn, ms) { ... }  // ❌ NOT imported anywhere
   &lt;div id="root"&gt;&lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;</pre>
-
-<div class="hbox" style="background:rgba(251,146,60,.06);border-color:var(--o)">
-<p class="htitle" style="color:var(--o)">This is everything the browser needs.</p>
-<p style="color:var(--t2)">No TypeScript. No SCSS. No node_modules. No JSX. Just plain HTML, CSS, JavaScript, and assets. The entire build pipeline exists to get from developer-friendly source to browser-friendly output.</p>
-</div>
 </div>
 </div>
 </div>
@@ -619,78 +1210,187 @@ export function throttle(fn, ms) { ... }  // ❌ NOT imported anywhere
 <div class="connector">⬇</div>
 
 <!-- ============================================ -->
-<!-- SECTION 3 -->
+<!-- SECTION 4 — DEPLOY TO CLOUD (EXPANDED) -->
 <!-- ============================================ -->
-<div class="section" id="s3">
+<div class="section" id="s4">
 <div class="section-head">
-<span class="section-num" style="background:rgba(59,130,246,.15);color:var(--bl)">03</span>
+<span class="section-num" style="background:rgba(59,130,246,.15);color:var(--bl)">04</span>
 <h2 class="section-title">Deploy to the cloud</h2>
 </div>
-<p class="section-sub">The cloud (AWS, Azure, GCP) is just <strong style="color:var(--t)">someone else's powerful computer</strong> in a data center. You upload your <code>dist/</code> folder so millions of users worldwide can request those files 24/7.</p>
+<p class="section-sub">"The cloud" is just <strong>someone else's computers</strong> — racks of physical servers in data centers around the world. AWS, Azure, GCP, Cloudflare and others rent slices of those machines, plus a stack of services around them, so you can ship without buying hardware.</p>
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">3.1</span>
-<span class="step-title">What "the cloud" actually is</span>
+<span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">4.1</span>
+<span class="step-title">What "the cloud" actually is — physical layer</span>
 <span class="step-arrow">▼</span>
 </div>
 <div class="step-body">
-<pre>  "The Cloud" = Data centers around the world
+<pre>  AWS Region: us-east-1 (Northern Virginia)
+  ┌────────────────────────────────────────────────────────────┐
+  │  Availability Zone A    Availability Zone B                │
+  │  ┌──────────────────┐   ┌──────────────────┐              │
+  │  │ Data center #1   │   │ Data center #2   │  ...×6 AZs   │
+  │  │ ────────────────  │   │ ────────────────  │              │
+  │  │ Rows of racks     │   │ Rows of racks     │              │
+  │  │ ┌──┐┌──┐┌──┐...  │   │ ┌──┐┌──┐┌──┐...  │              │
+  │  │ │S ││S ││S │      │   │ │S ││S ││S │     │              │
+  │  │ │  ││  ││  │      │   │ │  ││  ││  │     │              │
+  │  │ └──┘└──┘└──┘      │   │ └──┘└──┘└──┘     │              │
+  │  │ Each rack: 30+    │   │ Power, cooling,   │              │
+  │  │ servers, 100Gbps  │   │ redundant network │              │
+  │  │ network           │   │                   │              │
+  │  └──────────────────┘   └──────────────────┘              │
+  │   ↑ Independent power, cooling, network. AZ failure        │
+  │     should not affect another AZ → "Multi-AZ deploy"       │
+  └────────────────────────────────────────────────────────────┘
 
-  ┌─────────────────────────────────────────────────────┐
-  │  AWS Data Center (us-east-1, Virginia)              │
-  │                                                     │
-  │  ┌──────────┐ ┌──────────┐ ┌──────────┐           │
-  │  │ Server   │ │ Server   │ │ Server   │  ...×1000s│
-  │  │ Rack #1  │ │ Rack #2  │ │ Rack #3  │           │
-  │  │          │ │          │ │          │           │
-  │  │ Your     │ │ Someone  │ │ Netflix  │           │
-  │  │ dist/    │ │ else's   │ │ dist/    │           │
-  │  │ folder   │ │ app      │ │ folder   │           │
-  │  └──────────┘ └──────────┘ └──────────┘           │
-  │                                                     │
-  │  + Load balancers, networking, storage, cooling...  │
-  └─────────────────────────────────────────────────────┘
-
-  Your dist/ folder sits on one (or many) of these servers.
-  Each is a real physical computer with CPU, RAM, SSD.
-  The cloud provider manages hardware, networking, scaling.</pre>
+  AWS has ~30 REGIONS worldwide.
+  Each region has multiple AZs (usually 3+).
+  Each AZ has multiple data centers.
+  Each data center has thousands of physical servers.
+  Each server can host dozens of virtual machines / containers.</pre>
 
 <div class="layers">
-<div class="layer" style="background:rgba(59,130,246,.1)"><span class="name" style="color:var(--bl)">AWS S3</span><span class="desc">Store static files (dist/), serve directly. Cheapest. No server logic.</span></div>
-<div class="layer" style="background:rgba(52,211,153,.1)"><span class="name" style="color:var(--g)">CloudFront CDN</span><span class="desc">Cache copies at 400+ edge locations worldwide. User hits nearest one.</span></div>
-<div class="layer" style="background:rgba(99,102,241,.1)"><span class="name" style="color:var(--a2)">EC2 / Azure VM</span><span class="desc">Full server — run Node.js, SSR, APIs. You control everything.</span></div>
-<div class="layer" style="background:rgba(251,191,36,.1)"><span class="name" style="color:var(--y)">Vercel / Netlify</span><span class="desc">Abstraction on top: git push → auto-build → deploy → CDN. Zero config.</span></div>
+<div class="layer" style="background:rgba(59,130,246,.1)"><span class="name" style="color:var(--bl)">Region</span><span class="desc">Geographic area: us-east-1, eu-central-1, ap-southeast-1. Pick one near your users.</span></div>
+<div class="layer" style="background:rgba(52,211,153,.1)"><span class="name" style="color:var(--g)">Availability Zone</span><span class="desc">Isolated location within a region. Deploy across ≥2 AZs so one failure doesn't kill you.</span></div>
+<div class="layer" style="background:rgba(251,191,36,.1)"><span class="name" style="color:var(--y)">Edge location (CDN PoP)</span><span class="desc">~400 smaller sites worldwide that cache content close to users. Different from regions.</span></div>
 </div>
 </div>
 </div>
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">3.2</span>
-<span class="step-title">CI/CD pipeline &amp; CDN distribution</span>
+<span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">4.2</span>
+<span class="step-title">Compute options — where your code actually runs</span>
 <span class="step-arrow">▼</span>
 </div>
 <div class="step-body">
-<pre># What happens when you "git push" to main:
+<p class="step-desc">Cloud compute is a spectrum from "you manage everything" to "you write a function and forget the rest." Each level trades control for convenience.</p>
 
-Developer:  git push origin main
-                    │
-                    ▼
-GitHub Actions / GitLab CI picks it up:
-                    │
-  ┌─────────────────┼─────────────────┐
-  │ CI/CD Pipeline                    │
-  │                                   │
-  │  1. npm install    (get deps)     │
-  │  2. npm run lint   (check style)  │
-  │  3. npm run test   (run tests)    │
-  │  4. npm run build  (create dist/) │
-  │  5. Upload dist/ → AWS S3         │
-  │  6. Invalidate CDN cache          │
-  │  7. Notify Slack: "Deployed! ✅"  │
-  └───────────────────────────────────┘</pre>
+<pre>More control                                            Less control
+←──────────────────────────────────────────────────────────────────→
 
+[Bare metal]  [VM]   [Container]  [Managed K8s]  [PaaS]  [Serverless]
+
+  AWS         EC2    ECS/Fargate    EKS/GKE      Heroku    Lambda
+  Hetzner     +      Docker         App Runner   Vercel    Cloudflare
+  bare metal  Azure                              Render    Workers
+              VM                                            Vercel fns
+
+You manage:                                            You write:
+• Hardware  • OS  • Patches  • Scaling  • Networking      Just code</pre>
+
+<div class="layers">
+<div class="layer" style="background:rgba(248,113,113,.1)"><span class="name" style="color:var(--r)">Virtual Machine</span><span class="desc"><strong>EC2, Azure VM, GCE.</strong> A whole Linux box you SSH into. Max flexibility, you patch &amp; scale yourself. Pay per hour the box is on.</span></div>
+<div class="layer" style="background:rgba(251,146,60,.1)"><span class="name" style="color:var(--o)">Container</span><span class="desc"><strong>Docker on ECS/Fargate, Cloud Run, App Service.</strong> Ship a Dockerfile, the platform runs it. No OS management. Pay per running container.</span></div>
+<div class="layer" style="background:rgba(251,191,36,.1)"><span class="name" style="color:var(--y)">Kubernetes</span><span class="desc"><strong>EKS, GKE, AKS.</strong> Orchestrates many containers across many machines. Auto-restart, rolling deploys, service discovery. Powerful, complex, overkill for &lt; 10 services.</span></div>
+<div class="layer" style="background:rgba(52,211,153,.1)"><span class="name" style="color:var(--g)">PaaS</span><span class="desc"><strong>Vercel, Netlify, Render, Fly.io, Railway.</strong> Git push → live URL. Infra is invisible. Best DX. Pricing climbs at scale.</span></div>
+<div class="layer" style="background:rgba(34,211,238,.1)"><span class="name" style="color:var(--c)">Serverless functions</span><span class="desc"><strong>Lambda, Cloudflare Workers, Vercel Functions.</strong> Per-request billing, scales to zero. Cold starts. Stateless. Great for spiky traffic.</span></div>
+</div>
+
+<span class="code-label" style="background:rgba(251,146,60,.15);color:var(--o)">Dockerfile — packaging your backend into a container</span>
+<pre># Multi-stage build: smaller final image
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build              # → dist/
+
+FROM node:20-alpine AS runtime
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
+COPY package.json .
+USER node                       # don't run as root!
+EXPOSE 3000
+CMD ["node", "dist/server.js"]
+
+# Build:  docker build -t myapi:1.0 .
+# Run:    docker run -p 3000:3000 --env-file .env myapi:1.0
+# Push:   docker push registry.example.com/myapi:1.0</pre>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">4.3</span>
+<span class="step-title">Storage &amp; databases — where the data lives</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc">Your code is stateless and disposable. Your data is not. The cloud separates them deliberately so compute can scale without losing anything.</p>
+
+<div class="layers">
+<div class="layer" style="background:rgba(59,130,246,.1)"><span class="name" style="color:var(--bl)">Object storage</span><span class="desc"><strong>S3, GCS, Azure Blob, R2.</strong> Infinite cheap storage for files (images, video, frontend dist/, backups). HTTP API. Cheapest layer.</span></div>
+<div class="layer" style="background:rgba(99,102,241,.1)"><span class="name" style="color:var(--a2)">Block storage</span><span class="desc"><strong>EBS, Persistent Disks.</strong> Virtual hard drives attached to VMs. Used by databases for their actual data files.</span></div>
+<div class="layer" style="background:rgba(52,211,153,.1)"><span class="name" style="color:var(--g)">Managed SQL</span><span class="desc"><strong>RDS, Cloud SQL, Aurora, Supabase, Neon, PlanetScale.</strong> Postgres/MySQL the cloud runs for you. Backups, replicas, failover are checkboxes.</span></div>
+<div class="layer" style="background:rgba(244,114,182,.1)"><span class="name" style="color:var(--p)">Managed NoSQL</span><span class="desc"><strong>DynamoDB, Firestore, MongoDB Atlas.</strong> Different data models — key-value, document, wide-column. Often massively scalable, less flexible querying.</span></div>
+<div class="layer" style="background:rgba(248,113,113,.1)"><span class="name" style="color:var(--r)">Cache</span><span class="desc"><strong>ElastiCache, MemoryStore, Upstash Redis.</strong> In-memory, sub-millisecond reads. For hot data, sessions, rate-limiters.</span></div>
+<div class="layer" style="background:rgba(251,191,36,.1)"><span class="name" style="color:var(--y)">Queues / streams</span><span class="desc"><strong>SQS, Pub/Sub, Kafka, Kinesis.</strong> Decouple producers from consumers. Handle traffic spikes, retries, fanout.</span></div>
+</div>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">4.4</span>
+<span class="step-title">Networking layer — how a request reaches your code</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<pre>           Internet
+              │
+              ▼
+   ┌──────────────────────┐
+   │  DNS (Route 53,      │   "yourapp.com → 13.226.x.x"
+   │   Cloudflare DNS)    │
+   └──────────┬───────────┘
+              ▼
+   ┌──────────────────────┐
+   │  CDN (CloudFront,    │   Caches static assets at the edge.
+   │   Cloudflare)        │   Forwards dynamic to origin.
+   └──────────┬───────────┘
+              ▼
+   ┌──────────────────────┐
+   │  WAF (AWS WAF,       │   Blocks malicious patterns:
+   │   Cloudflare)        │   SQLi, XSS, bots, geo-bans.
+   └──────────┬───────────┘
+              ▼
+   ┌──────────────────────┐
+   │  Load Balancer       │   Distributes across many backend
+   │  (ALB, NLB)          │   instances. Health-checks them.
+   └──────────┬───────────┘
+              ▼
+   ┌──────────────────────┐
+   │  VPC (private network)│
+   │   ┌────┐ ┌────┐ ┌────┐│
+   │   │API │ │API │ │API ││  Your app servers — no public IPs
+   │   │ 1  │ │ 2  │ │ 3  ││
+   │   └─┬──┘ └─┬──┘ └─┬──┘│
+   │     └─────┼──────┘    │
+   │           ▼           │
+   │      ┌─────────┐      │
+   │      │ Database│      │  Reachable only from inside VPC
+   │      └─────────┘      │
+   └──────────────────────┘</pre>
+
+<div class="hbox" style="background:rgba(59,130,246,.06);border-color:var(--bl)">
+<p class="htitle" style="color:var(--bl)">Defence in depth</p>
+<p style="color:var(--t2)">A request crosses many layers before reaching your code. Each layer can drop it: <strong>DNS</strong> can route by geography, <strong>CDN</strong> serves cached responses without hitting your servers, <strong>WAF</strong> blocks attacks, <strong>load balancer</strong> only forwards if backend is healthy, <strong>VPC</strong> rules limit which machines can talk to which. Your database should never have a public IP.</p>
+</div>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">4.5</span>
+<span class="step-title">CDN deep dive — why latency drops 10×</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
 <pre>Without CDN:
   User in Tokyo  → request to Virginia → 200ms latency
   User in London → request to Virginia → 100ms latency
@@ -701,6 +1401,165 @@ With CDN (CloudFront, Cloudflare, Akamai):
 
   CDN edge servers ask origin ONCE, then cache.
   Every subsequent user gets served from nearest edge.</pre>
+
+<pre>What's cacheable?
+  ✅ Static assets (JS, CSS, images, fonts) — yes, for a year
+  ✅ Public API responses — yes, with short TTL
+  ⚠️  HTML — usually short TTL or no-cache
+  ❌ Authenticated/personal pages — vary by user, hard to cache
+  ❌ Mutating requests (POST, PUT, DELETE) — never cached
+
+Cache hit rate is the metric that matters.
+  90% hit rate = 10× less load on your origin servers.
+
+Cache invalidation:
+  • Hashed filenames → never invalidate, just deploy new ones
+  • TTL expiry      → set max-age, let it expire naturally
+  • Manual purge    → API call to CDN ("flush /api/users")</pre>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">4.6</span>
+<span class="step-title">CI/CD pipeline — git push to live</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<pre># What happens when you "git push" to main:
+
+Developer:  git push origin main
+                    │
+                    ▼
+GitHub Actions / GitLab CI / CircleCI picks it up:
+                    │
+  ┌─────────────────┼─────────────────────────────────┐
+  │ CI/CD Pipeline (typical Node app)                 │
+  │                                                   │
+  │  CI (continuous integration):                     │
+  │   1. Checkout code                                │
+  │   2. npm ci          (install deterministically)  │
+  │   3. npm run lint    (eslint, prettier)           │
+  │   4. npm run typecheck (tsc --noEmit)             │
+  │   5. npm run test    (unit + integration)         │
+  │   6. npm run build   (produce dist/)              │
+  │   7. docker build &amp; push image to registry        │
+  │                                                   │
+  │  CD (continuous deployment):                      │
+  │   8. Deploy to STAGING environment                │
+  │   9. Run E2E smoke tests against staging          │
+  │  10. (manual approval, or auto)                   │
+  │  11. Deploy to PRODUCTION                         │
+  │      • Blue/green: spin up new, switch traffic    │
+  │      • Canary: route 1% → 10% → 100%              │
+  │      • Rolling: replace instances one at a time   │
+  │  12. Run DB migrations (with safety guards)       │
+  │  13. Notify Slack: "Deployed v1.42.0 ✅"          │
+  └───────────────────────────────────────────────────┘
+
+Failure at any step → stop, rollback, alert. Don't deploy broken code.</pre>
+
+<span class="code-label" style="background:rgba(251,191,36,.15);color:var(--y)">.github/workflows/deploy.yml — minimal example</span>
+<pre>name: Deploy
+on: { push: { branches: [main] } }
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - run: npm run lint &amp;&amp; npm run typecheck &amp;&amp; npm test
+      - run: npm run build
+      - run: aws s3 sync ./dist s3://my-bucket --delete
+      - run: aws cloudfront create-invalidation \
+               --distribution-id $CF_ID --paths '/*'</pre>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">4.7</span>
+<span class="step-title">Observability — logs, metrics, traces</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc">Once your code runs in production, you can't <code>console.log</code> debug it from your laptop. The "three pillars of observability" replace that:</p>
+
+<div class="layers">
+<div class="layer" style="background:rgba(52,211,153,.1)"><span class="name" style="color:var(--g)">Logs</span><span class="desc">Structured text events: "user 42 placed order 99". Searchable. Tools: CloudWatch, Datadog, Loki, Elastic.</span></div>
+<div class="layer" style="background:rgba(59,130,246,.1)"><span class="name" style="color:var(--bl)">Metrics</span><span class="desc">Numbers over time: requests/sec, p95 latency, error rate, CPU. Dashboards. Tools: Prometheus + Grafana, Datadog, CloudWatch.</span></div>
+<div class="layer" style="background:rgba(244,114,182,.1)"><span class="name" style="color:var(--p)">Traces</span><span class="desc">Per-request graph: "this request spent 5ms in auth, 120ms in DB, 3ms serializing." Tools: OpenTelemetry, Jaeger, Tempo, Honeycomb.</span></div>
+<div class="layer" style="background:rgba(248,113,113,.1)"><span class="name" style="color:var(--r)">Error tracking</span><span class="desc">Captures exceptions with stack traces, breadcrumbs, user context. Tools: Sentry, Rollbar, Bugsnag.</span></div>
+<div class="layer" style="background:rgba(251,191,36,.1)"><span class="name" style="color:var(--y)">Alerts</span><span class="desc">"Page me when error rate &gt; 1% for 5 minutes." PagerDuty, Opsgenie. Tied to metrics.</span></div>
+</div>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(59,130,246,.15);color:var(--bl)">4.8</span>
+<span class="step-title">Scaling — handling more traffic</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<div class="comparison">
+<div>
+<span class="code-label" style="background:rgba(251,146,60,.15);color:var(--o)">Vertical scaling (scale up)</span>
+<pre>Bigger box.
+
+  4 vCPU,  8GB RAM
+        ↓
+  16 vCPU, 64GB RAM
+        ↓
+  64 vCPU, 256GB RAM
+
+✅ No code changes
+✅ Works for stateful systems
+   (single DB instance)
+❌ Single point of failure
+❌ Hits a hardware ceiling
+❌ Reboot to upgrade</pre>
+</div>
+<div class="vs">vs</div>
+<div>
+<span class="code-label" style="background:rgba(52,211,153,.15);color:var(--g)">Horizontal scaling (scale out)</span>
+<pre>More boxes.
+
+  [box]
+        ↓
+  [box] [box] [box]
+        ↓
+  [box] [box] ... ×100
+
+✅ Near-infinite ceiling
+✅ Survives instance death
+✅ Rolling deploys
+❌ App must be stateless
+❌ Need a load balancer
+❌ DB harder to scale this way</pre>
+</div>
+</div>
+
+<pre>Auto-scaling — the cloud does it for you:
+
+  Define a policy:
+    "Run 2 to 20 instances. Add one when avg CPU &gt; 70% for 2 min.
+     Remove one when avg CPU &lt; 30% for 5 min."
+
+  Friday 9am  →  Traffic jumps  →  CPU rises to 75%
+                                    →  Auto-scaler adds box (now 3)
+  Friday 5pm  →  Traffic settles →  CPU back to 25%
+                                    →  Auto-scaler removes boxes (back to 2)
+
+  Pay only for what you actually use.</pre>
+
+<div class="hbox" style="background:rgba(59,130,246,.06);border-color:var(--bl)">
+<p class="htitle" style="color:var(--bl)">"Stateless" is the magic word</p>
+<p style="color:var(--t2)">If your server stores anything in local memory or disk that another instance doesn't have (an in-process session, an upload-in-progress, a cache), you can't horizontally scale safely. Push state out: sessions → Redis, files → S3, cache → Redis. Then any instance can serve any request, and you can add/remove them at will.</p>
+</div>
 </div>
 </div>
 </div>
@@ -708,18 +1567,18 @@ With CDN (CloudFront, Cloudflare, Akamai):
 <div class="connector">⬇</div>
 
 <!-- ============================================ -->
-<!-- SECTION 4 -->
+<!-- SECTION 5 — USER MAKES REQUEST -->
 <!-- ============================================ -->
-<div class="section" id="s4">
+<div class="section" id="s5">
 <div class="section-head">
-<span class="section-num" style="background:rgba(251,146,60,.15);color:var(--o)">04</span>
+<span class="section-num" style="background:rgba(251,146,60,.15);color:var(--o)">05</span>
 <h2 class="section-title">User makes a request</h2>
 </div>
 <p class="section-sub">A user types <code>https://yourdashboard.com</code> and presses Enter. Here's every network step before a single byte of your code arrives.</p>
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">4.1</span>
+<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">5.1</span>
 <span class="step-title">DNS resolution — domain name to IP address</span>
 <span class="step-arrow">▼</span>
 </div>
@@ -736,13 +1595,20 @@ Step 5: ISP asks Root DNS server    → "Try .com TLD server"
 Step 6: Ask .com TLD server         → "Try ns1.cloudflare.com"
 Step 7: Ask Cloudflare nameserver   → "93.184.216.34" ✅
 
-Total: ~20-80ms (first visit), ~0ms (cached)</pre>
+Total: ~20-80ms (first visit), ~0ms (cached)
+
+DNS records you'll deal with:
+  A      yourdashboard.com    → 93.184.216.34       (IPv4)
+  AAAA   yourdashboard.com    → 2606:2800:220:1::   (IPv6)
+  CNAME  www                  → yourdashboard.com   (alias)
+  MX     yourdashboard.com    → mail.example.com    (email)
+  TXT    _dmarc               → "v=DMARC1; ..."     (email auth)</pre>
 </div>
 </div>
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">4.2</span>
+<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">5.2</span>
 <span class="step-title">TCP 3-way handshake — reliable connection</span>
 <span class="step-arrow">▼</span>
 </div>
@@ -758,13 +1624,20 @@ Total: ~20-80ms (first visit), ~0ms (cached)</pre>
 
 This "3-way handshake" takes 1 round-trip (~30ms).
 Both sides agree on sequence numbers so packets
-can be reassembled in order and retransmitted if lost.</pre>
+can be reassembled in order and retransmitted if lost.
+
+TCP guarantees:
+  ✅ Delivery (retransmits dropped packets)
+  ✅ Order (reassembles out-of-order packets)
+  ✅ No duplicates
+  ✅ Flow control (don't overwhelm the receiver)
+  ✅ Congestion control (back off when network is busy)</pre>
 </div>
 </div>
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">4.3</span>
+<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">5.3</span>
 <span class="step-title">TLS handshake — making it secure (HTTPS)</span>
 <span class="step-arrow">▼</span>
 </div>
@@ -783,6 +1656,7 @@ can be reassembled in order and retransmitted if lost.</pre>
    │   ✅ Signed by trusted CA?           │
    │   ✅ Domain name correct?            │
    │   ✅ Not expired?                    │
+   │   ✅ Not revoked (OCSP)?             │
    │                                      │
    │── Key Exchange ───────────────────▶│
    │   [Diffie-Hellman → shared secret]  │
@@ -791,13 +1665,14 @@ can be reassembled in order and retransmitted if lost.</pre>
    │   All data encrypted with AES-256   │
 
 TLS 1.3: 1 round-trip (~30ms)
-TLS 1.2: 2 round-trips (~60ms)</pre>
+TLS 1.2: 2 round-trips (~60ms)
+TLS 1.3 + 0-RTT (resumed sessions): 0 round-trips!</pre>
 </div>
 </div>
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">4.4</span>
+<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">5.4</span>
 <span class="step-title">HTTP request — asking for the page</span>
 <span class="step-arrow">▼</span>
 </div>
@@ -811,17 +1686,22 @@ Accept-Encoding: gzip, deflate, br     ← "I can handle compressed!"
 Cookie: session=abc123; theme=dark      ← Previous session data
 Cache-Control: no-cache
 Sec-Fetch-Dest: document                ← "I want an HTML document"</pre>
+
+<div class="hbox" style="background:rgba(251,146,60,.06);border-color:var(--o)">
+<p class="htitle" style="color:var(--o)">HTTP/1.1 vs HTTP/2 vs HTTP/3</p>
+<p style="color:var(--t2)"><strong>HTTP/1.1:</strong> one request at a time per connection (browsers open ~6 in parallel). Verbose plain-text headers. <strong>HTTP/2:</strong> multiple requests multiplexed over one TCP connection, header compression (HPACK), server push. <strong>HTTP/3:</strong> same as HTTP/2 but over QUIC (built on UDP) — eliminates "head-of-line blocking" when packets are dropped, faster on flaky mobile networks.</p>
+</div>
 </div>
 </div>
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">4.5</span>
+<span class="step-badge" style="background:rgba(251,146,60,.15);color:var(--o)">5.5</span>
 <span class="step-title">Complete timeline — keystroke to first byte</span>
 <span class="step-arrow">▼</span>
 </div>
 <div class="step-body">
-<div class="timeline" style="--tc:var(--o)">
+<div class="timeline">
 <div class="tl-item"><span class="time" style="color:var(--t3)">0ms</span><span class="detail">User presses Enter</span></div>
 <div class="tl-item"><span class="time" style="color:var(--a2)">~5ms</span><span class="detail">URL parsed — protocol, domain, path</span></div>
 <div class="tl-item"><span class="time" style="color:var(--bl)">~25ms</span><span class="detail">DNS resolved → IP address</span></div>
@@ -837,58 +1717,239 @@ Sec-Fetch-Dest: document                ← "I want an HTML document"</pre>
 <div class="connector">⬇</div>
 
 <!-- ============================================ -->
-<!-- SECTION 5 -->
+<!-- SECTION 6 — SERVER PROCESSES IT (EXPANDED) -->
 <!-- ============================================ -->
-<div class="section" id="s5">
+<div class="section" id="s6">
 <div class="section-head">
-<span class="section-num" style="background:rgba(251,191,36,.15);color:var(--y)">05</span>
-<h2 class="section-title">Server responds</h2>
+<span class="section-num" style="background:rgba(251,191,36,.15);color:var(--y)">06</span>
+<h2 class="section-title">Server processes the request</h2>
 </div>
-<p class="section-sub">The server receives your HTTP request and decides what to send back. For a static site: find the file, compress it, send it.</p>
+<p class="section-sub">The packet enters your cloud network. Now it has to walk through every layer the cloud and your application define before a response goes back. For a static request this is fast; for a real API call, this is where most of the time goes.</p>
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(251,191,36,.15);color:var(--y)">5.1</span>
-<span class="step-title">Server processing &amp; HTTP response</span>
+<span class="step-badge" style="background:rgba(251,191,36,.15);color:var(--y)">6.1</span>
+<span class="step-title">The infrastructure walk — load balancer to your code</span>
 <span class="step-arrow">▼</span>
 </div>
 <div class="step-body">
-<pre>Incoming: GET / HTTP/2
+<pre>HTTP request arrives at the data center
+        │
+        ▼
+┌──────────────────┐  Drops obvious attacks (SQLi patterns,
+│   WAF            │  bots, geo-bans). May 403 here.
+└────────┬─────────┘
+         ▼
+┌──────────────────┐  TLS termination happens here, not in your app.
+│  Load balancer   │  Picks a healthy backend instance (round-robin,
+│  (ALB / Nginx)   │  least-connections, or sticky-session).
+└────────┬─────────┘
+         ▼
+┌──────────────────┐  Inside your VPC. Your container/VM listens
+│ App instance #2  │  on a port. The kernel passes the connection
+│ (one of N pods)  │  to your Node process.
+└────────┬─────────┘
+         ▼
+┌──────────────────┐  Node's libuv accepts the socket, fires
+│ HTTP server      │  the 'request' event, hands off to Express/Nest.
+└────────┬─────────┘
+         ▼
+   YOUR APPLICATION CODE STARTS HERE</pre>
+</div>
+</div>
 
-Server decision tree:
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(251,191,36,.15);color:var(--y)">6.2</span>
+<span class="step-title">Static vs dynamic — two very different paths</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<pre>Server decision tree:
 ├── Cached at CDN edge?
 │   ├── YES → Return cached copy (&lt;5ms) ⚡
 │   └── NO  → Forward to origin
 │
-├── Static site (our case):
+├── Static asset request (e.g. /assets/index-Da3x.js)
+│   1. Reverse proxy (Nginx) checks file system / S3
+│   2. Reads bytes, sets cache headers, sends compressed
+│   3. Your app code is NEVER invoked
+│   → Done in &lt; 10ms
+│
+├── Static site HTML (our example)
 │   1. Match "/" → serve index.html
 │   2. Read file from disk/memory
-│   3. Compress with Brotli
-│   4. Set response headers
-│   5. Send
+│   3. Compress with Brotli, set cache headers, send
+│   → Done in &lt; 20ms
 │
-└── Dynamic site (SSR):
-    1. Run route handler
-    2. Query database
-    3. Render HTML on server
-    4. Compress and send</pre>
-
-<span class="code-label" style="background:rgba(251,191,36,.15);color:var(--y)">HTTP response</span>
-<pre>HTTP/2 200 OK
-content-type: text/html; charset=UTF-8
-content-encoding: br                       ← Brotli compressed
-cache-control: no-cache                    ← HTML always re-validated
-etag: "a3f8c2e1"                           ← Fingerprint for caching
-cf-cache-status: HIT                       ← Served from CDN cache
-strict-transport-security: max-age=31536000
-
-[compressed HTML body follows]</pre>
+└── Dynamic API request (POST /api/orders)
+    1. Pass to your application server (Node, Express, NestJS)
+    2. Walk through middleware (logger, CORS, auth, validation)
+    3. Route to controller
+    4. Service layer runs business logic
+    5. ORM issues SQL, DB returns rows
+    6. Service composes response
+    7. Controller serializes to JSON
+    8. Send back, log, record metrics
+    → Anywhere from 20ms to 2000ms+</pre>
 </div>
 </div>
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(251,191,36,.15);color:var(--y)">5.2</span>
+<span class="step-badge" style="background:rgba(251,191,36,.15);color:var(--y)">6.3</span>
+<span class="step-title">Dynamic request lifecycle — POST /api/orders walked through</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc">Let's trace one real API call through every layer. The user clicks "Buy now" — the frontend sends <code>POST /api/orders</code> with the cart contents.</p>
+
+<pre>1️⃣  REQUEST ARRIVES AT NODE PROCESS
+    POST /api/orders HTTP/2
+    Authorization: Bearer eyJhbGc...
+    Content-Type: application/json
+    { "items": [{ "id": "abc", "qty": 2 }] }
+
+2️⃣  EXPRESS MIDDLEWARE CHAIN
+    ├─ requestLogger        → logs "POST /api/orders user=? id=req-7c3"
+    ├─ helmet               → sets security headers on the eventual response
+    ├─ cors                 → "Origin allowed? yes."
+    ├─ rateLimit            → "User under 100/min? yes. Continue."
+    ├─ express.json()       → parses body → req.body = { items: [...] }
+    ├─ requireAuth          → verifies JWT signature, decodes user
+    │                         req.user = { id: 'u_42', role: 'customer' }
+    ├─ validateBody(schema) → Zod check: items.length &gt; 0, qty &gt; 0
+    │                         → if invalid: 400 with field errors, STOP
+    └─ → continues to route handler
+
+3️⃣  ROUTER MATCHES
+    POST /api/orders → OrdersController.create
+
+4️⃣  CONTROLLER (HTTP layer — thin)
+    async create(req, res, next) {
+      try {
+        const order = await ordersService
+          .placeOrder(req.user.id, req.body.items);
+        res.status(201).json({
+          id: order.id,
+          total: order.total,
+          status: order.status,
+        });
+      } catch (err) { next(err); }
+    }
+
+5️⃣  SERVICE LAYER (business logic)
+    async placeOrder(userId, items) {
+      return db.$transaction(async (tx) =&gt; {
+        const stock = await inventory.reserve(items, tx);  // may throw
+        const total = pricing.calculate(items);
+        const order = await orderRepo.create(
+                        { userId, items, total, status: 'PENDING' }, tx);
+        const charge = await payments.charge(userId, total);
+        await orderRepo.update(order.id,
+                        { status: 'PAID', chargeId: charge.id }, tx);
+        await emailQueue.enqueue('order.confirmation', { order });
+        return order;
+      });
+    }
+    ↑ Transaction means: if ANY step fails, rollback ALL changes.
+
+6️⃣  ORM / REPOSITORY LAYER
+    orderRepo.create(...) →
+    Prisma generates and runs SQL:
+      BEGIN;
+      INSERT INTO orders (id, user_id, total, status, created_at)
+        VALUES ('ord_99', 'u_42', 49.99, 'PENDING', NOW());
+      INSERT INTO order_items (order_id, product_id, qty, price)
+        VALUES ('ord_99', 'abc', 2, 24.99);
+      ...
+
+7️⃣  DATABASE
+    Postgres parses, plans, executes the queries.
+    Writes to WAL (write-ahead log) for durability.
+    Returns inserted rows. ~5-20ms typical.
+
+8️⃣  EXTERNAL CALL (payment provider)
+    payments.charge(...) → HTTPS to Stripe API
+    ~150-400ms — slowest part of the whole request.
+
+9️⃣  ENQUEUE EMAIL (asynchronous)
+    emailQueue.enqueue(...) → push job to Redis / SQS
+    Worker process picks it up SECONDS LATER, sends email.
+    User's request doesn't wait for it.
+
+🔟  RESPONSE BUILT &amp; SENT
+    Controller returns 201 Created with order JSON.
+    Express writes it to the socket → kernel → load balancer
+    → CDN (skipped for this dynamic POST) → user.
+
+    requestLogger middleware logs final status + duration.
+    Metrics emitted: orders.created.count++, orders.latency=623ms</pre>
+
+<div class="metrics">
+<div class="metric"><span class="val" style="color:var(--g)">~5ms</span><span class="lbl">Middleware chain</span></div>
+<div class="metric"><span class="val" style="color:var(--bl)">~25ms</span><span class="lbl">DB queries</span></div>
+<div class="metric"><span class="val" style="color:var(--o)">~250ms</span><span class="lbl">Payment provider</span></div>
+<div class="metric"><span class="val" style="color:var(--p)">~3ms</span><span class="lbl">Serialize + send</span></div>
+</div>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(251,191,36,.15);color:var(--y)">6.4</span>
+<span class="step-title">HTTP response — what comes back</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<span class="code-label" style="background:rgba(251,191,36,.15);color:var(--y)">Successful API response</span>
+<pre>HTTP/2 201 Created
+content-type: application/json; charset=UTF-8
+content-encoding: br                       ← Brotli compressed
+cache-control: no-store                    ← Don't cache this
+x-request-id: req-7c3e2f                   ← Trace ID for debugging
+x-ratelimit-remaining: 99
+strict-transport-security: max-age=31536000
+
+{"id":"ord_99","total":49.99,"status":"PAID"}</pre>
+
+<span class="code-label" style="background:rgba(248,113,113,.15);color:var(--r)">Common HTTP status codes you'll deal with</span>
+<pre>1xx  Informational    (rare)
+2xx  Success
+  200 OK              standard success
+  201 Created         resource created (POST)
+  204 No Content      success, body intentionally empty (DELETE)
+
+3xx  Redirection
+  301 Moved Permanently   permanent redirect (cached!)
+  302 Found               temporary redirect
+  304 Not Modified        client's cache is still good (saves bandwidth)
+
+4xx  CLIENT errors (the request is wrong)
+  400 Bad Request         malformed body / validation failed
+  401 Unauthorized        no/invalid credentials
+  403 Forbidden           authenticated but not allowed
+  404 Not Found           resource doesn't exist
+  409 Conflict            e.g. email already registered
+  422 Unprocessable       semantic validation failure
+  429 Too Many Requests   rate limited
+
+5xx  SERVER errors (the server is wrong)
+  500 Internal Server Error   unexpected exception
+  502 Bad Gateway             load balancer can't reach backend
+  503 Service Unavailable     down for maintenance / overloaded
+  504 Gateway Timeout         backend took too long</pre>
+
+<div class="hbox" style="background:rgba(248,113,113,.06);border-color:var(--r)">
+<p class="htitle" style="color:var(--r)">4xx is the client's fault, 5xx is yours</p>
+<p style="color:var(--t2)">A 4xx means "this request was invalid, fix it and try again" — log it but don't page anyone. A 5xx means "the server is broken" — alerts, dashboards, on-call. Returning a 500 when you should return a 400 (e.g. validation errors) is a common bug that blows up your alerting.</p>
+</div>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(251,191,36,.15);color:var(--y)">6.5</span>
 <span class="step-title">Cascade of requests — HTML triggers more fetches</span>
 <span class="step-arrow">▼</span>
 </div>
@@ -905,7 +1966,7 @@ Request #4: GET /assets/vendor-Bk9m.js   → vendor chunk (140KB)
   └─ JS executes and triggers:
 
 Request #5: GET /assets/logo-kM2x.svg    → logo (3KB)
-Request #6: GET /api/users               → JSON data (12KB)
+Request #6: GET /api/users               → JSON data (12KB) ← from backend!
 
 With HTTP/2, requests 2-4 happen IN PARALLEL (multiplexed)
 over the SAME TCP connection. No extra handshakes!
@@ -914,7 +1975,7 @@ Total: ~209KB compressed → ~850KB decompressed in memory</pre>
 
 <div class="hbox" style="background:rgba(251,191,36,.06);border-color:var(--y)">
 <p class="htitle" style="color:var(--y)">Caching headers control repeat visits</p>
-<p style="color:var(--t2)"><strong style="color:var(--t)">Hashed assets</strong> (app-Da3x.js) get <code>max-age=31536000</code> (1 year!) because the hash changes when content changes. <strong style="color:var(--t)">index.html</strong> gets <code>no-cache</code> so the browser always checks for a new version. Second visits are <em>much</em> faster.</p>
+<p style="color:var(--t2)"><strong>Hashed assets</strong> (app-Da3x.js) get <code>max-age=31536000, immutable</code> (1 year!) because the hash changes when content changes. <strong>index.html</strong> gets <code>no-cache</code> so the browser always checks for a new version. <strong>API responses</strong> usually get <code>no-store</code> or short TTLs. Second visits are <em>much</em> faster.</p>
 </div>
 </div>
 </div>
@@ -923,24 +1984,24 @@ Total: ~209KB compressed → ~850KB decompressed in memory</pre>
 <div class="connector">⬇</div>
 
 <!-- ============================================ -->
-<!-- SECTION 6 -->
+<!-- SECTION 7 — BROWSER RENDERS -->
 <!-- ============================================ -->
-<div class="section" id="s6">
+<div class="section" id="s7">
 <div class="section-head">
-<span class="section-num" style="background:rgba(244,114,182,.15);color:var(--p)">06</span>
+<span class="section-num" style="background:rgba(244,114,182,.15);color:var(--p)">07</span>
 <h2 class="section-title">Browser rendering engine</h2>
 </div>
-<p class="section-sub">The rendering engine (Blink in Chrome, Gecko in Firefox, WebKit in Safari) takes raw files and turns them into interactive pixels. This is the most complex part of the chain.</p>
+<p class="section-sub">The rendering engine (Blink in Chrome, Gecko in Firefox, WebKit in Safari) takes raw bytes and turns them into interactive pixels. This is the most complex part of the chain.</p>
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(244,114,182,.15);color:var(--p)">6.1</span>
+<span class="step-badge" style="background:rgba(244,114,182,.15);color:var(--p)">7.1</span>
 <span class="step-title">Parse HTML → Build the DOM tree</span>
 <span class="step-arrow">▼</span>
 </div>
 <div class="step-body">
 <pre>HTML bytes arrive:  3C 21 44 4F 43 54 59 50 45 ...
-                          ↓ decode
+                          ↓ decode (UTF-8)
 Characters:         &lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;...
                           ↓ tokenize
 Tokens:             [DOCTYPE] [StartTag:html] [StartTag:head] ...
@@ -962,14 +2023,14 @@ DOM Tree:
 
 <div class="hbox" style="background:rgba(244,114,182,.06);border-color:var(--p)">
 <p class="htitle" style="color:var(--p)">Parse-blocking behavior</p>
-<p style="color:var(--t2)">A <code>&lt;script&gt;</code> without <code>async</code>/<code>defer</code> <strong style="color:var(--t)">STOPS HTML parsing</strong> until it downloads and executes (JS might use document.write). Modern frameworks use <code>type="module"</code> (deferred by default). CSS is "render-blocking" — browser won't paint until CSS is parsed, but HTML parsing continues.</p>
+<p style="color:var(--t2)">A <code>&lt;script&gt;</code> without <code>async</code>/<code>defer</code> <strong>STOPS HTML parsing</strong> until it downloads and executes (because old JS could call <code>document.write</code>). Modern frameworks use <code>type="module"</code> (deferred by default). CSS is "render-blocking" — browser won't paint until CSS is parsed, but HTML parsing continues underneath.</p>
 </div>
 </div>
 </div>
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(244,114,182,.15);color:var(--p)">6.2</span>
+<span class="step-badge" style="background:rgba(244,114,182,.15);color:var(--p)">7.2</span>
 <span class="step-title">Parse CSS → Build CSSOM tree</span>
 <span class="step-arrow">▼</span>
 </div>
@@ -999,7 +2060,7 @@ During CSSOM construction:
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(244,114,182,.15);color:var(--p)">6.3</span>
+<span class="step-badge" style="background:rgba(244,114,182,.15);color:var(--p)">7.3</span>
 <span class="step-title">DOM + CSSOM → Render tree → Layout → Paint</span>
 <span class="step-arrow">▼</span>
 </div>
@@ -1049,24 +2110,24 @@ COMPOSITE — GPU layers → final frame → display
 <div class="connector">⬇</div>
 
 <!-- ============================================ -->
-<!-- SECTION 7 -->
+<!-- SECTION 8 — JS EVENT LOOP -->
 <!-- ============================================ -->
-<div class="section" id="s7">
+<div class="section" id="s8">
 <div class="section-head">
-<span class="section-num" style="background:rgba(52,211,153,.15);color:var(--g)">07</span>
+<span class="section-num" style="background:rgba(52,211,153,.15);color:var(--g)">08</span>
 <h2 class="section-title">JavaScript event loop</h2>
 </div>
-<p class="section-sub">JavaScript is <strong style="color:var(--t)">single-threaded</strong> — one thing at a time. The event loop lets async operations (network, timers, user input) work without blocking the UI.</p>
+<p class="section-sub">JavaScript is <strong>single-threaded</strong> — one thing at a time. The event loop lets async operations (network, timers, user input) work without blocking the UI. Same model in browser and Node.</p>
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(52,211,153,.15);color:var(--g)">7.1</span>
+<span class="step-badge" style="background:rgba(52,211,153,.15);color:var(--g)">8.1</span>
 <span class="step-title">Components of the JS runtime</span>
 <span class="step-arrow">▼</span>
 </div>
 <div class="step-body">
 <pre>┌─────────────────────────────────────────────────────────┐
-│  JavaScript Engine (V8 in Chrome)                       │
+│  JavaScript Engine (V8 in Chrome &amp; Node)                │
 │                                                         │
 │  ┌──────────────────┐    ┌──────────────────────────┐  │
 │  │   CALL STACK      │    │   HEAP (Memory)           │  │
@@ -1083,14 +2144,14 @@ COMPOSITE — GPU layers → final frame → display
 └─────────────────────────────────────────────────────────┘
               ↕ Event Loop checks ↕
 ┌─────────────────────────────────────────────────────────┐
-│  Browser APIs (NOT part of JS engine — separate threads)│
+│  Browser APIs / Node APIs (separate threads)            │
 │                                                         │
-│  • setTimeout / setInterval    → Timer API              │
-│  • fetch / XMLHttpRequest      → Network API            │
-│  • addEventListener            → DOM Event API          │
-│  • requestAnimationFrame       → Animation API          │
-│  • IntersectionObserver        → Visibility API         │
-│  • Web Workers                 → Threading API          │
+│  Browser:                    Node.js:                   │
+│   • setTimeout / setInterval  • setTimeout / setInterval│
+│   • fetch / XMLHttpRequest    • fs.readFile / http      │
+│   • addEventListener (DOM)    • net / dns / crypto      │
+│   • requestAnimationFrame     • Worker threads          │
+│   • Web Workers                                          │
 │                                                         │
 │  When complete, they push callbacks to the queues ↓     │
 └─────────────────────────────────────────────────────────┘
@@ -1111,7 +2172,7 @@ COMPOSITE — GPU layers → final frame → display
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(52,211,153,.15);color:var(--g)">7.2</span>
+<span class="step-badge" style="background:rgba(52,211,153,.15);color:var(--g)">8.2</span>
 <span class="step-title">Event loop in action — real code walkthrough</span>
 <span class="step-arrow">▼</span>
 </div>
@@ -1162,7 +2223,51 @@ FINAL ORDER:
 
 <div class="hbox" style="background:rgba(52,211,153,.06);border-color:var(--g)">
 <p class="htitle" style="color:var(--g)">setTimeout(fn, 0) is NOT instant</p>
-<p style="color:var(--t2)">Even with 0ms delay, <code>setTimeout</code> goes to the <strong style="color:var(--t)">macrotask</strong> queue. It must wait for: (1) synchronous code to finish, (2) ALL microtasks to drain, (3) its turn. Promise callbacks always run before setTimeout, even if setTimeout was registered first.</p>
+<p style="color:var(--t2)">Even with 0ms delay, <code>setTimeout</code> goes to the <strong>macrotask</strong> queue. It must wait for: (1) synchronous code to finish, (2) ALL microtasks to drain, (3) its turn. Promise callbacks always run before setTimeout, even if setTimeout was registered first.</p>
+</div>
+</div>
+</div>
+
+<div class="step">
+<div class="step-head" onclick="toggle(this)">
+<span class="step-badge" style="background:rgba(52,211,153,.15);color:var(--g)">8.3</span>
+<span class="step-title">Same loop, different shape — Node vs browser</span>
+<span class="step-arrow">▼</span>
+</div>
+<div class="step-body">
+<p class="step-desc">Node's event loop has more "phases" than the browser's, because servers care about I/O patterns the browser doesn't. The principle is the same; the order of certain callbacks differs.</p>
+
+<pre>Node.js event loop phases (simplified, runs each tick):
+
+  ┌─────────────┐
+  │ timers      │  setTimeout/setInterval callbacks due
+  └──────┬──────┘
+         ▼
+  ┌─────────────┐
+  │ pending I/O │  TCP errors etc.
+  └──────┬──────┘
+         ▼
+  ┌─────────────┐
+  │ poll        │  Most I/O completes here (file, net).
+  │             │  Will block here if no other work.
+  └──────┬──────┘
+         ▼
+  ┌─────────────┐
+  │ check       │  setImmediate() callbacks
+  └──────┬──────┘
+         ▼
+  ┌─────────────┐
+  │ close       │  socket.on('close'), etc.
+  └──────┬──────┘
+         │
+         └─────── back to top
+                   ↑
+        Microtasks drain BETWEEN every phase.
+        process.nextTick() callbacks drain even before microtasks.</pre>
+
+<div class="hbox" style="background:rgba(52,211,153,.06);border-color:var(--g)">
+<p class="htitle" style="color:var(--g)">CPU-bound work blocks everything</p>
+<p style="color:var(--t2)">A 200ms image-resize loop on the main thread freezes <em>every</em> in-flight HTTP request on a Node server, and <em>every</em> animation in a browser. For heavy CPU: in the browser use a <strong>Web Worker</strong>; in Node use <strong>worker_threads</strong> or a separate microservice in Go/Rust.</p>
 </div>
 </div>
 </div>
@@ -1171,35 +2276,40 @@ FINAL ORDER:
 <div class="connector">⬇</div>
 
 <!-- ============================================ -->
-<!-- SECTION 8 -->
+<!-- SECTION 9 — USER SEES & INTERACTS -->
 <!-- ============================================ -->
-<div class="section" id="s8">
+<div class="section" id="s9">
 <div class="section-head">
-<span class="section-num" style="background:rgba(248,113,113,.15);color:var(--r)">08</span>
+<span class="section-num" style="background:rgba(248,113,113,.15);color:var(--r)">09</span>
 <h2 class="section-title">User sees &amp; interacts</h2>
 </div>
-<p class="section-sub">The page is visible and interactive. Every action triggers: <strong style="color:var(--t)">Event → JS handler → State change → Re-render → New pixels</strong>. This loop runs at up to 60fps.</p>
+<p class="section-sub">The page is visible and interactive. Every action triggers: <strong>Event → JS handler → State change → Re-render → New pixels</strong>. This loop runs at up to 60fps.</p>
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">8.1</span>
+<span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">9.1</span>
 <span class="step-title">Core Web Vitals — measuring user experience</span>
 <span class="step-arrow">▼</span>
 </div>
 <div class="step-body">
 <div class="timeline">
 <div class="tl-item"><span class="time" style="color:var(--g)">FCP — First Contentful Paint (~1.2s)</span><span class="detail">First text or image rendered. No longer blank.</span></div>
-<div class="tl-item"><span class="time" style="color:var(--bl)">LCP — Largest Contentful Paint (~2.0s)</span><span class="detail">Biggest element (hero image, main heading) finishes rendering.</span></div>
-<div class="tl-item"><span class="time" style="color:var(--y)">INP — Interaction to Next Paint (~100ms)</span><span class="detail">Time between user input and next visual update.</span></div>
+<div class="tl-item"><span class="time" style="color:var(--bl)">LCP — Largest Contentful Paint (~2.0s)</span><span class="detail">Biggest element (hero image, main heading) finishes rendering. Google's main UX metric.</span></div>
+<div class="tl-item"><span class="time" style="color:var(--y)">INP — Interaction to Next Paint (~100ms)</span><span class="detail">Time between user input and next visual update. Replaced FID in 2024.</span></div>
 <div class="tl-item"><span class="time" style="color:var(--c)">TTI — Time to Interactive (~3.5s)</span><span class="detail">Fully interactive. All JS loaded, handlers attached.</span></div>
 <div class="tl-item"><span class="time" style="color:var(--a2)">CLS — Cumulative Layout Shift (~0.05)</span><span class="detail">Unexpected layout movement. Images without dimensions cause this.</span></div>
+</div>
+
+<div class="hbox" style="background:rgba(248,113,113,.06);border-color:var(--r)">
+<p class="htitle" style="color:var(--r)">These metrics affect SEO</p>
+<p style="color:var(--t2)">Google uses Core Web Vitals as a ranking signal. Two sites with equal content quality — the faster one wins. Measure with Lighthouse, PageSpeed Insights, or real-user monitoring (RUM) via the <code>web-vitals</code> npm package shipping data to your analytics backend.</p>
 </div>
 </div>
 </div>
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">8.2</span>
+<span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">9.2</span>
 <span class="step-title">The re-render cycle — what happens on every click</span>
 <span class="step-arrow">▼</span>
 </div>
@@ -1237,7 +2347,7 @@ FINAL ORDER:
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">8.3</span>
+<span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">9.3</span>
 <span class="step-title">Network round-trip during interaction</span>
 <span class="step-arrow">▼</span>
 </div>
@@ -1255,9 +2365,10 @@ fetch('/api/users/42', { method: 'DELETE' })
       ▼ Just sends: DELETE /api/users/42 HTTP/2
       │
       ▼
-Server:
-  → Check auth → Users.destroy(42)
-  → DELETE FROM users WHERE id = 42
+Server: ↑ goes through every layer from Section 6 ↑
+  → Auth middleware verifies user owns this resource
+  → Controller calls UsersService.delete(42)
+  → Service runs DELETE FROM users WHERE id = 42
   → Response: 204 No Content
       │
       ▼ (~50-200ms later)
@@ -1265,13 +2376,14 @@ Server:
   → Failure → ROLLBACK: put user back, show error toast
 
 OPTIMISTIC UPDATES = update UI before server confirms
-If server says "no" → undo the change</pre>
+If server says "no" → undo the change. Best UX, but
+your code must handle the rollback path.</pre>
 </div>
 </div>
 
 <div class="step">
 <div class="step-head" onclick="toggle(this)">
-<span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">8.4</span>
+<span class="step-badge" style="background:rgba(248,113,113,.15);color:var(--r)">9.4</span>
 <span class="step-title">The infinite interaction loop</span>
 <span class="step-arrow">▼</span>
 </div>
@@ -1291,6 +2403,10 @@ If server says "no" → undo the change</pre>
 │         │                                            │
 │         ▼                                            │
 │   State changes (setState / dispatch / signal)       │
+│         │                                            │
+│         ▼                                            │
+│   (Optional) fetch to backend → goes through         │
+│   the full Section 5 + 6 lifecycle                   │
 │         │                                            │
 │         ▼                                            │
 │   Framework reconciliation (VDOM diff / reactivity)  │
@@ -1322,13 +2438,17 @@ If server says "no" → undo the change</pre>
 <div class="connector" style="font-size:1rem;color:var(--t3);padding:2rem 0 1rem">— Complete Chain —</div>
 
 <div class="flow" style="justify-content:center">
-<span class="item" style="background:rgba(99,102,241,.15);color:var(--a2)">Write TSX</span>
+<span class="item" style="background:rgba(99,102,241,.15);color:var(--a2)">Write FE</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(34,211,238,.15);color:var(--c)">Write BE</span>
 <span class="arr">→</span>
 <span class="item" style="background:rgba(52,211,153,.15);color:var(--g)">Transpile</span>
 <span class="arr">→</span>
 <span class="item" style="background:rgba(52,211,153,.15);color:var(--g)">Bundle</span>
 <span class="arr">→</span>
 <span class="item" style="background:rgba(251,191,36,.15);color:var(--y)">Minify</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(59,130,246,.15);color:var(--bl)">Container</span>
 <span class="arr">→</span>
 <span class="item" style="background:rgba(59,130,246,.15);color:var(--bl)">Deploy</span>
 <span class="arr">→</span>
@@ -1340,7 +2460,13 @@ If server says "no" → undo the change</pre>
 <span class="arr">→</span>
 <span class="item" style="background:rgba(251,146,60,.15);color:var(--o)">HTTP</span>
 <span class="arr">→</span>
-<span class="item" style="background:rgba(251,191,36,.15);color:var(--y)">Server</span>
+<span class="item" style="background:rgba(251,191,36,.15);color:var(--y)">LB</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(251,191,36,.15);color:var(--y)">Middleware</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(251,191,36,.15);color:var(--y)">Service</span>
+<span class="arr">→</span>
+<span class="item" style="background:rgba(251,191,36,.15);color:var(--y)">DB</span>
 <span class="arr">→</span>
 <span class="item" style="background:rgba(244,114,182,.15);color:var(--p)">Parse</span>
 <span class="arr">→</span>
@@ -1355,7 +2481,7 @@ If server says "no" → undo the change</pre>
 
 <footer>
   <a href="index.html" style="color:var(--c)">← Back to Knowledge Base</a><br><br>
-  Dev Knowledge Base · Web Dev A → Z · Last updated April 2026<br>
+  Dev Knowledge Base · Web Dev A → Z · Last updated May 2026<br>
   <span style="color:var(--t3)">Keep learning, keep building.</span>
 </footer>
 
@@ -1365,6 +2491,14 @@ function toggle(el){
   var arrow=el.querySelector('.step-arrow');
   body.classList.toggle('open');
   arrow.classList.toggle('open');
+}
+function switchTab(btn, name){
+  var step = btn.closest('.step-body');
+  step.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+  btn.classList.add('active');
+  step.querySelectorAll('.tab-panel').forEach(function(p){
+    p.classList.toggle('active', p.dataset.panel === name);
+  });
 }
 document.querySelectorAll('.toc a').forEach(function(a){
   a.addEventListener('click',function(e){
